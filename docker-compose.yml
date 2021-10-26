@@ -4,8 +4,8 @@ services:
     
     rabbitmq:
         image: 'rabbitmq:3.8.22-management-alpine'
-        container_name: balancer_rabbitmq
-        hostname: 'balancer_rabbitmq'
+        container_name: cookapp_rabbitmq
+        hostname: 'cookapp_rabbitmq'
         restart: unless-stopped
         ports:
             - 5630:5672
@@ -15,10 +15,29 @@ services:
 
     mysql:
         image: 'mariadb:10.6'
-        container_name: 'balancer_mysql'
-        hostname: 'balancer_mysql'
+        container_name: 'cookapp_mysql'
+        hostname: 'cookapp_mysql'
         restart: unless-stopped
         ports:                                                           
             - 3360:3306
+        volumes:
+            - ./backoffice/etc/backoffice.sql:/docker-entrypoint-initdb.d/backoffice.sql
         env_file:
             - ./.env
+
+    backoffice_backend:
+        image: 'cookapp_backoffice_backend:latest'
+        container_name: 'cookapp_backoffice_backend'
+        hostname: 'cookapp_backoffice_backend'
+        build: ./backoffice
+        restart: unless-stopped
+        ports:
+            - "5001:5000"
+        volumes:
+            - ./backoffice:/src/app
+        env_file:
+            - ./backoffice/.env
+        depends_on:
+            - rabbitmq
+            - mysql
+        command: python /src/app/main.py
