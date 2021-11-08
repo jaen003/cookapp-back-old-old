@@ -45,7 +45,7 @@ CREATE TABLE Dining_Table (
 	PRIMARY KEY( tab_id )
 );
 
-ALTER TABLE Product ADD CONSTRAINT FK_Product_Restaurant FOREIGN KEY ( area_id ) REFERENCES Restaurant( rest_id );
+ALTER TABLE Product ADD CONSTRAINT FK_Product_Restaurant FOREIGN KEY ( rest_id ) REFERENCES Restaurant( rest_id );
 ALTER TABLE User ADD CONSTRAINT FK_User_Restaurant FOREIGN KEY ( rest_id ) REFERENCES Restaurant( rest_id );
 ALTER TABLE Dining_Table ADD CONSTRAINT FK_Dining_Table_Restaurant FOREIGN KEY ( rest_id ) REFERENCES Restaurant( rest_id );
 
