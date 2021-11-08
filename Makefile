@@ -7,3 +7,8 @@ run :
 stop :
 	@echo "Stopping balancer architecture"
 	@docker-compose stop
+
+.PHONY: test
+test :
+	@echo "Starting cookapp suite tests"
+	@docker-compose up --remove-orphans backoffice_backend_test
