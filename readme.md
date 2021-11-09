@@ -18,8 +18,8 @@
 
 1. [Install Docker](https://www.docker.com/get-started)
 2. [Install Docker Compose](https://docs.docker.com/compose/install/)
-3. Clone this project: `git clone https://github.com/jaen003/balancer_backend balancer`
-4. Move to the project folder: `cd balancer`
+3. Clone this project: `git clone https://github.com/jaen003/cookapp-back cookapp`
+4. Move to the project folder: `cd cookapp`
 
 ### ⚙️ Environment configuration
 

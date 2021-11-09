@@ -21,14 +21,14 @@ class TestSuite( unittest.TestCase ):
      *
     """
 
-    def test_valid_price( self ):
+    def testValidProductPrice( self ):
         price = ProductPrice( 3300 )
         self.assertTrue( price.isValid() )
     
-    def test_invalid_price_1( self ):
+    def testInvalidProductPrice1( self ):
         price = ProductPrice( 0 )
         self.assertFalse( price.isValid() )
 
-    def test_invalid_price_2( self ):
+    def testInvalidProductPrice2( self ):
         price = ProductPrice( -1000 )
         self.assertFalse( price.isValid() )
