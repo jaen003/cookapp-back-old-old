@@ -1,11 +1,11 @@
 .PHONY: run
 run :
-	@echo "Running balancer architecture"
-	@docker-compose up --remove-orphans
+	@echo "Running cookapp architecture"
+	@docker-compose up --remove-orphans backoffice_backend
 
 .PHONY: stop
 stop :
-	@echo "Stopping balancer architecture"
+	@echo "Stopping cookapp architecture"
 	@docker-compose stop
 
 .PHONY: test
