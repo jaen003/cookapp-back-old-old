@@ -17,6 +17,7 @@ from .backofficeInvalidProductPriceException       import InvalidProductPriceExc
 from src.shared.domain                             import RestaurantId
 from .backofficeProductDeleted                     import ProductDeleted
 from .backofficeProductRenamed                     import ProductRenamed
+from .backofficeProductRevalued                    import ProductRevalued
 
 """
  *
@@ -145,4 +146,13 @@ class Product( AggregateRoot ):
         self.record( ProductRenamed(
             id   = self.__id,
             name = name,
+        ) )
+    
+    def revalue( self, price : ProductPrice ) -> None:
+        if not price.isValid():
+            raise InvalidProductPriceException( price )
+        self.__price = price
+        self.record( ProductRevalued(
+            id    = self.__id,
+            price = price,
         ) )
