@@ -16,6 +16,7 @@ from .backofficeInvalidProductDescriptionException import InvalidProductDescript
 from .backofficeInvalidProductPriceException       import InvalidProductPriceException
 from src.shared.domain                             import RestaurantId
 from .backofficeProductDeleted                     import ProductDeleted
+from .backofficeProductRenamed                     import ProductRenamed
 
 """
  *
@@ -135,4 +136,13 @@ class Product( AggregateRoot ):
         self.__status = self.__DELETED
         self.record( ProductDeleted(
             id = self.__id,
+        ) )
+    
+    def rename( self, name : ProductName ) -> None:
+        if name.isEmpty():
+            raise InvalidProductNameException( name )
+        self.__name = name
+        self.record( ProductRenamed(
+            id   = self.__id,
+            name = name,
         ) )

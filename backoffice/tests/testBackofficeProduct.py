@@ -149,3 +149,18 @@ class TestSuite( unittest.TestCase ):
         )
         product.delete()
         self.assertEqual( product.status(), 2 )
+    
+    def testProductRenamedSuccess( self ):
+        # Variables
+        product : Product
+        # Code
+        product = Product( 
+            ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
+            ProductName( 'Hot dog' ),
+            ProductPrice( 3 ),
+            ProductDescription( 'Bread, Onion, Tomato, Chicken' ),
+            1,
+            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        )
+        product.rename( ProductName( 'Sandwich' ) )
+        self.assertEqual( product.name().value(), 'Sandwich' )
