@@ -6,7 +6,7 @@ run :
 .PHONY: stop
 stop :
 	@echo "Stopping cookapp architecture"
-	@docker-compose stop -d
+	@docker-compose stop
 
 .PHONY: test
 test :
