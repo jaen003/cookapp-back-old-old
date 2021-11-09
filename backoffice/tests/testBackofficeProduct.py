@@ -134,3 +134,18 @@ class TestSuite( unittest.TestCase ):
         except DomainException as exc:
             responseCode = exc.code()
         self.assertEqual( responseCode, 125 )
+    
+    def testProductDeletedSuccess( self ):
+        # Variables
+        product : Product
+        # Code
+        product = Product( 
+            ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
+            ProductName( 'Sandwich' ),
+            ProductPrice( 3 ),
+            ProductDescription( 'Bread, Onion, Tomato, Chicken' ),
+            1,
+            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        )
+        product.delete()
+        self.assertEqual( product.status(), 2 )
