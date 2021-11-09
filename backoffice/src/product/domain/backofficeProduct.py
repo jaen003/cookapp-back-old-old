@@ -15,6 +15,7 @@ from .backofficeProductCreated                     import ProductCreated
 from .backofficeInvalidProductDescriptionException import InvalidProductDescriptionException
 from .backofficeInvalidProductPriceException       import InvalidProductPriceException
 from src.shared.domain                             import RestaurantId
+from .backofficeProductDeleted                     import ProductDeleted
 
 """
  *
@@ -31,6 +32,7 @@ class Product( AggregateRoot ):
     """
 
     __ENABLED = 1
+    __DELETED = 2
 
     """
      *
@@ -128,3 +130,9 @@ class Product( AggregateRoot ):
             raise InvalidProductPriceException()
         if description.isEmpty():
             raise InvalidProductDescriptionException()
+            
+    def delete( self ) -> None:
+        self.__status = self.__DELETED
+        self.record( ProductDeleted(
+            id = self.__id,
+        ) )
