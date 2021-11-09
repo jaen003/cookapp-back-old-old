@@ -15,6 +15,8 @@ from src.shared.infrastructure  import EventBus
 from src.shared.domain          import INCORRECT_DATA
 from src.product.application    import ProductRevalorizer
 from src.product.domain         import ProductPrice
+from src.product.application    import ProductRewriter
+from src.product.domain         import ProductDescription
 
 """
  *
@@ -41,6 +43,13 @@ def __isValidDataToRevalue( data : dict ) -> bool:
     if data.get( 'prod_id' ) is None:
         return False
     if data.get( 'prod_price' ) is None:
+        return False
+    return True
+
+def __isValidDataToRewrite( data : dict ) -> bool:
+    if data.get( 'prod_id' ) is None:
+        return False
+    if data.get( 'prod_description' ) is None:
         return False
     return True
 
@@ -82,6 +91,27 @@ def revalue():
     responseCode = revalorizer.revalue(
         id           = ProductId( data.get( 'prod_id' ) ),
         price        = ProductPrice( data.get( 'prod_price' ) ),
+        restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+    )
+    return { 'code' : responseCode }, 202
+
+@productPutController.route( '/api/v1/product/rewrite', methods = [ 'PUT' ] )
+def rewrite():
+    # Variables
+    data         : dict
+    rewriter     : ProductRewriter
+    responseCode : int
+    # Code
+    data     = request.json
+    rewriter = ProductRewriter(
+        repository = ProductRepository(),
+        eventBus   = EventBus(),
+    )
+    if not __isValidDataToRewrite( data ):
+        return { 'code' : INCORRECT_DATA }, 202
+    responseCode = rewriter.rewrite(
+        id           = ProductId( data.get( 'prod_id' ) ),
+        description  = ProductDescription( data.get( 'prod_description' ) ),
         restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
     )
     return { 'code' : responseCode }, 202

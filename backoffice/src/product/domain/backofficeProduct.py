@@ -18,6 +18,7 @@ from src.shared.domain                             import RestaurantId
 from .backofficeProductDeleted                     import ProductDeleted
 from .backofficeProductRenamed                     import ProductRenamed
 from .backofficeProductRevalued                    import ProductRevalued
+from .backofficeProductRewrited                    import ProductRewrited
 
 """
  *
@@ -71,33 +72,6 @@ class Product( AggregateRoot ):
         self.__description  = description
         self.__status       = status
         self.__restaurantId = restaurantId
-    
-    @classmethod
-    def create( 
-        cls, 
-        id           : ProductId, 
-        name         : ProductName,
-        price        : ProductPrice,
-        description  : ProductDescription,
-        restaurantId : RestaurantId,
-    ): # -> Product
-        cls.__validateDataToCreate( id, name, price, description )
-        self = cls(
-            id           = id,
-            name         = name,
-            price        = price,
-            description  = description,
-            status       = cls.__ENABLED,
-            restaurantId = restaurantId,
-        )
-        self.record( ProductCreated(
-            id           = id,
-            name         = name,
-            price        = price,
-            description  = description,
-            restaurantId = restaurantId,
-        ) )
-        return self
 
     def id( self ) -> ProductId:
         return self.__id
@@ -116,14 +90,16 @@ class Product( AggregateRoot ):
 
     def restaurantId( self ) -> RestaurantId:
         return self.__restaurantId
-    
-    @staticmethod
-    def __validateDataToCreate(
-        id          : ProductId, 
-        name        : ProductName,
-        price       : ProductPrice,
-        description : ProductDescription,
-    ) -> None:
+
+    @classmethod
+    def create( 
+        cls, 
+        id           : ProductId, 
+        name         : ProductName,
+        price        : ProductPrice,
+        description  : ProductDescription,
+        restaurantId : RestaurantId,
+    ): # -> Product
         if id.isEmpty():
             raise InvalidProductIdException()
         if name.isEmpty():
@@ -132,7 +108,23 @@ class Product( AggregateRoot ):
             raise InvalidProductPriceException()
         if description.isEmpty():
             raise InvalidProductDescriptionException()
-            
+        self = cls(
+            id           = id,
+            name         = name,
+            price        = price,
+            description  = description,
+            status       = cls.__ENABLED,
+            restaurantId = restaurantId,
+        )
+        self.record( ProductCreated(
+            id           = id,
+            name         = name,
+            price        = price,
+            description  = description,
+            restaurantId = restaurantId,
+        ) )
+        return self    
+    
     def delete( self ) -> None:
         self.__status = self.__DELETED
         self.record( ProductDeleted(
@@ -155,4 +147,13 @@ class Product( AggregateRoot ):
         self.record( ProductRevalued(
             id    = self.__id,
             price = price,
+        ) )
+    
+    def rewrite( self, description : ProductDescription ) -> None:
+        if description.isEmpty():
+            raise InvalidProductDescriptionException( description )
+        self.__description = description
+        self.record( ProductRewrited(
+            id          = self.__id,
+            description = description,
         ) )
