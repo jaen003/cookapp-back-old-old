@@ -4,4 +4,5 @@
  *
 """
 
-from .backofficeTableCreator import *
+from .backofficeTableCreator  import *
+from .backofficeTableSearcher import *
