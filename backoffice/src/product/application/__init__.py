@@ -9,4 +9,4 @@ from .backofficeProductDeletor     import *
 from .backofficeProductRenamer     import *
 from .backofficeProductRevalorizer import *
 from .backofficeProductRewriter    import *
-from .backofficeProductReader      import *
+from .backofficeProductSearcher    import *
