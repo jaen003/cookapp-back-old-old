@@ -13,6 +13,7 @@ from src.shared.domain                      import AggregateRoot
 from .backofficeTableCreated                import TableCreated
 from .backofficeInvalidTableNumberException import InvalidTableNumberException
 from .backofficeTableDeleted                import TableDeleted
+from .backofficeTableRenumbered             import TableRenumbered
 
 """
  *
@@ -110,4 +111,11 @@ class Table( AggregateRoot ):
         self.__status = self.__DELETED
         self.record( TableDeleted(
             id = self.__id,
+        ) )
+    
+    def renumber( self, number : TableNumber ) -> None:
+        self.__number = number
+        self.record( TableRenumbered(
+            id     = self.__id,
+            number = number,
         ) )
