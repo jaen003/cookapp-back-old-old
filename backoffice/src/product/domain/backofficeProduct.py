@@ -101,13 +101,13 @@ class Product( AggregateRoot ):
         restaurantId : RestaurantId,
     ): # -> Product
         if id.isEmpty():
-            raise InvalidProductIdException()
+            raise InvalidProductIdException( id )
         if name.isEmpty():
-            raise InvalidProductNameException()
+            raise InvalidProductNameException( name )
         if price.isValid() == False:
-            raise InvalidProductPriceException()
+            raise InvalidProductPriceException( price )
         if description.isEmpty():
-            raise InvalidProductDescriptionException()
+            raise InvalidProductDescriptionException( description )
         self = cls(
             id           = id,
             name         = name,
