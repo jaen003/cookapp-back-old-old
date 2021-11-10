@@ -15,4 +15,6 @@ from .backofficeIntValueObject            import *
 from .backofficeDomainEventSubscriber     import *
 from .backofficeInvalidProductIdException import *
 from .backofficeProductId                 import *
-from .backofficeRestaurantId              import * 
+from .backofficeRestaurantId              import *
+from .backofficeTableId                   import *
+from .backofficeInvalidTableIdException   import *
