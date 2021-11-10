@@ -14,6 +14,7 @@ from .backofficeTableCreated                import TableCreated
 from .backofficeInvalidTableNumberException import InvalidTableNumberException
 from .backofficeTableDeleted                import TableDeleted
 from .backofficeTableRenumbered             import TableRenumbered
+from .backofficeTableRewrited               import TableRewrited
 
 """
  *
@@ -118,4 +119,11 @@ class Table( AggregateRoot ):
         self.record( TableRenumbered(
             id     = self.__id,
             number = number,
+        ) )
+    
+    def rewrite( self, description : TableDescription ) -> None:
+        self.__description = description
+        self.record( TableRewrited(
+            id          = self.__id,
+            description = description,
         ) )
