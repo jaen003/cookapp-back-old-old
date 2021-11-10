@@ -12,6 +12,7 @@ from src.shared.domain                      import InvalidTableIdException
 from src.shared.domain                      import AggregateRoot
 from .backofficeTableCreated                import TableCreated
 from .backofficeInvalidTableNumberException import InvalidTableNumberException
+from .backofficeTableDeleted                import TableDeleted
 
 """
  *
@@ -28,6 +29,7 @@ class Table( AggregateRoot ):
     """
 
     __ENABLED = 1
+    __DELETED = 2
 
     """
      *
@@ -103,3 +105,9 @@ class Table( AggregateRoot ):
             restaurantId = restaurantId,
         ) )
         return self
+    
+    def delete( self ) -> None:
+        self.__status = self.__DELETED
+        self.record( TableDeleted(
+            id = self.__id,
+        ) )
