@@ -12,6 +12,18 @@
     <br />
 </p>
 
+## 📋 Project Description
+
+### ⚡ Technologies
+
+- Python `v3.9.7`
+- Flask   `v1.1.4`
+- Mariadb `v10.6`
+- Rabbitmq `v3.8.22`
+- Docker `v20.10.8`
+- Docker compose `v1.29.2`
+- Gunicorn `v20.1.0`
+
 ## 🚀 Environment Setup
 
 ### 🔨 Needed tools
