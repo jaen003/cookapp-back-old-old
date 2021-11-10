@@ -16,7 +16,7 @@ from src.shared.domain  import RestaurantId
  *
 """
 
-class ProductReader:
+class ProductSearcher:
 
     """
      *
@@ -35,7 +35,7 @@ class ProductReader:
     def __init__( self, repository : ProductRepository ) -> None:
         self.__repository = repository
 
-    def findAllByNameAndRestaurant( 
+    def searchAllByNameAndRestaurant( 
         self,
         name         : ProductName,
         restaurantId : RestaurantId,
@@ -48,7 +48,7 @@ class ProductReader:
         products   = repository.selectAllByNameAndRestaurant( name, restaurantId )
         return products, SUCCESSFUL_REQUEST
     
-    def findAllByRestaurant( 
+    def searchAllByRestaurant( 
         self,
         restaurantId : RestaurantId,
     ) -> tuple[ list, int ]:
