@@ -11,6 +11,7 @@ from .backofficeUserRole     import UserRole
 from src.shared.domain       import RestaurantId
 from src.shared.domain       import AggregateRoot
 from abc                     import abstractmethod
+from .backofficeUserDeleted  import UserDeleted
 
 """
  *
@@ -97,7 +98,7 @@ class User( AggregateRoot ):
     def delete( self ) -> None:
         self._status = self.__DELETED
         self.record( UserDeleted(
-            id = self._id,
+            email = self._email,
         ) )
 
     def rename( self, name : UserName ) -> None:
