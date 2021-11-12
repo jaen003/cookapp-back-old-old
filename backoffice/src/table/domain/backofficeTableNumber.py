@@ -33,6 +33,6 @@ class TableNumber( IntValueObject ):
         super().__init__( value )
     
     def isValid( self ) -> bool:
-        if self.isLessThan( self.__MINIMUN_NUMBER ) and self.isBiggerThan( self.__MAXIMUM_NUMBER ):
+        if self.isLessThan( self.__MINIMUN_NUMBER ) or self.isBiggerThan( self.__MAXIMUM_NUMBER ):
             return False
         return True
