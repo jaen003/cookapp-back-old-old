@@ -32,4 +32,9 @@ TABLE_NOT_FOUND                    = 135
 TABLE_NUMBER_NOT_FOUND             = 136
 TABLE_ALREADY_CREATED              = 137
 INVALID_TABLE_ID                   = 138
+USER_ALREADY_CREATED               = 139
+USER_NOT_FOUND                     = 140
+INVALID_USER_EMAIL                 = 141
+INVALID_USER_NAME                  = 142
+INVALID_USER_PASSWORD              = 143
 

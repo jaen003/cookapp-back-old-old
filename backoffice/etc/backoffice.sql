@@ -26,14 +26,13 @@ CREATE TABLE Restaurant (
 DROP TABLE IF EXISTS User;
 
 CREATE TABLE User (
-	user_id VARCHAR( 40 ) NOT NULL,
-	user_name VARCHAR( 40 ) DEFAULT NULL,
-	user_email VARCHAR( 60 ) DEFAULT NULL UNIQUE,
-	user_password VARCHAR( 150 ) DEFAULT NULL,
+	user_email VARCHAR( 60 ) NOT NULL,
+	user_name VARCHAR( 40 ) NOT NULL,
+	user_password VARCHAR( 150 ) NOT NULL,
 	user_role TINYINT UNSIGNED NOT NULL,
 	user_status TINYINT UNSIGNED NOT NULL,
 	rest_id VARCHAR( 40 ) NOT NULL,
-	PRIMARY KEY( user_id )
+	PRIMARY KEY( user_email )
 );
 
 CREATE TABLE Dining_Table (
@@ -45,7 +44,7 @@ CREATE TABLE Dining_Table (
 	PRIMARY KEY( tab_id )
 );
 
-ALTER TABLE Product ADD CONSTRAINT FK_Product_Restaurant FOREIGN KEY ( area_id ) REFERENCES Restaurant( rest_id );
+ALTER TABLE Product ADD CONSTRAINT FK_Product_Restaurant FOREIGN KEY ( rest_id ) REFERENCES Restaurant( rest_id );
 ALTER TABLE User ADD CONSTRAINT FK_User_Restaurant FOREIGN KEY ( rest_id ) REFERENCES Restaurant( rest_id );
 ALTER TABLE Dining_Table ADD CONSTRAINT FK_Dining_Table_Restaurant FOREIGN KEY ( rest_id ) REFERENCES Restaurant( rest_id );
 

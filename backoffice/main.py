@@ -4,7 +4,8 @@
  *
 """
 
-from flask import Flask
+from flask                   import Flask
+from app.user.infrastructure import exposeUserEntryPoints
 
 """
  *
@@ -20,7 +21,11 @@ server = Flask( __name__ )
  *
 """
 
+def exposeEntryPoints() -> None:
+    exposeUserEntryPoints( server )
+
 def main() -> None:
+    exposeEntryPoints()
     server.run( debug = True, host = '0.0.0.0' )
 
 main() # call the main method
