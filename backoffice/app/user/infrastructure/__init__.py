@@ -4,7 +4,8 @@
  *
 """
 
-from .backofficeUserPostController import userPostController
+from .backofficeUserPostController   import userPostController
+from .backofficeUserDeleteController import userDeleteController
 
 """
  *
@@ -14,3 +15,4 @@ from .backofficeUserPostController import userPostController
 
 def exposeUserEntryPoints( server ):
     server.register_blueprint( userPostController )
+    server.register_blueprint( userDeleteController )
