@@ -4,5 +4,6 @@
  *
 """
 
-from .backofficeUserCreator import *
-from .backofficeUserDeletor import *
+from .backofficeUserCreator    import *
+from .backofficeUserDeletor    import *
+from .backofficeProductRenamer import *
