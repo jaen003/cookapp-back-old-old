@@ -25,5 +25,5 @@ class TableNotFoundException( DomainException ):
     def __init__( self, id : TableId ) -> None:
         super().__init__( 
             TABLE_NOT_FOUND,
-            'The table  has not been found'.format( id.value() ),
+            'The table {} has not been found'.format( id.value() ),
         )

@@ -78,7 +78,7 @@ class TableCreated( DomainEvent ):
         self._uuid          = body['uuid']
         self._occurredOn    = int( body['occurredOn'] )
         self.__id           = TableId( body['id'] )
-        self.__number       = TableName( body['number'] )
-        self.__decription   = TableName( body['description'] )
+        self.__number       = TableNumber( body['number'] )
+        self.__decription   = TableDescription( body['description'] )
         self.__restaurantId = RestaurantId( body['restaurantId'] )
 

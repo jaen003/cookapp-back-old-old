@@ -28,15 +28,13 @@ class RestaurantRepository( Repository ):
 
     def insert( self, restaurant : Restaurant ) -> bool:
         # Variables
-        query        : str
-        insertFields : str
-        database     : Database
-        values       : tuple
-        connection   : MySQLConnection
-        cursor       : MySQLCursor
+        query      : str
+        database   : Database
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
         # Code
-        insertFields = 'rest_id, rest_name, rest_status'
-        query        = 'INSERT INTO Restaurant ( ' + insertFields + ' ) VALUES ( %s, %s, %s )'
+        query = 'INSERT INTO Restaurant ( rest_id, rest_name, rest_status ) VALUES ( %s, %s, %s )'
         try:
             database   = Database()
             connection = database.connect()
@@ -58,18 +56,15 @@ class RestaurantRepository( Repository ):
 
     def selectById( self, id : RestaurantId ) -> Restaurant:
         # Variables
-        query        : str
-        database     : Database
-        queryFields  : str
-        conditions   : str
-        restaurant   : Restaurant
-        values       : tuple
-        connection   : MySQLConnection
-        cursor       : MySQLCursor
+        query      : str
+        database   : Database
+        restaurant : Restaurant
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
         # Code
-        queryFields = 'rest_id, rest_name, rest_status'
-        conditions  = 'rest_status = 1 and rest_id = %s'
-        query       = 'SELECT ' + queryFields + ' FROM Restaurant WHERE ' + conditions
+        query = 'SELECT rest_id, rest_name, rest_status FROM Restaurant ' \
+                'WHERE rest_status = 1 and rest_id = %s'
         try:
             database   = Database()
             connection = database.connect()

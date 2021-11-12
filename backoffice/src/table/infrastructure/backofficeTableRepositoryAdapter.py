@@ -61,11 +61,11 @@ class TableRepository( Repository ):
                 
     def update( self, table : Table ) -> bool:
         # Variables
-        query        : str
-        database     : Database
-        values       : tuple
-        connection   : MySQLConnection
-        cursor       : MySQLCursor
+        query      : str
+        database   : Database
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
         # Code
         query = 'UPDATE Dining_Table SET tab_number = %s, tab_description = %s, ' \
                 'tab_status = %s WHERE tab_id = %s'
