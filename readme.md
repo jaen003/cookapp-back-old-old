@@ -12,14 +12,26 @@
     <br />
 </p>
 
+## 📋 Project Description
+
+### ⚡ Technologies
+
+- Python `v3.9.7`
+- Flask   `v1.1.4`
+- Mariadb `v10.6`
+- Rabbitmq `v3.8.22`
+- Docker `v20.10.8`
+- Docker compose `v1.29.2`
+- Gunicorn `v20.1.0`
+
 ## 🚀 Environment Setup
 
 ### 🔨 Needed tools
 
 1. [Install Docker](https://www.docker.com/get-started)
 2. [Install Docker Compose](https://docs.docker.com/compose/install/)
-3. Clone this project: `git clone https://github.com/jaen003/balancer_backend balancer`
-4. Move to the project folder: `cd balancer`
+3. Clone this project: `git clone https://github.com/jaen003/cookapp-back cookapp`
+4. Move to the project folder: `cd cookapp`
 
 ### ⚙️ Environment configuration
 

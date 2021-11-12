@@ -13,7 +13,10 @@ from .backofficeDomainEvent               import *
 from .backofficeEventBus                  import *
 from .backofficeIntValueObject            import *
 from .backofficeDomainEventSubscriber     import *
-from .backofficeUserEmail                 import *
 from .backofficeInvalidUserEmailException import *
+from .backofficeUserEmail                 import *
+from .backofficeInvalidProductIdException import *
+from .backofficeProductId                 import *
 from .backofficeRestaurantId              import *
-from .backofficeUuidValueObject           import *
+from .backofficeTableId                   import *
+from .backofficeInvalidTableIdException   import *
