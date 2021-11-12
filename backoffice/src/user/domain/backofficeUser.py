@@ -12,6 +12,7 @@ from src.shared.domain       import RestaurantId
 from src.shared.domain       import AggregateRoot
 from abc                     import abstractmethod
 from .backofficeUserDeleted  import UserDeleted
+from .backofficeUserRenamed  import UserRenamed
 
 """
  *
@@ -106,8 +107,8 @@ class User( AggregateRoot ):
             raise InvalidUserNameException( name )
         self._name = name
         self.record( UserRenamed(
-            name = name,
-            id   = self._id
+            name  = name,
+            email = self._email
         ) )
     
     def reassure( self, password : UserPassword ) -> None:
