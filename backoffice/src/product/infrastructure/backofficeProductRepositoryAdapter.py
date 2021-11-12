@@ -31,11 +31,11 @@ class ProductRepository( Repository ):
 
     def insert( self, product : Product ) -> bool:
         # Variables
-        query        : str
-        database     : Database
-        values       : tuple
-        connection   : MySQLConnection
-        cursor       : MySQLCursor
+        query      : str
+        database   : Database
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
         # Code
         query = 'INSERT INTO Product ( prod_id, prod_name, prod_price, ' \
                 'prod_description, prod_status, rest_id ) ' \
@@ -64,11 +64,11 @@ class ProductRepository( Repository ):
                 
     def update( self, product : Product ) -> bool:
         # Variables
-        query        : str
-        database     : Database
-        values       : tuple
-        connection   : MySQLConnection
-        cursor       : MySQLCursor
+        query      : str
+        database   : Database
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
         # Code
         query = 'UPDATE Product SET prod_name = %s, prod_price = %s, ' \
                 'prod_status = %s, prod_description = %s WHERE prod_id = %s'
@@ -95,12 +95,12 @@ class ProductRepository( Repository ):
 
     def selectByIdAndRestaurant( self, id : ProductId, restaurantId : RestaurantId ) -> Product:
         # Variables
-        query        : str
-        database     : Database
-        product      : Product
-        values       : tuple
-        connection   : MySQLConnection
-        cursor       : MySQLCursor
+        query      : str
+        database   : Database
+        product    : Product
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
         # Code
         query = 'SELECT prod_id, prod_name, prod_price, prod_description, prod_status, rest_id ' \
                 'FROM Product WHERE prod_status = 1 and prod_id = %s and rest_id = %s'
@@ -134,12 +134,12 @@ class ProductRepository( Repository ):
     
     def selectByNameAndRestaurant( self, name : ProductName, restaurantId : RestaurantId ) -> Product:
         # Variables
-        query        : str
-        database     : Database
-        product      : Product
-        values       : tuple
-        connection   : MySQLConnection
-        cursor       : MySQLCursor
+        query      : str
+        database   : Database
+        product    : Product
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
         # Code
         query = 'SELECT prod_id, prod_name, prod_price, prod_description, prod_status, rest_id ' \
                 'FROM Product WHERE prod_status = 1 and prod_name = %s and rest_id = %s'
@@ -173,12 +173,12 @@ class ProductRepository( Repository ):
     
     def selectAllByNameAndRestaurant( self, name : ProductName, restaurantId : RestaurantId ) -> list:
         # Variables
-        query        : str
-        database     : Database
-        products     : list
-        values       : tuple
-        connection   : MySQLConnection
-        cursor       : MySQLCursor
+        query      : str
+        database   : Database
+        products   : list
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
         # Code
         query = 'SELECT prod_id, prod_name, prod_price, prod_description, rest_id ' \
                 'FROM Product WHERE prod_status = 1 and prod_name ' \
@@ -209,12 +209,12 @@ class ProductRepository( Repository ):
     
     def selectAllByRestaurant( self, restaurantId : RestaurantId ) -> list:
         # Variables
-        query        : str
-        database     : Database
-        products     : list
-        values       : tuple
-        connection   : MySQLConnection
-        cursor       : MySQLCursor
+        query      : str
+        database   : Database
+        products   : list
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
         # Code
         query = 'SELECT prod_id, prod_name, prod_price, prod_description, rest_id ' \
                 'FROM Product WHERE prod_status = 1 and rest_id = %s'
