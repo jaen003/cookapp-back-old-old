@@ -7,6 +7,7 @@
 from flask                      import Flask
 from app.product.infrastructure import exposeProductEntryPoints
 from app.table.infrastructure   import exposeTableEntryPoints
+from app.user.infrastructure    import exposeUserEntryPoints
 
 """
  *
@@ -25,6 +26,7 @@ server = Flask( __name__ )
 def exposeEntryPoints() -> None:
     exposeProductEntryPoints( server )
     exposeTableEntryPoints( server )
+    exposeUserEntryPoints( server )
 
 def main() -> None:
     exposeEntryPoints()

@@ -13,6 +13,8 @@ from .backofficeDomainEvent               import *
 from .backofficeEventBus                  import *
 from .backofficeIntValueObject            import *
 from .backofficeDomainEventSubscriber     import *
+from .backofficeInvalidUserEmailException import *
+from .backofficeUserEmail                 import *
 from .backofficeInvalidProductIdException import *
 from .backofficeProductId                 import *
 from .backofficeRestaurantId              import *
