@@ -28,4 +28,5 @@ USER_NOT_FOUND                     = 140
 INVALID_USER_EMAIL                 = 141
 INVALID_USER_NAME                  = 142
 INVALID_USER_PASSWORD              = 143
+INVALID_USER_ROLE                  = 144
 

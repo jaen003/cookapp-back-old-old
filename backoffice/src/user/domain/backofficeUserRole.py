@@ -48,3 +48,9 @@ class UserRole( IntValueObject ):
     def waiter( cls ): # -> UserRole
         self = cls( cls.__WAITER )
         return self
+    
+    def isValid( self ) -> None:
+        if self.equals( self.__WAITER ) or self.equals( self.__CHEF ):
+            return True
+        return False
+

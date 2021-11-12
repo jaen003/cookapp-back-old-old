@@ -4,15 +4,17 @@
  *
 """
 
-from .backofficeUserName     import UserName
-from src.shared.domain       import UserEmail
-from .backofficeUserPassword import UserPassword
-from .backofficeUserRole     import UserRole
-from src.shared.domain       import RestaurantId
-from src.shared.domain       import AggregateRoot
-from abc                     import abstractmethod
-from .backofficeUserDeleted  import UserDeleted
-from .backofficeUserRenamed  import UserRenamed
+from .backofficeUserName                 import UserName
+from src.shared.domain                   import UserEmail
+from .backofficeUserPassword             import UserPassword
+from .backofficeUserRole                 import UserRole
+from src.shared.domain                   import RestaurantId
+from src.shared.domain                   import AggregateRoot
+from abc                                 import abstractmethod
+from .backofficeUserDeleted              import UserDeleted
+from .backofficeUserRenamed              import UserRenamed
+from .backofficeUserRelocated            import UserRelocated
+from .backofficeInvalidUserRoleException import InvalidUserRoleException
 
 """
  *
@@ -108,11 +110,17 @@ class User( AggregateRoot ):
         self._name = name
         self.record( UserRenamed(
             name  = name,
-            email = self._email
+            email = self._email,
         ) )
     
     def reassure( self, password : UserPassword ) -> None:
         pass
     
     def relocate( self, role : UserRole ) -> None:
-        pass
+        if not role.isValid():
+            raise InvalidUserRoleException( role )
+        self._role = role
+        self.record( UserRelocated(
+            role  = role,
+            email = self._email,
+        ) )
