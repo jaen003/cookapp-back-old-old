@@ -20,6 +20,7 @@ from src.shared.domain     import USER_ALREADY_CREATED
 from src.shared.domain     import EventBus
 from src.restaurant.domain import RestaurantRepository
 from src.restaurant.domain import RestaurantFinder
+from src.user.domain       import User
 
 """
  *

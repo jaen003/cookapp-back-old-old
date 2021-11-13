@@ -4,4 +4,5 @@
  *
 """
 
-from .backofficeUserRepositoryAdapter import *
+from .backofficeUserRepositoryAdapter   import *
+from .backofficeUserTokenManagerAdapter import *

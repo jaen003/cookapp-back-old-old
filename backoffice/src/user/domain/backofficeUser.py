@@ -15,6 +15,7 @@ from .backofficeUserDeleted              import UserDeleted
 from .backofficeUserRenamed              import UserRenamed
 from .backofficeUserRelocated            import UserRelocated
 from .backofficeInvalidUserRoleException import InvalidUserRoleException
+from .backofficeInvalidUserNameException import InvalidUserNameException
 
 """
  *
@@ -33,6 +34,7 @@ class User( AggregateRoot ):
     _ENABLED  = 1
     __DELETED = 2
     _DISABLED = 3
+    __BLOCKED = 4
 
     """
      *
@@ -124,3 +126,18 @@ class User( AggregateRoot ):
             role  = role,
             email = self._email,
         ) )
+    
+    def isDisabled( self ) -> bool:
+        if self._status == self._DISABLED:
+            return True
+        return False
+    
+    def isBlocked( self ) -> bool:
+        if self._status == self.__BLOCKED:
+            return True
+        return False
+    
+    def isAuthentic( self, password : UserPassword ) -> bool:
+        if self._password.equals( password.value() ):
+            return True
+        return False

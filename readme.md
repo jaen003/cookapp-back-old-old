@@ -23,6 +23,7 @@
 - Docker `v20.10.8`
 - Docker compose `v1.29.2`
 - Gunicorn `v20.1.0`
+- Pyjwt `v2.3.0`
 
 ## 🚀 Environment Setup
 
