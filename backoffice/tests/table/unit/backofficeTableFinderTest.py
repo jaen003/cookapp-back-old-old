@@ -5,12 +5,14 @@
 """
 
 import unittest
-from src.table.domain  import Table
-from src.shared.domain import TableId
+from unittest.mock     import Mock 
 from src.table.domain  import TableNumber
-from src.table.domain  import TableDescription
+from src.table.domain  import TableFinder
 from src.shared.domain import RestaurantId
 from src.shared.domain import DomainException
+from src.shared.domain import TableId
+from src.table.domain  import Table
+from src.table.domain  import TableDescription
 
 """
  *
@@ -37,88 +39,80 @@ class TestSuite( unittest.TestCase ):
     def setUp( self ):
         self.__table = Table( 
             TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
-            TableNumber( 3 ),
+            TableNumber( 256 ),
             TableDescription( 'Nice place' ),
             1,
             RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
         )
 
-    def testTableCreatedSuccess( self ):
+    def testTableAlreadyExist( self ):
         # Variables
+        finder       : TableFinder
         responseCode : int
-        table        : Table
         # Code
         responseCode = 0
+        repositoryMock = Mock()
+        repositoryMock.selectByIdAndRestaurant.return_value = self.__table
+        finder = TableFinder( repositoryMock )
         try:
-            table = Table.create( 
+            finder.findByIdAndRestaurant( 
                 TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
-                TableNumber( 3 ),
-                TableDescription( 'Nice place' ),
                 RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
             )
         except DomainException as exc:
             responseCode = exc.code()
         self.assertEqual( responseCode, 0 )
-
-    def testTableNotCreatedBecauseTheIdIsEmpty( self ):
+    
+    def testTableNumberAlreadyExist( self ):
         # Variables
+        finder       : TableFinder
         responseCode : int
-        table        : Table
         # Code
         responseCode = 0
+        repositoryMock = Mock()
+        repositoryMock.selectByNumberAndRestaurant.return_value = self.__table
+        finder = TableFinder( repositoryMock )
         try:
-            table = Table.create( 
-                TableId( '' ),
-                TableNumber( 5 ),
-                TableDescription( 'Nice place' ),
+            finder.findByNumberAndRestaurant( 
+                TableNumber( 13 ),
                 RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
             )
         except DomainException as exc:
             responseCode = exc.code()
-        self.assertEqual( responseCode, 138 )
+        self.assertEqual( responseCode, 0 )
     
-    def testTableNotCreatedBecauseTheNumberIsInvalid( self ):
+    def testTableNotFound( self ):
         # Variables
+        finder       : TableFinder
         responseCode : int
-        table        : Table
         # Code
         responseCode = 0
+        repositoryMock = Mock()
+        repositoryMock.selectByIdAndRestaurant.return_value = None
+        finder = TableFinder( repositoryMock )
         try:
-            table = Table.create( 
+            finder.findByIdAndRestaurant( 
                 TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
-                TableNumber( 0 ),
-                TableDescription( 'Nice place' ),
                 RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
             )
         except DomainException as exc:
             responseCode = exc.code()
-        self.assertEqual( responseCode, 133 )
+        self.assertEqual( responseCode, 135 )
     
-    def testTableNotCreatedBecauseTheNumberIsInvalid2( self ):
+    def testTableNumberNotFound( self ):
         # Variables
+        finder       : TableFinder
         responseCode : int
-        table        : Table
         # Code
         responseCode = 0
+        repositoryMock = Mock()
+        repositoryMock.selectByNumberAndRestaurant.return_value = None
+        finder = TableFinder( repositoryMock )
         try:
-            table = Table.create( 
-                TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
-                TableNumber( 256 ),
-                TableDescription( 'Nice place' ),
+            finder.findByNumberAndRestaurant( 
+                TableNumber( 13 ),
                 RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
             )
         except DomainException as exc:
             responseCode = exc.code()
-        self.assertEqual( responseCode, 133 )
-    
-    def testTableDeletedSuccess( self ):
-        self.__table.delete()
-        self.assertEqual( self.__table.status(), 2 )
-    
-    def testTableRenumberedSuccess( self ):
-        self.__table.renumber( TableNumber( 4 ) )
-        self.assertEqual( self.__table.number().value(), 4 )
-    
-    def testTableRewritedSuccess( self ):
-        self.__table.rewrite( TableDescription( 'Very very well' ) )
-        self.assertEqual( self.__table.description().value(), 'Very very well' )
+        self.assertEqual( responseCode, 136 )
