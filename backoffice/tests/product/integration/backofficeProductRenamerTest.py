@@ -13,7 +13,6 @@ from src.product.domain      import ProductDescription
 from src.shared.domain       import RestaurantId
 from src.shared.domain       import DomainException
 from src.product.application import ProductRenamer
-from src.shared.domain       import EventBus
 from src.product.domain      import ProductPrice
 
 """

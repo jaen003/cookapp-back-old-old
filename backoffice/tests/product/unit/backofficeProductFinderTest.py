@@ -7,13 +7,11 @@
 import unittest
 from unittest.mock      import Mock 
 from src.product.domain import ProductPrice
-from src.product.domain import ProductRepository
 from src.product.domain import ProductFinder
 from src.shared.domain  import RestaurantId
 from src.shared.domain  import DomainException
 from src.shared.domain  import ProductId
 from src.product.domain import ProductName
-from src.product.domain import ProductRepository
 from src.product.domain import Product
 from src.product.domain import ProductDescription
 
