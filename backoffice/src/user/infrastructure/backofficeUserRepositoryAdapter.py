@@ -54,8 +54,7 @@ class UserRepository( Repository ):
             cursor.execute( query, values )
             connection.commit()
             return True
-        except Exception as exc:
-            print( exc )
+        except Exception:
             return False
         finally:
             if connection is not None:
@@ -103,7 +102,7 @@ class UserRepository( Repository ):
         cursor     : MySQLCursor
         # Code
         query = 'SELECT user_email, user_name, user_password, user_role, user_status, rest_id ' \
-                'FROM User WHERE user_status = 1 and user_email = %s and rest_id = %s'
+                'FROM User WHERE user_status in ( 1, 3, 4 ) and user_email = %s and rest_id = %s'
         try:
             database   = Database()
             connection = database.connect()
@@ -111,6 +110,44 @@ class UserRepository( Repository ):
             values     = (
                 email.value(),
                 restaurantId.value(),
+            )
+            cursor.execute( query, values )
+            record = cursor.fetchone()
+            if record is None:
+                return None
+            user = User(
+                email        = UserEmail( record[0] ),
+                name         = UserName( record[1] ),
+                password     = UserPassword( record[2] ),
+                role         = UserRole( record[3] ),
+                status       = record[4],
+                restaurantId = RestaurantId( record[5] ),
+            )
+            return user
+        except Exception:
+            return None
+        finally:
+            if connection is not None:
+                cursor.close()
+                connection.close()
+    
+    def selectByEmail( self, email : UserEmail ) -> User:
+        # Variables
+        query      : str
+        database   : Database
+        user       : User
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
+        # Code
+        query = 'SELECT user_email, user_name, user_password, user_role, user_status, rest_id ' \
+                'FROM User WHERE user_status in ( 1, 3, 4 ) and user_email = %s'
+        try:
+            database   = Database()
+            connection = database.connect()
+            cursor     = connection.cursor()
+            values     = (
+                email.value(),
             )
             cursor.execute( query, values )
             record = cursor.fetchone()

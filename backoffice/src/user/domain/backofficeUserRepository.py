@@ -35,3 +35,7 @@ class UserRepository( metaclass = ABCMeta ):
     @abstractmethod
     def selectByEmailAndRestaurant( self, email : UserEmail, restaurantId : RestaurantId ) -> User:
         pass
+
+    @abstractmethod
+    def selectByEmail( self, email : UserEmail ) -> User:
+        pass
