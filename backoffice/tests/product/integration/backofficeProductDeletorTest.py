@@ -14,10 +14,6 @@ from src.product.domain      import ProductDescription
 from src.shared.domain       import RestaurantId
 from src.shared.domain       import DomainException
 from src.product.application import ProductDeletor
-from src.shared.domain       import EventBus
-from src.restaurant.domain   import RestaurantRepository
-from src.restaurant.domain   import Restaurant
-from src.restaurant.domain   import RestaurantName
 
 """
  *

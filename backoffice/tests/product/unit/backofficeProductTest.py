@@ -23,11 +23,29 @@ class TestSuite( unittest.TestCase ):
 
     """
      *
+     * Parameters 
+     *
+    """
+
+    __product : Product
+
+    """
+     *
      * Methods 
      *
     """
 
-    def testValidDataToCreate( self ):
+    def setUp( self ):
+        self.__product = Product( 
+            ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
+            ProductName( 'Sandwich' ),
+            ProductPrice( 3 ),
+            ProductDescription( 'Bread, Onion, Tomato, Chicken' ),
+            1,
+            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        )
+
+    def testProductCreatedSuccess( self ):
         # Variables
         responseCode : int
         product      : Product
@@ -45,7 +63,7 @@ class TestSuite( unittest.TestCase ):
             responseCode = exc.code()
         self.assertEqual( responseCode, 0 )
     
-    def testInvalidDataToCreate1( self ):
+    def testProductNotCreatedBecauseTheIdIsEmpty( self ):
         # Variables
         responseCode : int
         product      : Product
@@ -63,7 +81,7 @@ class TestSuite( unittest.TestCase ):
             responseCode = exc.code()
         self.assertEqual( responseCode, 109 )
     
-    def testInvalidDataToCreate2( self ):
+    def testProductNotCreatedBecauseTheNameIsEmpty( self ):
         # Variables
         responseCode : int
         product      : Product
@@ -81,7 +99,7 @@ class TestSuite( unittest.TestCase ):
             responseCode = exc.code()
         self.assertEqual( responseCode, 124 )
     
-    def testInvalidDataToCreate3( self ):
+    def testProductNotCreatedBecauseThePriceIsInvalid1( self ):
         # Variables
         responseCode : int
         product      : Product
@@ -99,7 +117,7 @@ class TestSuite( unittest.TestCase ):
             responseCode = exc.code()
         self.assertEqual( responseCode, 126 )
     
-    def testInvalidDataToCreate4( self ):
+    def testProductNotCreatedBecauseThePriceIsInvalid2( self ):
         # Variables
         responseCode : int
         product      : Product
@@ -117,7 +135,7 @@ class TestSuite( unittest.TestCase ):
             responseCode = exc.code()
         self.assertEqual( responseCode, 126 )
     
-    def testInvalidDataToCreate5( self ):
+    def testProductNotCreatedBecauseTheDesciptionIsEmpty( self ):
         # Variables
         responseCode : int
         product      : Product
@@ -136,61 +154,17 @@ class TestSuite( unittest.TestCase ):
         self.assertEqual( responseCode, 125 )
     
     def testProductDeletedSuccess( self ):
-        # Variables
-        product : Product
-        # Code
-        product = Product( 
-            ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
-            ProductName( 'Sandwich' ),
-            ProductPrice( 3 ),
-            ProductDescription( 'Bread, Onion, Tomato, Chicken' ),
-            1,
-            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-        )
-        product.delete()
-        self.assertEqual( product.status(), 2 )
+        self.__product.delete()
+        self.assertEqual( self.__product.status(), 2 )
     
     def testProductRenamedSuccess( self ):
-        # Variables
-        product : Product
-        # Code
-        product = Product( 
-            ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
-            ProductName( 'Hot dog' ),
-            ProductPrice( 3 ),
-            ProductDescription( 'Bread, Onion, Tomato, Chicken' ),
-            1,
-            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-        )
-        product.rename( ProductName( 'Sandwich' ) )
-        self.assertEqual( product.name().value(), 'Sandwich' )
+        self.__product.rename( ProductName( 'Sandwich' ) )
+        self.assertEqual( self.__product.name().value(), 'Sandwich' )
     
     def testProductRevaluedSuccess( self ):
-        # Variables
-        product : Product
-        # Code
-        product = Product( 
-            ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
-            ProductName( 'Sandwich' ),
-            ProductPrice( 3 ),
-            ProductDescription( 'Bread, Onion, Tomato, Chicken' ),
-            1,
-            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-        )
-        product.revalue( ProductPrice( 4 ) )
-        self.assertEqual( product.price().value(), 4 )
+        self.__product.revalue( ProductPrice( 4 ) )
+        self.assertEqual( self.__product.price().value(), 4 )
     
     def testProductRewritedSuccess( self ):
-        # Variables
-        product : Product
-        # Code
-        product = Product( 
-            ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
-            ProductName( 'Sandwich' ),
-            ProductPrice( 3 ),
-            ProductDescription( 'Bread, Onion, Tomato, Chicken' ),
-            1,
-            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-        )
-        product.rewrite( ProductDescription( 'Bread, Tomato, Chicken' ) )
-        self.assertEqual( product.description().value(), 'Bread, Tomato, Chicken' )
+        self.__product.rewrite( ProductDescription( 'Bread, Tomato, Chicken' ) )
+        self.assertEqual( self.__product.description().value(), 'Bread, Tomato, Chicken' )
