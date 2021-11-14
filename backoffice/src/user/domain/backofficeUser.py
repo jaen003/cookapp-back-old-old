@@ -4,18 +4,20 @@
  *
 """
 
-from .backofficeUserName                 import UserName
-from src.shared.domain                   import UserEmail
-from .backofficeUserPassword             import UserPassword
-from .backofficeUserRole                 import UserRole
-from src.shared.domain                   import RestaurantId
-from src.shared.domain                   import AggregateRoot
-from abc                                 import abstractmethod
-from .backofficeUserDeleted              import UserDeleted
-from .backofficeUserRenamed              import UserRenamed
-from .backofficeUserRelocated            import UserRelocated
-from .backofficeInvalidUserRoleException import InvalidUserRoleException
-from .backofficeInvalidUserNameException import InvalidUserNameException
+from .backofficeUserName                     import UserName
+from src.shared.domain                       import UserEmail
+from .backofficeUserPassword                 import UserPassword
+from .backofficeUserRole                     import UserRole
+from src.shared.domain                       import RestaurantId
+from src.shared.domain                       import AggregateRoot
+from abc                                     import abstractmethod
+from .backofficeUserDeleted                  import UserDeleted
+from .backofficeUserRenamed                  import UserRenamed
+from .backofficeUserRelocated                import UserRelocated
+from .backofficeInvalidUserRoleException     import InvalidUserRoleException
+from .backofficeInvalidUserNameException     import InvalidUserNameException
+from .backofficeUserInsured                  import UserInsured
+from .backofficeInvalidUserPasswordException import InvalidUserPasswordException
 
 """
  *
@@ -115,8 +117,14 @@ class User( AggregateRoot ):
             email = self._email,
         ) )
     
-    def reassure( self, password : UserPassword ) -> None:
-        pass
+    def insure( self, password : UserPassword ) -> None:
+        if password.isEmpty():
+            raise InvalidUserPasswordException( password )
+        self._password = password
+        self.record( UserInsured(
+            email    = self._email,
+            password = password,
+        ) )
     
     def relocate( self, role : UserRole ) -> None:
         if not role.isValid():
