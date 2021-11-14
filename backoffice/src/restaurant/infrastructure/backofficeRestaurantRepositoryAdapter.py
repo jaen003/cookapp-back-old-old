@@ -34,15 +34,14 @@ class RestaurantRepository( Repository ):
         connection : MySQLConnection
         cursor     : MySQLCursor
         # Code
-        query = 'INSERT INTO Restaurant ( rest_id, rest_name, rest_status ) VALUES ( %s, %s, %s )'
+        query = 'INSERT INTO Restaurant ( rest_id, rest_status ) VALUES ( %s, %s )'
         try:
             database   = Database()
             connection = database.connect()
             cursor     = connection.cursor()
             values = (
-                rest.id().value(),
-                rest.name().value(),
-                rest.status(),
+                restaurant.id().value(),
+                restaurant.status(),
             )
             cursor.execute( query, values )
             connection.commit()

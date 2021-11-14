@@ -20,3 +20,4 @@ from .backofficeProductId                 import *
 from .backofficeRestaurantId              import *
 from .backofficeTableId                   import *
 from .backofficeInvalidTableIdException   import *
+from .backofficeUuidValueObject           import *

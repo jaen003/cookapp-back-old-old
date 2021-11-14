@@ -4,6 +4,7 @@
  *
 """
 
+from src.shared.domain         import AggregateRoot
 from .backofficeRestaurantName import RestaurantName
 from src.shared.domain         import RestaurantId
 
@@ -13,7 +14,15 @@ from src.shared.domain         import RestaurantId
  *
 """
 
-class Restaurant:
+class Restaurant( AggregateRoot ):
+
+    """
+     *
+     * Consts 
+     *
+    """
+
+    __ENABLED  = 1
 
     """
      *
@@ -40,6 +49,18 @@ class Restaurant:
         self.__id     = id
         self.__name   = name
         self.__status = status
+    
+    @classmethod
+    def create( 
+        cls, 
+        id     : RestaurantId,
+    ): # -> Restaurant
+        self = cls( 
+            id     = id,
+            name   = None,
+            status = cls.__ENABLED,
+        )
+        return self
 
     def id( self ) -> RestaurantId:
         return self.__id

@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS Restaurant;
 
 CREATE TABLE Restaurant (
 	rest_id VARCHAR( 40 ) NOT NULL,
-	rest_name VARCHAR( 40 ) NOT NULL,
+	rest_name VARCHAR( 40 ) DEFAULT NULL,
 	rest_status TINYINT UNSIGNED NOT NULL,
 	PRIMARY KEY( rest_id )
 );

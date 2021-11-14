@@ -62,10 +62,9 @@ def createAdministrator():
     if not __isValidDataToCreateAdministrator( data ):
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = creator.createAdministrator(
-        email        = UserEmail( data.get( 'user_email' ) ),
-        name         = UserName( data.get( 'user_name' ) ),
-        password     = UserPassword( data.get( 'user_password' ) ),
-        restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        email    = UserEmail( data.get( 'user_email' ) ),
+        name     = UserName( data.get( 'user_name' ) ),
+        password = UserPassword( data.get( 'user_password' ) ),
     )
     return { 'code' : responseCode }, 202
 
