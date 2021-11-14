@@ -21,6 +21,8 @@ from src.shared.domain     import EventBus
 from src.restaurant.domain import RestaurantRepository
 from src.restaurant.domain import RestaurantFinder
 from src.user.domain       import User
+from src.restaurant.domain import Restaurant
+from src.shared.domain     import UuidValueObject
 
 """
  *
@@ -58,10 +60,9 @@ class UserCreator:
 
     def createAdministrator( 
         self, 
-        email        : UserEmail, 
-        name         : UserName,
-        password     : UserPassword,
-        restaurantId : RestaurantId,
+        email    : UserEmail, 
+        name     : UserName,
+        password : UserPassword,
     ) -> int:
         # Variables
         user                : User
@@ -69,25 +70,28 @@ class UserCreator:
         finder               : UserFinder
         eventBus             : EventBus
         restaurantRepository : RestaurantRepository
-        restaurantFinder     : RestaurantFinder
+        restaurant           : Restaurant
+        restaurantId         : RestaurantId
         # Code
         eventBus             = self.__eventBus
         repository           = self.__repository
         finder               = UserFinder( repository )
         restaurantRepository = self.__restaurantRepository
-        restaurantFinder     = RestaurantFinder( restaurantRepository )
         try:
+            restaurant   = Restaurant.create( UuidValueObject.random() )
+            restaurantId = restaurant.id()
             user = Administrator.create( email, name, password, restaurantId )
-            restaurantFinder.findById( restaurantId )
             try:            
-                finder.findByEmailAndRestaurant( email, restaurantId )
+                finder.findByEmail( email )
                 return USER_ALREADY_CREATED
             except DomainException:
                 pass
-            if repository.insert( user ):
-                eventBus.publish( user.pullEvents() )
-                return SUCCESSFUL_REQUEST
-            return SERVER_INTERNAL_ERROR
+            if not restaurantRepository.insert( restaurant ):
+                return SERVER_INTERNAL_ERROR
+            if not repository.insert( user ):
+                return SERVER_INTERNAL_ERROR
+            eventBus.publish( user.pullEvents() )
+            return SUCCESSFUL_REQUEST
         except DomainException as exc:
             return exc.code()
     

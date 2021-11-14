@@ -4,7 +4,7 @@
  *
 """
 
-from .backofficeStringValueObject import StringValueObject
+from .backofficeUuidValueObject import UuidValueObject
 
 """
  *
@@ -12,7 +12,7 @@ from .backofficeStringValueObject import StringValueObject
  *
 """
 
-class RestaurantId( StringValueObject ):
+class RestaurantId( UuidValueObject ):
 
     """
      *
