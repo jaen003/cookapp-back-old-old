@@ -52,6 +52,35 @@ class RestaurantRepository( Repository ):
             if connection is not None:
                 cursor.close()
                 connection.close()
+    
+    def update( self, restaurant : Restaurant ) -> bool:
+        # Variables
+        query      : str
+        database   : Database
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
+        # Code
+        query = 'UPDATE Restaurant SET rest_name = %s, rest_status = %s ' \
+                'WHERE rest_id = %s'
+        try:
+            database   = Database()
+            connection = database.connect()
+            cursor     = connection.cursor()
+            values     = ( 
+                restaurant.name().value(),
+                restaurant.status(),
+                restaurant.id().value(),
+            )
+            cursor.execute( query, values )
+            connection.commit()
+            return True
+        except Exception:
+            return False
+        finally:
+            if connection is not None:
+                cursor.close()
+                connection.close()
 
     def selectById( self, id : RestaurantId ) -> Restaurant:
         # Variables

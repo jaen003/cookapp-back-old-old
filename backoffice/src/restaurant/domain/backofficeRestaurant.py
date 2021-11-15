@@ -4,9 +4,10 @@
  *
 """
 
-from src.shared.domain         import AggregateRoot
-from .backofficeRestaurantName import RestaurantName
-from src.shared.domain         import RestaurantId
+from src.shared.domain                         import AggregateRoot
+from .backofficeRestaurantName                 import RestaurantName
+from src.shared.domain                         import RestaurantId
+from .backofficeInvalidRestaurantNameException import InvalidRestaurantNameException
 
 """
  *
@@ -70,3 +71,8 @@ class Restaurant( AggregateRoot ):
 
     def status( self ) -> int:
         return self.__status
+    
+    def rename( self, name : RestaurantName ) -> None:
+        if name.isEmpty():
+            raise InvalidRestaurantNameException( name )
+        self.__name = name
