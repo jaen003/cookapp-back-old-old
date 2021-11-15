@@ -30,3 +30,7 @@ class RestaurantRepository( metaclass = ABCMeta ):
     @abstractmethod
     def insert( self, restaurant : Restaurant ) -> bool:
         pass
+    
+    @abstractmethod
+    def update( self, restaurant : Restaurant ) -> bool:
+        pass
