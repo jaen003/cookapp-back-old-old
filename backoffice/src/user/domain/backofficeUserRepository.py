@@ -7,7 +7,6 @@
 from abc               import abstractmethod
 from .backofficeUser   import User
 from src.shared.domain import UserEmail
-from abc               import ABCMeta
 from src.shared.domain import RestaurantId
 
 """
@@ -16,7 +15,7 @@ from src.shared.domain import RestaurantId
  *
 """
 
-class UserRepository( metaclass = ABCMeta ):
+class UserRepository:
 
     """
      *

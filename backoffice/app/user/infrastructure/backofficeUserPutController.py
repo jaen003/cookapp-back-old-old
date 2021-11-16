@@ -7,7 +7,7 @@
 from flask                     import Blueprint
 from flask                     import request
 from src.user.application      import UserRenamer
-from src.user.infrastructure   import UserRepository
+from src.user.infrastructure   import UserMysqlRepository
 from src.user.domain           import UserName
 from src.shared.domain         import UserEmail
 from src.shared.domain         import RestaurantId
@@ -69,7 +69,7 @@ def rename():
     # Code
     data    = request.json
     renamer = UserRenamer(
-        repository = UserRepository(),
+        repository = UserMysqlRepository(),
         eventBus   = EventBus(),
     )
     if not __isValidDataToRename( data ):
@@ -90,7 +90,7 @@ def relocate():
     # Code
     data    = request.json
     relocator = UserRelocator(
-        repository = UserRepository(),
+        repository = UserMysqlRepository(),
         eventBus   = EventBus(),
     )
     if not __isValidDataToRelocate( data ):
@@ -112,7 +112,7 @@ def authenticate():
     # Code
     data    = request.json
     authenticator = UserAuthenticator(
-        repository   = UserRepository(),
+        repository   = UserMysqlRepository(),
         tokenManager = UserTokenManager(),
     )
     if not __isValidDataToAuthenticate( data ):
@@ -132,7 +132,7 @@ def insure():
     # Code
     data    = request.json
     insurer = UserInsurer(
-        repository = UserRepository(),
+        repository = UserMysqlRepository(),
         eventBus   = EventBus(),
     )
     if not __isValidDataToInsure( data ):

@@ -7,7 +7,7 @@
 from flask                         import Blueprint
 from flask                         import request
 from src.user.application          import UserCreator
-from src.user.infrastructure       import UserRepository
+from src.user.infrastructure       import UserMysqlRepository
 from src.user.domain               import UserName
 from src.user.domain               import UserPassword
 from src.shared.domain             import UserEmail
@@ -15,6 +15,7 @@ from src.shared.domain             import RestaurantId
 from src.restaurant.infrastructure import RestaurantRepository
 from src.shared.infrastructure     import EventBus
 from src.shared.domain             import INCORRECT_DATA
+from src.shared.infrastructure     import CodeGenerator
 
 """
  *
@@ -55,9 +56,10 @@ def createAdministrator():
     # Code
     data    = request.json
     creator = UserCreator(
-        repository           = UserRepository(),
+        repository           = UserMysqlRepository(),
         restaurantRepository = RestaurantRepository(),
         eventBus             = EventBus(),
+        codeGenerator        = CodeGenerator(),
     )
     if not __isValidDataToCreateAdministrator( data ):
         return { 'code' : INCORRECT_DATA }, 202
@@ -77,7 +79,7 @@ def createWaiter():
     # Code
     data    = request.json
     creator = UserCreator(
-        repository           = UserRepository(),
+        repository           = UserMysqlRepository(),
         restaurantRepository = RestaurantRepository(),
         eventBus             = EventBus(),
     )
@@ -99,7 +101,7 @@ def createChef():
     # Code
     data    = request.json
     creator = UserCreator(
-        repository           = UserRepository(),
+        repository           = UserMysqlRepository(),
         restaurantRepository = RestaurantRepository(),
         eventBus             = EventBus(),
     )

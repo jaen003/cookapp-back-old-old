@@ -23,6 +23,7 @@ from src.restaurant.domain import RestaurantFinder
 from src.user.domain       import User
 from src.restaurant.domain import Restaurant
 from src.shared.domain     import UuidValueObject
+from src.shared.domain     import CodeGenerator
 
 """
  *
@@ -41,6 +42,7 @@ class UserCreator:
     __repository           : UserRepository
     __restaurantRepository : RestaurantRepository
     __eventBus             : EventBus
+    __codeGenerator        : CodeGenerator
 
     """
      *
@@ -53,10 +55,12 @@ class UserCreator:
         repository           : UserRepository,
         restaurantRepository : RestaurantRepository,
         eventBus             : EventBus,
+        codeGenerator        : CodeGenerator,
     ) -> None:
         self.__repository           = repository
         self.__restaurantRepository = restaurantRepository
         self.__eventBus             = eventBus
+        self.__codeGenerator        = codeGenerator
 
     def createAdministrator( 
         self, 
@@ -72,15 +76,19 @@ class UserCreator:
         restaurantRepository : RestaurantRepository
         restaurant           : Restaurant
         restaurantId         : RestaurantId
+        codeGenerator        : CodeGenerator
+        code                 : str
         # Code
         eventBus             = self.__eventBus
         repository           = self.__repository
         finder               = UserFinder( repository )
         restaurantRepository = self.__restaurantRepository
+        codeGenerator        = self.__codeGenerator
         try:
             restaurant   = Restaurant.create( UuidValueObject.random() )
             restaurantId = restaurant.id()
-            user = Administrator.create( email, name, password, restaurantId )
+            code         = codeGenerator.generateShortCode()
+            user = Administrator.create( email, name, password, restaurantId, code )
             try:            
                 finder.findByEmail( email )
                 return USER_ALREADY_CREATED

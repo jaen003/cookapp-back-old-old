@@ -28,6 +28,7 @@ class AdministratorCreated( DomainEvent ):
     __name         : UserName
     __password     : UserPassword
     __restaurantId : RestaurantId
+    __code         : str
 
     """
      *
@@ -37,16 +38,18 @@ class AdministratorCreated( DomainEvent ):
 
     def __init__( 
         self, 
-        email        : UserEmail, 
-        name         : UserName,
-        password     : UserPassword,
-        restaurantId : RestaurantId,
+        email        : UserEmail    = None, 
+        name         : UserName     = None,
+        password     : UserPassword = None,
+        restaurantId : RestaurantId = None,
+        code         : str          = None,
     ) -> None:
         super().__init__( 'administrator_created' )
         self.__email        = email
         self.__name         = name
         self.__password     = password
         self.__restaurantId = restaurantId
+        self.__code         = code
     
     def body( self ) -> dict:
         # Variables
@@ -59,6 +62,7 @@ class AdministratorCreated( DomainEvent ):
             'name'         : self.__name.value(),
             'password'     : self.__password.value(),
             'restaurantId' : self.__restaurantId.value(),
+            'code'         : self.__code,
         }
         return body
     
@@ -73,6 +77,9 @@ class AdministratorCreated( DomainEvent ):
 
     def restaurantId( self ) -> RestaurantId:
         return self.__restaurantId
+    
+    def code( self ) -> str:
+        return self.__code
 
     def fromPrimitives( self, body : dict ) -> None:
         self._uuid          = body['uuid']
@@ -81,3 +88,4 @@ class AdministratorCreated( DomainEvent ):
         self.__name         = UserName( body['name'] )
         self.__password     = UserPassword( body['password'] )
         self.__restaurantId = RestaurantId( body['restaurantId'] )
+        self.__code         = body['code']

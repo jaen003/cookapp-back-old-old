@@ -9,7 +9,7 @@ from src.shared.domain              import UserEmail
 from src.user.domain                import UserName
 from src.user.domain                import UserPassword
 from src.user.domain                import UserRole
-from src.user.domain                import UserRepository as Repository
+from src.user.domain                import UserRepository
 from src.persistence.infrastructure import Database
 from src.shared.domain              import RestaurantId
 from mysql.connector.connection     import MySQLConnection
@@ -21,7 +21,7 @@ from mysql.connector.cursor         import MySQLCursor
  *
 """
 
-class UserRepository( Repository ):
+class UserMysqlRepository( UserRepository ):
 
     """
      *

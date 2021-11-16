@@ -10,3 +10,4 @@ from .backofficeUserRenamer       import *
 from .backofficeUserRelocator     import *
 from .backofficeUserAuthenticator import *
 from .backofficeUserInsurer       import *
+from .backofficeUserSender        import *

@@ -7,7 +7,7 @@
 from flask                     import Blueprint
 from flask                     import request
 from src.user.application      import UserDeletor
-from src.user.infrastructure   import UserRepository
+from src.user.infrastructure   import UserMysqlRepository
 from src.shared.domain         import UserEmail
 from src.shared.domain         import RestaurantId
 from src.shared.infrastructure import EventBus
@@ -35,7 +35,7 @@ def delete( email : str ):
     # Code
     data    = request.json
     deletor = UserDeletor(
-        repository = UserRepository(),
+        repository = UserMysqlRepository(),
         eventBus   = EventBus(),
     )
     responseCode = deletor.delete(
