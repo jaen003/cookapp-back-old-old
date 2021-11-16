@@ -4,23 +4,16 @@
  *
 """
 
-from src.user.domain       import UserName
-from src.user.domain       import UserPassword
-from src.shared.domain     import UserEmail
-from src.shared.domain     import RestaurantId
-from src.user.domain       import UserRepository
-from src.user.domain       import Administrator
-from src.user.domain       import Chef
-from src.user.domain       import Waiter
-from src.shared.domain     import SUCCESSFUL_REQUEST
-from src.shared.domain     import SERVER_INTERNAL_ERROR
-from src.shared.domain     import DomainException
-from src.user.domain       import UserFinder
-from src.shared.domain     import USER_ALREADY_CREATED
-from src.shared.domain     import EventBus
-from src.restaurant.domain import RestaurantRepository
-from src.restaurant.domain import RestaurantFinder
-from src.user.domain       import User
+from src.user.domain   import UserPassword
+from src.shared.domain import UserEmail
+from src.shared.domain import RestaurantId
+from src.user.domain   import UserRepository
+from src.shared.domain import SUCCESSFUL_REQUEST
+from src.shared.domain import SERVER_INTERNAL_ERROR
+from src.shared.domain import DomainException
+from src.user.domain   import UserFinder
+from src.shared.domain import EventBus
+from src.user.domain   import User
 
 """
  *

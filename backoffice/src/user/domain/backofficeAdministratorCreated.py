@@ -9,6 +9,7 @@ from .backofficeUserPassword import UserPassword
 from src.shared.domain       import UserEmail
 from src.shared.domain       import RestaurantId
 from src.shared.domain       import DomainEvent
+from .backofficeUserCode     import UserCode
 
 """
  *
@@ -28,7 +29,7 @@ class AdministratorCreated( DomainEvent ):
     __name         : UserName
     __password     : UserPassword
     __restaurantId : RestaurantId
-    __code         : str
+    __code         : UserCode
 
     """
      *
@@ -42,7 +43,7 @@ class AdministratorCreated( DomainEvent ):
         name         : UserName     = None,
         password     : UserPassword = None,
         restaurantId : RestaurantId = None,
-        code         : str          = None,
+        code         : UserCode     = None,
     ) -> None:
         super().__init__( 'administrator_created' )
         self.__email        = email
@@ -62,7 +63,7 @@ class AdministratorCreated( DomainEvent ):
             'name'         : self.__name.value(),
             'password'     : self.__password.value(),
             'restaurantId' : self.__restaurantId.value(),
-            'code'         : self.__code,
+            'code'         : self.__code.value(),
         }
         return body
     
@@ -78,7 +79,7 @@ class AdministratorCreated( DomainEvent ):
     def restaurantId( self ) -> RestaurantId:
         return self.__restaurantId
     
-    def code( self ) -> str:
+    def code( self ) -> UserCode:
         return self.__code
 
     def fromPrimitives( self, body : dict ) -> None:
@@ -88,4 +89,4 @@ class AdministratorCreated( DomainEvent ):
         self.__name         = UserName( body['name'] )
         self.__password     = UserPassword( body['password'] )
         self.__restaurantId = RestaurantId( body['restaurantId'] )
-        self.__code         = body['code']
+        self.__code         = UserCode( body['code'] )

@@ -32,3 +32,4 @@ INVALID_USER_ROLE                  = 144
 USER_DISABLED                      = 145
 USER_BLOCKED                       = 146
 INVALID_RESTAURANT_NAME            = 147
+INVALID_USER_CODE                  = 148

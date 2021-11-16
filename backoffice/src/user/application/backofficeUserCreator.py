@@ -23,7 +23,7 @@ from src.restaurant.domain import RestaurantFinder
 from src.user.domain       import User
 from src.restaurant.domain import Restaurant
 from src.shared.domain     import UuidValueObject
-from src.shared.domain     import CodeGenerator
+from src.user.domain       import UserCode
 
 """
  *
@@ -40,9 +40,9 @@ class UserCreator:
     """
  
     __repository           : UserRepository
+    __volatileRepository   : UserRepository
     __restaurantRepository : RestaurantRepository
     __eventBus             : EventBus
-    __codeGenerator        : CodeGenerator
 
     """
      *
@@ -53,14 +53,14 @@ class UserCreator:
     def __init__( 
         self, 
         repository           : UserRepository,
+        volatileRepository   : UserRepository,
         restaurantRepository : RestaurantRepository,
         eventBus             : EventBus,
-        codeGenerator        : CodeGenerator,
     ) -> None:
         self.__repository           = repository
+        self.__volatileRepository   = volatileRepository
         self.__restaurantRepository = restaurantRepository
         self.__eventBus             = eventBus
-        self.__codeGenerator        = codeGenerator
 
     def createAdministrator( 
         self, 
@@ -69,25 +69,25 @@ class UserCreator:
         password : UserPassword,
     ) -> int:
         # Variables
-        user                : User
+        user                 : User
         repository           : UserRepository
         finder               : UserFinder
         eventBus             : EventBus
         restaurantRepository : RestaurantRepository
+        volatileRepository   : UserRepository
         restaurant           : Restaurant
         restaurantId         : RestaurantId
-        codeGenerator        : CodeGenerator
-        code                 : str
+        code                 : UserCode
         # Code
         eventBus             = self.__eventBus
         repository           = self.__repository
         finder               = UserFinder( repository )
         restaurantRepository = self.__restaurantRepository
-        codeGenerator        = self.__codeGenerator
+        volatileRepository   = self.__volatileRepository
         try:
             restaurant   = Restaurant.create( UuidValueObject.random() )
             restaurantId = restaurant.id()
-            code         = codeGenerator.generateShortCode()
+            code         = UserCode.short()
             user = Administrator.create( email, name, password, restaurantId, code )
             try:            
                 finder.findByEmail( email )
@@ -98,6 +98,7 @@ class UserCreator:
                 return SERVER_INTERNAL_ERROR
             if not repository.insert( user ):
                 return SERVER_INTERNAL_ERROR
+            volatileRepository.insert( user )
             eventBus.publish( user.pullEvents() )
             return SUCCESSFUL_REQUEST
         except DomainException as exc:
@@ -110,7 +111,7 @@ class UserCreator:
         restaurantId : RestaurantId,
     ) -> int:
         # Variables
-        user                : User
+        user                 : User
         repository           : UserRepository
         finder               : UserFinder
         eventBus             : EventBus

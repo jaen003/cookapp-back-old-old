@@ -18,6 +18,9 @@ from .backofficeInvalidUserRoleException     import InvalidUserRoleException
 from .backofficeInvalidUserNameException     import InvalidUserNameException
 from .backofficeUserInsured                  import UserInsured
 from .backofficeInvalidUserPasswordException import InvalidUserPasswordException
+from .backofficeUserCode                     import UserCode
+from .backofficeUserValidated                import UserValidated
+from .backofficeInvalidUserCodeException     import InvalidUserCodeException
 
 """
  *
@@ -44,13 +47,13 @@ class User( AggregateRoot ):
      *
     """
 
-    _email        : UserEmail
-    _name         : UserName
-    _password     : UserPassword
-    _role         : UserRole
-    _status       : int
-    _restaurantId : RestaurantId
-    _code         : str
+    __email        : UserEmail
+    __name         : UserName
+    __password     : UserPassword
+    __role         : UserRole
+    __status       : int
+    __restaurantId : RestaurantId
+    __code         : UserCode
 
     """
      *
@@ -66,97 +69,90 @@ class User( AggregateRoot ):
         role         : UserRole,
         status       : int,
         restaurantId : RestaurantId,
-        code         : str = None,
+        code         : UserCode = None,
     ) -> None:
         super().__init__()
-        self._email        = email
-        self._name         = name
-        self._password     = password
-        self._role         = role
-        self._status       = status
-        self._restaurantId = restaurantId
-        self._code         = code
+        self.__email        = email
+        self.__name         = name
+        self.__password     = password
+        self.__role         = role
+        self.__status       = status
+        self.__restaurantId = restaurantId
+        self.__code         = code
     
     def email( self ) -> UserEmail:
-        return self._email
+        return self.__email
 
     def name( self ) -> UserName:
-        return self._name
+        return self.__name
 
     def password( self ) -> UserPassword:
-        return self._password
+        return self.__password
         
     def role( self ) -> UserRole:
-        return self._role
+        return self.__role
     
     def status( self ) -> int:
-        return self._status
+        return self.__status
 
     def restaurantId( self ) -> RestaurantId:
-        return self._restaurantId
+        return self.__restaurantId
     
-    def code( self ) -> str:
-        return self._code
-
-    @abstractmethod
-    def create( 
-        self,
-        email        : UserEmail,
-        name         : UserName,
-        password     : UserPassword,
-        restaurantId : RestaurantId, 
-    ): # -> User
-        pass
+    def code( self ) -> UserCode:
+        return self.__code
 
     def delete( self ) -> None:
-        self._status = self.__DELETED
+        self.__status = self.__DELETED
         self.record( UserDeleted(
-            email = self._email,
+            email = self.__email,
         ) )
 
     def rename( self, name : UserName ) -> None:
         if name.isEmpty():
             raise InvalidUserNameException( name )
-        self._name = name
+        self.__name = name
         self.record( UserRenamed(
             name  = name,
-            email = self._email,
+            email = self.__email,
         ) )
     
     def insure( self, password : UserPassword ) -> None:
         if password.isEmpty():
             raise InvalidUserPasswordException( password )
-        self._password = password
+        self.__password = password
         self.record( UserInsured(
-            email    = self._email,
+            email    = self.__email,
             password = password,
         ) )
     
     def relocate( self, role : UserRole ) -> None:
         if not role.isValid():
             raise InvalidUserRoleException( role )
-        self._role = role
+        self.__role = role
         self.record( UserRelocated(
             role  = role,
-            email = self._email,
+            email = self.__email,
         ) )
     
     def isDisabled( self ) -> bool:
-        if self._status == self._DISABLED:
+        if self.__status == self._DISABLED:
             return True
         return False
     
     def isBlocked( self ) -> bool:
-        if self._status == self.__BLOCKED:
+        if self.__status == self.__BLOCKED:
             return True
         return False
     
     def isAuthentic( self, password : UserPassword ) -> bool:
-        if self._password.equals( password.value() ):
+        if self.__password.equals( password.value() ):
             return True
         return False
     
-    def isValidated( self, code : str ) -> bool:
-        if self._code == code:
-            return True
-        return False
+    def validate( self, code : UserCode ) -> None:
+        if not self.__code.validate( code.value() ):
+            raise InvalidUserCodeException( code )
+        self.__status = self._ENABLED
+        self.record( UserValidated(
+            email = self.__email,
+        ) )

@@ -8,7 +8,6 @@ from src.user.application      import UserSender
 from src.shared.domain         import DomainEventSubscriber
 from src.user.domain           import AdministratorCreated
 from src.shared.infrastructure import EmailSender
-from src.user.infrastructure   import UserCacheMemoryRepository
 
 """
  *
@@ -33,7 +32,6 @@ class SendValidationEmailOnAdministratorCreated( DomainEventSubscriber ):
         # Code
         sender = UserSender(
             emailSender = EmailSender(),
-            repository  = UserCacheMemoryRepository(),
         )
         sender.sendValidationEmail( 
             name    = event.name(), 

@@ -15,7 +15,7 @@ from src.shared.domain             import RestaurantId
 from src.restaurant.infrastructure import RestaurantRepository
 from src.shared.infrastructure     import EventBus
 from src.shared.domain             import INCORRECT_DATA
-from src.shared.infrastructure     import CodeGenerator
+from src.user.infrastructure       import UserCacheMemoryRepository
 
 """
  *
@@ -59,7 +59,7 @@ def createAdministrator():
         repository           = UserMysqlRepository(),
         restaurantRepository = RestaurantRepository(),
         eventBus             = EventBus(),
-        codeGenerator        = CodeGenerator(),
+        volatileRepository   = UserCacheMemoryRepository(),
     )
     if not __isValidDataToCreateAdministrator( data ):
         return { 'code' : INCORRECT_DATA }, 202

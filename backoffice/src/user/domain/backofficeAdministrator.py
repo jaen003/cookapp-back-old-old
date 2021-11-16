@@ -14,6 +14,7 @@ from src.shared.domain                       import InvalidUserEmailException
 from .backofficeInvalidUserPasswordException import InvalidUserPasswordException
 from .backofficeAdministratorCreated         import AdministratorCreated
 from .backofficeUser                         import User
+from .backofficeUserCode                     import UserCode
 
 """
  *
@@ -36,7 +37,7 @@ class Administrator( User ):
         name         : UserName,
         password     : UserPassword,
         restaurantId : RestaurantId,
-        code         : str,
+        code         : UserCode,
     ): # -> User
         if name.isEmpty():
             raise InvalidUserNameException( name )
@@ -51,6 +52,7 @@ class Administrator( User ):
             role         = UserRole.administrator(),
             status       = cls._DISABLED,
             restaurantId = restaurantId,
+            code         = code,
         )
         self.record( AdministratorCreated(
             email        = email,
