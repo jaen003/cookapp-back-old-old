@@ -15,3 +15,4 @@ from .backofficeChef                 import *
 from .backofficeWaiter               import *
 from .backofficeUserTokenManager     import *
 from .backofficeAdministratorCreated import *
+from .backofficeUserCode             import *

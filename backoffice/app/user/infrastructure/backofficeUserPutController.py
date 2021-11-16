@@ -6,6 +6,7 @@
 
 from flask                     import Blueprint
 from flask                     import request
+from src.user.infrastructure   import UserCacheMemoryRepository
 from src.user.application      import UserRenamer
 from src.user.infrastructure   import UserMysqlRepository
 from src.user.domain           import UserName
@@ -19,6 +20,8 @@ from src.user.application      import UserAuthenticator
 from src.user.domain           import UserPassword
 from src.user.infrastructure   import UserTokenManager
 from src.user.application      import UserInsurer
+from src.user.application      import UserValidator
+from src.user.domain           import UserCode
 
 """
  *
@@ -56,7 +59,14 @@ def __isValidDataToAuthenticate( data : dict ) -> bool:
     return True
 
 def __isValidDataToInsure( data : dict ) -> bool:
+    if data.get( 'user_email' ) is None:
+        return False
     if data.get( 'user_password' ) is None:
+        return False
+    return True
+
+def __isValidDataToValidate( data : dict ) -> bool:
+    if data.get( 'user_code' ) is None:
         return False
     return True
 
@@ -141,5 +151,26 @@ def insure():
         email    = UserEmail( 'jaenfelliniechavarriatijo@gmail.com' ),
         password = UserPassword( data.get( 'user_password' ) ),
         restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+    )
+    return { 'code' : responseCode }, 202
+
+@userPutController.route( '/api/v1/user/validate', methods = [ 'PUT' ] )
+def validate():
+    # Variables
+    data         : dict
+    validator    : UserValidator
+    responseCode : int
+    # Code
+    data    = request.json
+    validator = UserValidator(
+        repository         = UserMysqlRepository(),
+        volatileRepository = UserCacheMemoryRepository(),
+        eventBus           = EventBus(),
+    )
+    if not __isValidDataToValidate( data ):
+        return { 'code' : INCORRECT_DATA }, 202
+    responseCode = validator.validate(
+        email = UserEmail( data.get( 'user_email' ) ),
+        code  = UserCode( data.get( 'user_code' ) ),
     )
     return { 'code' : responseCode }, 202
