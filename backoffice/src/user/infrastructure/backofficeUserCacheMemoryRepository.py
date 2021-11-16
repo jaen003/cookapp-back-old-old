@@ -69,7 +69,6 @@ class UserCacheMemoryRepository( UserRepository, metaclass = Singleton ):
             'status'       : user.status(),
             'restaurantId' : user.restaurantId().value(),
         }
-        print( self.__users )
         return True
     
     def selectByEmail( self, email : UserEmail ) -> User:
