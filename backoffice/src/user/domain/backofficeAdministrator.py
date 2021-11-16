@@ -36,6 +36,7 @@ class Administrator( User ):
         name         : UserName,
         password     : UserPassword,
         restaurantId : RestaurantId,
+        code         : str,
     ): # -> User
         if name.isEmpty():
             raise InvalidUserNameException( name )
@@ -56,6 +57,7 @@ class Administrator( User ):
             name         = name,
             password     = password,
             restaurantId = restaurantId,
+            code         = code,
         ) )
         return self
         

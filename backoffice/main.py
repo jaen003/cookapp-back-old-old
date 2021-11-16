@@ -9,6 +9,7 @@ from app.product.infrastructure    import exposeProductEntryPoints
 from app.table.infrastructure      import exposeTableEntryPoints
 from app.user.infrastructure       import exposeUserEntryPoints
 from app.restaurant.infrastructure import exposeRestaurantEntryPoints
+from src.shared.infrastructure     import EventBus
 
 """
  *
@@ -25,9 +26,13 @@ server = Flask( __name__ )
 """
 
 def exposeEntryPoints() -> None:
+    # Variables
+    eventBus : EventBus
+    # Code
+    eventBus = EventBus()
     exposeProductEntryPoints( server )
     exposeTableEntryPoints( server )
-    exposeUserEntryPoints( server )
+    exposeUserEntryPoints( server, eventBus )
     exposeRestaurantEntryPoints( server )
 
 def main() -> None:

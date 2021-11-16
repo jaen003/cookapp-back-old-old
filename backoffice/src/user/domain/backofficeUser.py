@@ -50,6 +50,7 @@ class User( AggregateRoot ):
     _role         : UserRole
     _status       : int
     _restaurantId : RestaurantId
+    _code         : str
 
     """
      *
@@ -65,6 +66,7 @@ class User( AggregateRoot ):
         role         : UserRole,
         status       : int,
         restaurantId : RestaurantId,
+        code         : str = None,
     ) -> None:
         super().__init__()
         self._email        = email
@@ -73,6 +75,7 @@ class User( AggregateRoot ):
         self._role         = role
         self._status       = status
         self._restaurantId = restaurantId
+        self._code         = code
     
     def email( self ) -> UserEmail:
         return self._email
@@ -91,6 +94,9 @@ class User( AggregateRoot ):
 
     def restaurantId( self ) -> RestaurantId:
         return self._restaurantId
+    
+    def code( self ) -> str:
+        return self._code
 
     @abstractmethod
     def create( 
@@ -147,5 +153,10 @@ class User( AggregateRoot ):
     
     def isAuthentic( self, password : UserPassword ) -> bool:
         if self._password.equals( password.value() ):
+            return True
+        return False
+    
+    def isValidated( self, code : str ) -> bool:
+        if self._code == code:
             return True
         return False

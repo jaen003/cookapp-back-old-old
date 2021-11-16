@@ -39,11 +39,11 @@ class EmployeeCreated( DomainEvent ):
 
     def __init__( 
         self, 
-        email        : UserEmail, 
-        name         : UserName,
-        password     : UserPassword,
-        role         : UserRole,
-        restaurantId : RestaurantId,
+        email        : UserEmail    = None, 
+        name         : UserName     = None,
+        password     : UserPassword = None,
+        role         : UserRole     = None,
+        restaurantId : RestaurantId = None,
     ) -> None:
         super().__init__( 'employee_created' )
         self.__email        = email

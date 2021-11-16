@@ -21,3 +21,5 @@ from .backofficeRestaurantId              import *
 from .backofficeTableId                   import *
 from .backofficeInvalidTableIdException   import *
 from .backofficeUuidValueObject           import *
+from .backofficeCodeGenerator             import *
+from .backofficeEmailSender               import *
