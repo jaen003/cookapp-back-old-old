@@ -31,7 +31,7 @@ class UserValidated( DomainEvent ):
 
     def __init__( 
         self, 
-        email : UserEmail,
+        email : UserEmail = None,
     ) -> None:
         super().__init__( 'user_validated' )
         self.__email = email

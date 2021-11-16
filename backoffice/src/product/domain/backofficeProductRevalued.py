@@ -62,5 +62,5 @@ class ProductRevalued( DomainEvent ):
         self._uuid       = body['uuid']
         self._occurredOn = int( body['occurredOn'] )
         self.__id        = ProductId( body['id'] )
-        self.__price     = ProductName( body['price'] )
+        self.__price     = ProductPrice( body['price'] )
 

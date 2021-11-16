@@ -4,11 +4,9 @@
  *
 """
 
-from .backofficeTableNumber      import TableNumber
-from .backofficeTableDescription import TableDescription
-from src.shared.domain           import TableId
-from src.shared.domain           import RestaurantId
-from src.shared.domain           import DomainEvent
+from .backofficeTableNumber import TableNumber
+from src.shared.domain      import TableId
+from src.shared.domain      import DomainEvent
 
 """
  *
@@ -35,8 +33,8 @@ class TableRenumbered( DomainEvent ):
 
     def __init__( 
         self, 
-        id     : TableId, 
-        number : TableNumber,
+        id     : TableId     = None, 
+        number : TableNumber = None,
     ) -> None:
         super().__init__( 'table_renumbered' )
         self.__id     = id
@@ -64,5 +62,5 @@ class TableRenumbered( DomainEvent ):
         self._uuid       = body['uuid']
         self._occurredOn = int( body['occurredOn'] )
         self.__id        = TableId( body['id'] )
-        self.__number    = TableName( body['number'] )
+        self.__number    = TableNumber( body['number'] )
 

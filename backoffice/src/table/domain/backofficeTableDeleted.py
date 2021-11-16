@@ -31,7 +31,7 @@ class TableDeleted( DomainEvent ):
 
     def __init__( 
         self, 
-        id : TableId,
+        id : TableId = None,
     ) -> None:
         super().__init__( 'table_deleted' )
         self.__id = id

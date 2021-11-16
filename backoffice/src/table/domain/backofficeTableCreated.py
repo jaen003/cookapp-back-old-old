@@ -37,10 +37,10 @@ class TableCreated( DomainEvent ):
 
     def __init__( 
         self, 
-        id           : TableId, 
-        number       : TableNumber,
-        description  : TableDescription,
-        restaurantId : RestaurantId,
+        id           : TableId          = None, 
+        number       : TableNumber      = None,
+        description  : TableDescription = None,
+        restaurantId : RestaurantId     = None,
     ) -> None:
         super().__init__( 'table_created' )
         self.__id           = id
