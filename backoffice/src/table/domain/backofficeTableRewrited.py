@@ -33,8 +33,8 @@ class TableRewrited( DomainEvent ):
 
     def __init__( 
         self, 
-        id          : TableId,
-        description : TableDescription,
+        id          : TableId          = None,
+        description : TableDescription = None,
     ) -> None:
         super().__init__( 'table_rewrited' )
         self.__id         = id
@@ -62,5 +62,5 @@ class TableRewrited( DomainEvent ):
         self._uuid        = body['uuid']
         self._occurredOn  = int( body['occurredOn'] )
         self.__id         = TableId( body['id'] )
-        self.__decription = TableName( body['description'] )
+        self.__decription = TableDescription( body['description'] )
 

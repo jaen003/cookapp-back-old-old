@@ -33,8 +33,8 @@ class UserRelocated( DomainEvent ):
 
     def __init__( 
         self, 
-        email : UserEmail, 
-        role  : UserRole,
+        email : UserEmail = None, 
+        role  : UserRole  = None,
     ) -> None:
         super().__init__( 'user_relocated' )
         self.__email = email

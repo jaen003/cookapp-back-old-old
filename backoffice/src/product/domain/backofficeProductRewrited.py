@@ -62,6 +62,5 @@ class ProductRewrited( DomainEvent ):
         self._uuid         = body['uuid']
         self._occurredOn   = int( body['occurredOn'] )
         self.__id          = ProductId( body['id'] )
-        self.__name        = ProductName( body['name'] )
-        self.__description = ProductName( body['description'] )
+        self.__description = ProductDescription( body['description'] )
 

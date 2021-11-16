@@ -31,7 +31,7 @@ class UserDeleted( DomainEvent ):
 
     def __init__( 
         self, 
-        email : UserEmail,
+        email : UserEmail = None,
     ) -> None:
         super().__init__( 'user_deleted' )
         self.__email = email
