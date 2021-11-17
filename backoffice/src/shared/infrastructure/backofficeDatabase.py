@@ -7,7 +7,7 @@
 import os
 from mysql.connector.pooling    import MySQLConnectionPool
 from mysql.connector.connection import MySQLConnection
-from src.shared.infrastructure  import Logger
+from .backofficeLoggerAdapter   import Logger
 
 """
  *

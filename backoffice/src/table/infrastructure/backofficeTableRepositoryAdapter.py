@@ -4,15 +4,15 @@
  *
 """
 
-from src.table.domain               import Table
-from src.table.domain               import TableNumber
-from src.table.domain               import TableDescription
-from src.table.domain               import TableRepository as Repository
-from src.persistence.infrastructure import Database
-from src.shared.domain              import TableId
-from src.shared.domain              import RestaurantId
-from mysql.connector.connection     import MySQLConnection
-from mysql.connector.cursor         import MySQLCursor
+from src.table.domain           import Table
+from src.table.domain           import TableNumber
+from src.table.domain           import TableDescription
+from src.table.domain           import TableRepository as Repository
+from src.shared.infrastructure  import Database
+from src.shared.domain          import TableId
+from src.shared.domain          import RestaurantId
+from mysql.connector.connection import MySQLConnection
+from mysql.connector.cursor     import MySQLCursor
 
 """
  *
@@ -191,7 +191,7 @@ class TableRepository( Repository ):
                     'tab_description' : record[2],
                 } )
             return tables
-        except Exception as exc:
+        except Exception:
             return []
         finally:
             if connection is not None:

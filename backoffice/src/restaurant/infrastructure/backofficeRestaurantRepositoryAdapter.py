@@ -4,13 +4,13 @@
  *
 """
 
-from src.restaurant.domain          import Restaurant
-from src.restaurant.domain          import RestaurantRepository as Repository
-from src.persistence.infrastructure import Database
-from src.shared.domain              import RestaurantId
-from mysql.connector.connection     import MySQLConnection
-from mysql.connector.cursor         import MySQLCursor
-from src.restaurant.domain          import RestaurantName
+from src.restaurant.domain      import Restaurant
+from src.restaurant.domain      import RestaurantRepository as Repository
+from src.shared.infrastructure  import Database
+from src.shared.domain          import RestaurantId
+from mysql.connector.connection import MySQLConnection
+from mysql.connector.cursor     import MySQLCursor
+from src.restaurant.domain      import RestaurantName
 
 """
  *
