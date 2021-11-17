@@ -156,3 +156,8 @@ class User( AggregateRoot ):
         self.record( UserValidated(
             email = self.__email,
         ) )
+    
+    def renovateCode( self, code : UserCode ) -> None:
+        if code.isEmpty():
+            raise InvalidUserCodeException( code )
+        self.__code = code

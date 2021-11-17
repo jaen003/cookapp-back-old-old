@@ -22,6 +22,8 @@ from src.user.infrastructure   import UserTokenManager
 from src.user.application      import UserInsurer
 from src.user.application      import UserValidator
 from src.user.domain           import UserCode
+from src.shared.infrastructure import EmailSender
+from src.user.application      import UserRenovator
 
 """
  *
@@ -66,7 +68,14 @@ def __isValidDataToInsure( data : dict ) -> bool:
     return True
 
 def __isValidDataToValidate( data : dict ) -> bool:
+    if data.get( 'user_email' ) is None:
+        return False
     if data.get( 'user_code' ) is None:
+        return False
+    return True
+
+def __isValidDataToRenovateCode( data : dict ) -> bool:
+    if data.get( 'user_email' ) is None:
         return False
     return True
 
@@ -172,5 +181,24 @@ def validate():
     responseCode = validator.validate(
         email = UserEmail( data.get( 'user_email' ) ),
         code  = UserCode( data.get( 'user_code' ) ),
+    )
+    return { 'code' : responseCode }, 202
+
+@userPutController.route( '/api/v1/user/renovate/code', methods = [ 'PUT' ] )
+def renovateCode():
+    # Variables
+    data         : dict
+    renovator    : UserRenovator
+    responseCode : int
+    # Code
+    data    = request.json
+    renovator = UserRenovator(
+        repository  = UserCacheMemoryRepository(),
+        emailSender = EmailSender(),
+    )
+    if not __isValidDataToRenovateCode( data ):
+        return { 'code' : INCORRECT_DATA }, 202
+    responseCode = renovator.renovateCode(
+        toEmail = UserEmail( data.get( 'user_email' ) ),
     )
     return { 'code' : responseCode }, 202
