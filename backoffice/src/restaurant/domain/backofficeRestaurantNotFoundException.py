@@ -25,5 +25,5 @@ class RestaurantNotFoundException( DomainException ):
     def __init__( self, id : RestaurantId ) -> None:
         super().__init__( 
             RESTAURANT_NOT_FOUND,
-            'The restaurant ' + id.value() + ' has not been found'
+            'The restaurant {} has not been found'.format( id.value() )
         )

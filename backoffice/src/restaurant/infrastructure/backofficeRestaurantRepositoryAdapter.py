@@ -116,3 +116,38 @@ class RestaurantRepository( Repository ):
             if connection is not None:
                 cursor.close()
                 connection.close()
+    
+    def selectByName( self, name : RestaurantName ) -> Restaurant:
+        # Variables
+        query      : str
+        database   : Database
+        restaurant : Restaurant
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
+        # Code
+        query = 'SELECT rest_id, rest_name, rest_status FROM Restaurant ' \
+                'WHERE rest_status = 1 and rest_name = %s'
+        try:
+            database   = Database()
+            connection = database.connect()
+            cursor     = connection.cursor()
+            values     = (
+                name.value(),
+            )
+            cursor.execute( query, values )
+            record = cursor.fetchone()
+            if record is None:
+                return None
+            restaurant = Restaurant(
+                id     = RestaurantId( record[0] ),
+                name   = RestaurantName( record[1] ),
+                status = record[2],
+            )
+            return restaurant
+        except Exception:
+            return None
+        finally:
+            if connection is not None:
+                cursor.close()
+                connection.close()
