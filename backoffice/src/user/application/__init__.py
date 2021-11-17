@@ -12,3 +12,4 @@ from .backofficeUserAuthenticator import *
 from .backofficeUserInsurer       import *
 from .backofficeUserSender        import *
 from .backofficeUserValidator     import *
+from .backoffceUserSearcher       import *

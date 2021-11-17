@@ -32,7 +32,7 @@ def searchAllByRestaurant():
     searcher = TableSearcher( 
         repository = TableRepository(),
     )
-    products, responseCode = searcher.searchAllByRestaurant(
+    tables, responseCode = searcher.searchAllByRestaurant(
         restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
     )
-    return { 'code' : responseCode, 'data' : products }, 202
+    return { 'code' : responseCode, 'data' : tables }, 202

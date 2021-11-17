@@ -38,3 +38,7 @@ class UserRepository:
     @abstractmethod
     def selectByEmail( self, email : UserEmail ) -> User:
         pass
+    
+    @abstractmethod
+    def selectAllByRestaurant( self, restaurantId : RestaurantId ) -> User:
+        pass

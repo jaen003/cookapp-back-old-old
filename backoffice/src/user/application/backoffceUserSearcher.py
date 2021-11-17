@@ -4,7 +4,7 @@
  *
 """
 
-from src.table.domain  import TableRepository
+from src.user.domain   import UserRepository
 from src.shared.domain import SUCCESSFUL_REQUEST
 from src.shared.domain import RestaurantId
 
@@ -14,7 +14,7 @@ from src.shared.domain import RestaurantId
  *
 """
 
-class TableSearcher:
+class UserSearcher:
 
     """
      *
@@ -22,7 +22,7 @@ class TableSearcher:
      *
     """
  
-    __repository : TableRepository
+    __repository : UserRepository
 
     """
      *
@@ -30,7 +30,7 @@ class TableSearcher:
      *
     """
 
-    def __init__( self, repository : TableRepository ) -> None:
+    def __init__( self, repository : UserRepository ) -> None:
         self.__repository = repository
 
     def searchAllByRestaurant( 
@@ -38,9 +38,9 @@ class TableSearcher:
         restaurantId : RestaurantId,
     ) -> tuple[ list, int ]:
         # Variables
-        repository : TableRepository
-        tables   : list
+        repository : UserRepository
+        users      : list
         # Code
         repository = self.__repository
-        tables     = repository.selectAllByRestaurant( restaurantId )
-        return tables, SUCCESSFUL_REQUEST
+        users      = repository.selectAllByRestaurant( restaurantId )
+        return users, SUCCESSFUL_REQUEST

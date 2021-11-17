@@ -168,3 +168,37 @@ class UserMysqlRepository( UserRepository ):
             if connection is not None:
                 cursor.close()
                 connection.close()
+    
+    def selectAllByRestaurant( self, restaurantId : RestaurantId ) -> list:
+        # Variables
+        query      : str
+        database   : Database
+        users      : list
+        values     : tuple
+        connection : MySQLConnection
+        cursor     : MySQLCursor
+        # Code
+        query = 'SELECT user_email, user_name, user_role, user_status FROM User ' \
+                'WHERE user_status in ( 1, 3, 4 ) and rest_id = %s'
+        try:
+            users      = list()
+            database   = Database()
+            connection = database.connect()
+            cursor     = connection.cursor()
+            values     = ( restaurantId.value(), )
+            cursor.execute( query, values )
+            records  = cursor.fetchall()
+            for record in records:
+                users.append( {
+                    'user_email'  : record[0],
+                    'user_name'   : record[1],
+                    'user_role'   : record[2],
+                    'user_status' : record[3],
+                } )
+            return users
+        except Exception:
+            return []
+        finally:
+            if connection is not None:
+                cursor.close()
+                connection.close()
