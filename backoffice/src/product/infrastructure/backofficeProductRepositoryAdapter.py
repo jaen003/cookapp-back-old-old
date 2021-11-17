@@ -4,16 +4,16 @@
  *
 """
 
-from src.product.domain             import Product
-from src.product.domain             import ProductName
-from src.product.domain             import ProductRepository as Repository
-from src.persistence.infrastructure import Database
-from src.shared.domain              import ProductId
-from src.shared.domain              import RestaurantId
-from mysql.connector.connection     import MySQLConnection
-from mysql.connector.cursor         import MySQLCursor
-from src.product.domain             import ProductPrice
-from src.product.domain             import ProductDescription
+from src.product.domain         import Product
+from src.product.domain         import ProductName
+from src.product.domain         import ProductRepository as Repository
+from src.shared.infrastructure  import Database
+from src.shared.domain          import ProductId
+from src.shared.domain          import RestaurantId
+from mysql.connector.connection import MySQLConnection
+from mysql.connector.cursor     import MySQLCursor
+from src.product.domain         import ProductPrice
+from src.product.domain         import ProductDescription
 
 """
  *
@@ -200,7 +200,7 @@ class ProductRepository( Repository ):
                     'rest_id'          : record[4],
                 } )
             return products
-        except Exception as exc:
+        except Exception:
             return []
         finally:
             if connection is not None:
@@ -235,7 +235,7 @@ class ProductRepository( Repository ):
                     'rest_id'          : record[4],
                 } )
             return products
-        except Exception as exc:
+        except Exception:
             return []
         finally:
             if connection is not None:

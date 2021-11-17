@@ -1,7 +1,0 @@
-"""
- *
- * Libraries 
- *
-"""
-
-from .backofficeDatabase import *
