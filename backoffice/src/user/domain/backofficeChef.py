@@ -47,6 +47,8 @@ class Chef( User ):
             raise InvalidUserNameException( name )
         if email.isEmpty():
             raise InvalidUserEmailException( email )
+        if password.isEmpty():
+            raise InvalidUserPasswordException( password )
         self = cls(
             email        = email,
             name         = name,

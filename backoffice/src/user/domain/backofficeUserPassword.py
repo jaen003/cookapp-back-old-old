@@ -35,7 +35,7 @@ class UserPassword( StringValueObject ):
         super().__init__( value )
     
     @classmethod
-    def short( cls ): # -> StringValueObject
+    def weak( cls ): # -> StringValueObject
         # Variables
         password : str
         # Code
