@@ -53,9 +53,9 @@ class UserCreator:
     def __init__( 
         self, 
         repository           : UserRepository,
-        volatileRepository   : UserRepository,
         restaurantRepository : RestaurantRepository,
         eventBus             : EventBus,
+        volatileRepository   : UserRepository = None,
     ) -> None:
         self.__repository           = repository
         self.__volatileRepository   = volatileRepository
@@ -124,7 +124,7 @@ class UserCreator:
         restaurantRepository = self.__restaurantRepository
         restaurantFinder     = RestaurantFinder( restaurantRepository )
         try:
-            user = Chef.create( email, name, UserPassword.short(), restaurantId )
+            user = Chef.create( email, name, UserPassword.weak(), restaurantId )
             restaurantFinder.findById( restaurantId )
             try:            
                 finder.findByEmailAndRestaurant( email, restaurantId )
@@ -158,7 +158,7 @@ class UserCreator:
         restaurantRepository = self.__restaurantRepository
         restaurantFinder     = RestaurantFinder( restaurantRepository )
         try:
-            user = Waiter.create( email, name, UserPassword.short(), restaurantId )
+            user = Waiter.create( email, name, UserPassword.weak(), restaurantId )
             restaurantFinder.findById( restaurantId )
             try:            
                 finder.findByEmailAndRestaurant( email, restaurantId )
