@@ -71,6 +71,17 @@ class UserCacheMemoryRepository( UserRepository, metaclass = Singleton ):
         }
         return True
     
+    def update( self, user : User ) -> bool:
+        self.__users[user.email().value()] = {
+            'name'         : user.name().value(),
+            'code'         : user.code().value(),
+            'password'     : user.password().value(),
+            'role'         : user.role().value(),
+            'status'       : user.status(),
+            'restaurantId' : user.restaurantId().value(),
+        }
+        return True
+    
     def selectByEmail( self, email : UserEmail ) -> User:
         # Variables
         data : dict
