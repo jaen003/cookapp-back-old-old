@@ -11,11 +11,13 @@ from src.user.infrastructure       import UserMysqlRepository
 from src.user.domain               import UserName
 from src.user.domain               import UserPassword
 from src.shared.domain             import UserEmail
-from src.shared.domain             import RestaurantId
 from src.restaurant.infrastructure import RestaurantRepository
 from src.shared.infrastructure     import EventBus
 from src.shared.domain             import INCORRECT_DATA
 from src.user.infrastructure       import UserCacheMemoryRepository
+from src.shared.domain             import SERVER_ACCESS_DENIED
+from src.user.infrastructure       import UserTokenManager
+from src.user.domain               import User
 
 """
  *
@@ -50,9 +52,9 @@ def __isValidDataToCreateEmployee( data : dict ) -> bool:
 @userPostController.route( '/api/v1/user/create/administrator', methods = [ 'POST' ] )
 def createAdministrator():
     # Variables
-    data         : dict
-    creator      : UserCreator
-    responseCode : int
+    data            : dict
+    creator         : UserCreator
+    responseCode    : int
     # Code
     data    = request.json
     creator = UserCreator(
@@ -73,10 +75,26 @@ def createAdministrator():
 @userPostController.route( '/api/v1/user/create/waiter', methods = [ 'POST' ] )
 def createWaiter():
     # Variables
-    data         : dict
-    creator      : UserCreator
-    responseCode : int
+    data            : dict
+    creator         : UserCreator
+    responseCode    : int
+    headers         : dict
+    token           : str
+    tokenManager    : UserTokenManager
+    user            : User
+    isAuthenticated : bool
     # Code
+    headers         = request.headers
+    tokenManager    = UserTokenManager()
+    isAuthenticated = False
+    try:
+        token           = headers['Token']
+        user            = tokenManager.decodeToken( token )
+        isAuthenticated = user.role().isAdministrator()
+    except:
+        pass
+    if not isAuthenticated:
+        return { 'code' : SERVER_ACCESS_DENIED }, 202
     data    = request.json
     creator = UserCreator(
         repository           = UserMysqlRepository(),
@@ -88,17 +106,33 @@ def createWaiter():
     responseCode = creator.createWaiter(
         email        = UserEmail( data.get( 'user_email' ) ),
         name         = UserName( data.get( 'user_name' ) ),
-        restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        restaurantId = user.restaurantId(),
     )
     return { 'code' : responseCode }, 202
 
 @userPostController.route( '/api/v1/user/create/chef', methods = [ 'POST' ] )
 def createChef():
     # Variables
-    data         : dict
-    creator      : UserCreator
-    responseCode : int
+    data            : dict
+    creator         : UserCreator
+    responseCode    : int
+    headers         : dict
+    token           : str
+    tokenManager    : UserTokenManager
+    user            : User
+    isAuthenticated : bool
     # Code
+    headers         = request.headers
+    tokenManager    = UserTokenManager()
+    isAuthenticated = False
+    try:
+        token           = headers['Token']
+        user            = tokenManager.decodeToken( token )
+        isAuthenticated = user.role().isAdministrator()
+    except:
+        pass
+    if not isAuthenticated:
+        return { 'code' : SERVER_ACCESS_DENIED }, 202
     data    = request.json
     creator = UserCreator(
         repository           = UserMysqlRepository(),
@@ -110,6 +144,6 @@ def createChef():
     responseCode = creator.createChef(
         email        = UserEmail( data.get( 'user_email' ) ),
         name         = UserName( data.get( 'user_name' ) ),
-        restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        restaurantId = user.restaurantId(),
     )
     return { 'code' : responseCode }, 202

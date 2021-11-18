@@ -14,7 +14,6 @@ from src.shared.domain                 import DomainEventSubscriber
 from pika.adapters.blocking_connection import BlockingChannel
 from pika                              import URLParameters
 from pika                              import BlockingConnection
-from pika.exceptions                   import AMQPConnectionError
 
 """
  *
@@ -52,7 +51,7 @@ class EventBus( Bus, metaclass = Singleton ):
      *
     """
 
-    __topics : dict[list[DomainEventSubscriber]]
+    __topics : dict[ list[ DomainEventSubscriber ] ]
 
     """
      *
@@ -79,7 +78,7 @@ class EventBus( Bus, metaclass = Singleton ):
         connection = BlockingConnection( URLParameters( dsn ) )
         return connection
 
-    def publish( self, events : list[DomainEvent] ) -> None:
+    def publish( self, events : list[ DomainEvent ] ) -> None:
         # Variables
         channel    : BlockingChannel
         connection : BlockingConnection
@@ -98,22 +97,10 @@ class EventBus( Bus, metaclass = Singleton ):
                 body        = json.dumps( event.body() ),
             )
         connection.close()
-
-    """ @staticmethod
-    def notify( event : DomainEvent ):
-        # Variables
-        subscribers : list[DomainEventSubscriber]
-        topic       : str
-        # Code
-        self        = EventBus()
-        topic       = event.topic()
-        subscribers = self.__topics[topic]
-        for subscriber in subscribers:
-            subscriber.notify( event ) """
     
     def __notify( self, event : DomainEvent ):
         # Variables
-        subscribers : list[DomainEventSubscriber]
+        subscribers : list[ DomainEventSubscriber ]
         topic       : str
         # Code
         self        = EventBus()

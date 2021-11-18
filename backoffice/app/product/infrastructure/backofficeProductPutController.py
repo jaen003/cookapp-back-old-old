@@ -10,13 +10,15 @@ from src.product.application    import ProductRenamer
 from src.product.infrastructure import ProductRepository
 from src.product.domain         import ProductName
 from src.shared.domain          import ProductId
-from src.shared.domain          import RestaurantId
 from src.shared.infrastructure  import EventBus
 from src.shared.domain          import INCORRECT_DATA
 from src.product.application    import ProductRevalorizer
 from src.product.domain         import ProductPrice
 from src.product.application    import ProductRewriter
 from src.product.domain         import ProductDescription
+from src.shared.domain          import SERVER_ACCESS_DENIED
+from src.user.infrastructure    import UserTokenManager
+from src.user.domain            import User
 
 """
  *
@@ -56,10 +58,26 @@ def __isValidDataToRewrite( data : dict ) -> bool:
 @productPutController.route( '/api/v1/product/rename', methods = [ 'PUT' ] )
 def rename():
     # Variables
-    data         : dict
-    renamer      : ProductRenamer
-    responseCode : int
+    data            : dict
+    renamer         : ProductRenamer
+    responseCode    : int
+    headers         : dict
+    token           : str
+    tokenManager    : UserTokenManager
+    user            : User
+    isAuthenticated : bool
     # Code
+    headers         = request.headers
+    tokenManager    = UserTokenManager()
+    isAuthenticated = False
+    try:
+        token           = headers['Token']
+        user            = tokenManager.decodeToken( token )
+        isAuthenticated = user.role().isAdministrator()
+    except:
+        pass
+    if not isAuthenticated:
+        return { 'code' : SERVER_ACCESS_DENIED }, 202
     data    = request.json
     renamer = ProductRenamer(
         repository = ProductRepository(),
@@ -70,17 +88,33 @@ def rename():
     responseCode = renamer.rename(
         id           = ProductId( data.get( 'prod_id' ) ),
         name         = ProductName( data.get( 'prod_name' ) ),
-        restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        restaurantId = user.restaurantId(),
     )
     return { 'code' : responseCode }, 202
 
 @productPutController.route( '/api/v1/product/revalue', methods = [ 'PUT' ] )
 def revalue():
     # Variables
-    data         : dict
-    revalorizer    : ProductRevalorizer
-    responseCode : int
+    data            : dict
+    revalorizer     : ProductRevalorizer
+    responseCode    : int
+    headers         : dict
+    token           : str
+    tokenManager    : UserTokenManager
+    user            : User
+    isAuthenticated : bool
     # Code
+    headers         = request.headers
+    tokenManager    = UserTokenManager()
+    isAuthenticated = False
+    try:
+        token           = headers['Token']
+        user            = tokenManager.decodeToken( token )
+        isAuthenticated = user.role().isAdministrator()
+    except:
+        pass
+    if not isAuthenticated:
+        return { 'code' : SERVER_ACCESS_DENIED }, 202
     data      = request.json
     revalorizer = ProductRevalorizer(
         repository     = ProductRepository(),
@@ -91,17 +125,33 @@ def revalue():
     responseCode = revalorizer.revalue(
         id           = ProductId( data.get( 'prod_id' ) ),
         price        = ProductPrice( data.get( 'prod_price' ) ),
-        restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        restaurantId = user.restaurantId(),
     )
     return { 'code' : responseCode }, 202
 
 @productPutController.route( '/api/v1/product/rewrite', methods = [ 'PUT' ] )
 def rewrite():
     # Variables
-    data         : dict
-    rewriter     : ProductRewriter
-    responseCode : int
+    data            : dict
+    rewriter        : ProductRewriter
+    responseCode    : int
+    headers         : dict
+    token           : str
+    tokenManager    : UserTokenManager
+    user            : User
+    isAuthenticated : bool
     # Code
+    headers         = request.headers
+    tokenManager    = UserTokenManager()
+    isAuthenticated = False
+    try:
+        token           = headers['Token']
+        user            = tokenManager.decodeToken( token )
+        isAuthenticated = user.role().isAdministrator()
+    except:
+        pass
+    if not isAuthenticated:
+        return { 'code' : SERVER_ACCESS_DENIED }, 202
     data     = request.json
     rewriter = ProductRewriter(
         repository = ProductRepository(),
@@ -112,6 +162,6 @@ def rewrite():
     responseCode = rewriter.rewrite(
         id           = ProductId( data.get( 'prod_id' ) ),
         description  = ProductDescription( data.get( 'prod_description' ) ),
-        restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        restaurantId = user.restaurantId(),
     )
     return { 'code' : responseCode }, 202
