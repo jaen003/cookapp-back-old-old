@@ -47,5 +47,3 @@ CREATE TABLE Dining_Table (
 ALTER TABLE Product ADD CONSTRAINT FK_Product_Restaurant FOREIGN KEY ( rest_id ) REFERENCES Restaurant( rest_id );
 ALTER TABLE User ADD CONSTRAINT FK_User_Restaurant FOREIGN KEY ( rest_id ) REFERENCES Restaurant( rest_id );
 ALTER TABLE Dining_Table ADD CONSTRAINT FK_Dining_Table_Restaurant FOREIGN KEY ( rest_id ) REFERENCES Restaurant( rest_id );
-
-INSERT INTO Restaurant VALUES ( "43fd2ede-699d-4602-b6e3-3987923a28e4", "Subway", 1 );

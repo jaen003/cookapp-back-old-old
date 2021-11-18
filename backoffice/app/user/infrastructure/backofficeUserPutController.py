@@ -11,7 +11,6 @@ from src.user.application      import UserRenamer
 from src.user.infrastructure   import UserMysqlRepository
 from src.user.domain           import UserName
 from src.shared.domain         import UserEmail
-from src.shared.domain         import RestaurantId
 from src.shared.infrastructure import EventBus
 from src.shared.domain         import INCORRECT_DATA
 from src.user.application      import UserRelocator
@@ -24,6 +23,9 @@ from src.user.application      import UserValidator
 from src.user.domain           import UserCode
 from src.shared.infrastructure import EmailSender
 from src.user.application      import UserRenovator
+from src.shared.domain         import SERVER_ACCESS_DENIED
+from src.user.infrastructure   import UserTokenManager
+from src.user.domain           import User
 
 """
  *
@@ -61,8 +63,6 @@ def __isValidDataToAuthenticate( data : dict ) -> bool:
     return True
 
 def __isValidDataToInsure( data : dict ) -> bool:
-    if data.get( 'user_email' ) is None:
-        return False
     if data.get( 'user_password' ) is None:
         return False
     return True
@@ -82,10 +82,26 @@ def __isValidDataToRenovateCode( data : dict ) -> bool:
 @userPutController.route( '/api/v1/user/rename', methods = [ 'PUT' ] )
 def rename():
     # Variables
-    data         : dict
-    renamer      : UserRenamer
-    responseCode : int
+    data            : dict
+    renamer         : UserRenamer
+    responseCode    : int
+    headers         : dict
+    token           : str
+    tokenManager    : UserTokenManager
+    user            : User
+    isAuthenticated : bool
     # Code
+    headers         = request.headers
+    tokenManager    = UserTokenManager()
+    isAuthenticated = False
+    try:
+        token           = headers['Token']
+        user            = tokenManager.decodeToken( token )
+        isAuthenticated = user.role().isAdministrator()
+    except:
+        pass
+    if not isAuthenticated:
+        return { 'code' : SERVER_ACCESS_DENIED }, 202
     data    = request.json
     renamer = UserRenamer(
         repository = UserMysqlRepository(),
@@ -96,17 +112,33 @@ def rename():
     responseCode = renamer.rename(
         email        = UserEmail( data.get( 'user_email' ) ),
         name         = UserName( data.get( 'user_name' ) ),
-        restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        restaurantId = user.restaurantId(),
     )
     return { 'code' : responseCode }, 202
 
 @userPutController.route( '/api/v1/user/relocate', methods = [ 'PUT' ] )
 def relocate():
     # Variables
-    data         : dict
-    relocator    : UserRelocator
-    responseCode : int
+    data            : dict
+    relocator       : UserRelocator
+    responseCode    : int
+    headers         : dict
+    token           : str
+    tokenManager    : UserTokenManager
+    user            : User
+    isAuthenticated : bool
     # Code
+    headers         = request.headers
+    tokenManager    = UserTokenManager()
+    isAuthenticated = False
+    try:
+        token           = headers['Token']
+        user            = tokenManager.decodeToken( token )
+        isAuthenticated = user.role().isAdministrator()
+    except:
+        pass
+    if not isAuthenticated:
+        return { 'code' : SERVER_ACCESS_DENIED }, 202
     data    = request.json
     relocator = UserRelocator(
         repository = UserMysqlRepository(),
@@ -117,7 +149,7 @@ def relocate():
     responseCode = relocator.relocate(
         email        = UserEmail( data.get( 'user_email' ) ),
         role         = UserRole( data.get( 'user_role' ) ),
-        restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        restaurantId = user.restaurantId(),
     )
     return { 'code' : responseCode }, 202
 
@@ -145,10 +177,26 @@ def authenticate():
 @userPutController.route( '/api/v1/user/insure', methods = [ 'PUT' ] )
 def insure():
     # Variables
-    data         : dict
-    insurer      : UserInsurer
-    responseCode : int
+    data            : dict
+    insurer         : UserInsurer
+    responseCode    : int
+    headers         : dict
+    token           : str
+    tokenManager    : UserTokenManager
+    user            : User
+    isAuthenticated : bool
     # Code
+    headers         = request.headers
+    tokenManager    = UserTokenManager()
+    isAuthenticated = False
+    try:
+        token           = headers['Token']
+        user            = tokenManager.decodeToken( token )
+        isAuthenticated = True
+    except:
+        pass
+    if not isAuthenticated:
+        return { 'code' : SERVER_ACCESS_DENIED }, 202
     data    = request.json
     insurer = UserInsurer(
         repository = UserMysqlRepository(),
@@ -157,9 +205,9 @@ def insure():
     if not __isValidDataToInsure( data ):
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = insurer.insure(
-        email    = UserEmail( 'jaenfelliniechavarriatijo@gmail.com' ),
-        password = UserPassword( data.get( 'user_password' ) ),
-        restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        email        = user.email(),
+        password     = UserPassword( data.get( 'user_password' ) ),
+        restaurantId = user.restaurantId(),
     )
     return { 'code' : responseCode }, 202
 

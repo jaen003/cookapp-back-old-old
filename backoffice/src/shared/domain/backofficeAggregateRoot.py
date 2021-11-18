@@ -20,7 +20,7 @@ class AggregateRoot:
      *
     """
 
-    __events : list[DomainEvent]
+    __events : list[ DomainEvent ]
 
     """
      *
@@ -34,9 +34,9 @@ class AggregateRoot:
     def record( self, event : DomainEvent ) -> None:
         self.__events.append( event )
     
-    def pullEvents( self ) -> list[DomainEvent]:
+    def pullEvents( self ) -> list[ DomainEvent ]:
         # Variables
-        events : list[DomainEvent]
+        events : list[ DomainEvent ]
         # Code
         events = self.__events
         self.__events = []

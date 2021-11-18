@@ -23,7 +23,7 @@ class EventBus:
     """
 
     @abstractmethod
-    def publish( self, events : list[DomainEvent] ) -> None:
+    def publish( self, events : list[ DomainEvent ] ) -> None:
         pass
 
     @abstractmethod

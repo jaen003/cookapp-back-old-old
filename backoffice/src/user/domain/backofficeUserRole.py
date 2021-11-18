@@ -54,4 +54,19 @@ class UserRole( IntValueObject ):
             if role != self.__ADMINISTRATOR:
                 return True
         return False
+    
+    def isChef( self ) -> bool:
+        if self.equals( self.__CHEF ):
+            return True
+        return False
+    
+    def isWaiter( self ) -> bool:
+        if self.equals( self.__WAITER ):
+            return True
+        return False
+    
+    def isAdministrator( self ) -> bool:
+        if self.equals( self.__ADMINISTRATOR ):
+            return True
+        return False
 
