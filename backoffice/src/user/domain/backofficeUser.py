@@ -126,7 +126,7 @@ class User( AggregateRoot ):
         ) )
     
     def relocate( self, role : UserRole ) -> None:
-        if not role.isValid():
+        if not self.__role.validate( role.value() ):
             raise InvalidUserRoleException( role )
         self.__role = role
         self.record( UserRelocated(
