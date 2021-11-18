@@ -41,14 +41,14 @@ class Waiter( User ):
         # Variables
         passwordDecrypted : UserPassword
         # Code
-        passwordDecrypted = copy( password )
-        password.encode()
         if name.isEmpty():
             raise InvalidUserNameException( name )
         if email.isEmpty():
             raise InvalidUserEmailException( email )
         if password.isEmpty():
             raise InvalidUserPasswordException( password )
+        passwordDecrypted = copy( password )
+        password.encode()
         self = cls(
             email        = email,
             name         = name,

@@ -105,7 +105,7 @@ class UserCreator:
             return exc.code()
     
     def createChef( 
-        self, 
+        self,
         email        : UserEmail, 
         name         : UserName,
         restaurantId : RestaurantId,
