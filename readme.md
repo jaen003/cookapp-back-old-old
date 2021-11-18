@@ -36,15 +36,19 @@
 
 ### ⚙️ Environment configuration
 
-1. If you want to modify any environment parameter in local `.env` file, you can
+* If you want to modify any environment parameter in local `.env` file, you can
 
 ### 🔥 Application execution
 
-1. Execution the project: `make run` or the simplificated command `make`
+* Execution the project: `make run` or the simplificated command `make`
+
+### ✋ Application stop
+
+* Stop the project: `make stop`
 
 ### 🧪 Tests execution
 
-1. Execution the project tests: `make test`
+* Execution the project tests: `make test`
 
 ## 🍿 Project explanation
 
