@@ -1,9 +1,9 @@
 <h1 align="center">
-    🐍 🐀 Hexagonal Architecture & DDD in Python and Golang
+    👨‍🍳 Cookapp API backend
 </h1>
 
 <p align="center">
-    Example of a <strong>Python and Golang application using Domain-Driven Design (DDD)</strong> keeping the code as simple as possible.
+    Example of a <strong>application using Domain-Driven Design (DDD)</strong> keeping the code as simple as possible.
     <br />
     <br />
     Take a look, play and have fun with this.
