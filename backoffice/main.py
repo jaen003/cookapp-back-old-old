@@ -37,6 +37,6 @@ def exposeEntryPoints() -> None:
 
 def main() -> None:
     exposeEntryPoints()
-    server.run( debug = True, host = '0.0.0.0' )
+    server.run( debug = False, host = '0.0.0.0' )
 
 main() # call the main method
