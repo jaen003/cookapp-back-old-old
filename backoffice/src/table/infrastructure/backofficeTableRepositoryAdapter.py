@@ -174,8 +174,8 @@ class TableRepository( Repository ):
         connection : MySQLConnection
         cursor     : MySQLCursor
         # Code
-        query = 'SELECT tab_id, tab_number, tab_description FROM Dining_Table ' \
-                'WHERE tab_status = 1 and rest_id = %s'
+        query = 'SELECT tab_id, tab_number, tab_description, tab_status ' \
+                'FROM Dining_Table WHERE tab_status = 1 and rest_id = %s'
         try:
             tables     = list()
             database   = Database()
@@ -189,6 +189,7 @@ class TableRepository( Repository ):
                     'tab_id'          : record[0],
                     'tab_number'      : record[1],
                     'tab_description' : record[2],
+                    'tab_status'      : record[3],
                 } )
             return tables
         except Exception:
