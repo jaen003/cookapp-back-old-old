@@ -35,7 +35,6 @@ class DomainEvent:
     def __init__( self, topic : str ) -> None:
         # Variables
         timestamp : int
-        uuid      : str
         # Code
         now              = datetime.now()
         timestamp        = int( datetime.timestamp( now ) )
