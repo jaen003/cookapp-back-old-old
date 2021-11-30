@@ -22,5 +22,5 @@ class TableDescription( StringValueObject ):
     
     def __init__( self, value : str = None ) -> None:
         if value is None:
-            value = 'Sin información'
+            value = 'No information'
         super().__init__( value )
