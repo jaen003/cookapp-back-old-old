@@ -6,7 +6,6 @@
 
 from abc             import abstractmethod
 from .backofficeUser import User
-from abc             import ABCMeta
 
 """
  *
@@ -14,7 +13,7 @@ from abc             import ABCMeta
  *
 """
 
-class UserTokenManager( metaclass = ABCMeta ):
+class UserTokenManager:
 
     """
      *
@@ -28,4 +27,8 @@ class UserTokenManager( metaclass = ABCMeta ):
     
     @abstractmethod
     def decodeToken( self, token : str ) -> User:
+        pass
+
+    @abstractmethod
+    def expireToken( self, token : str ) -> None:
         pass

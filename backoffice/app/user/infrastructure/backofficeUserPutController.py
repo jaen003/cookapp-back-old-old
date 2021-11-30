@@ -153,8 +153,8 @@ def relocate():
     )
     return { 'code' : responseCode }, 202
 
-@userPutController.route( '/api/v1/user/authenticate', methods = [ 'PUT' ] )
-def authenticate():
+@userPutController.route( '/api/v1/user/login', methods = [ 'PUT' ] )
+def login():
     # Variables
     data          : dict
     authenticator : UserAuthenticator
@@ -173,6 +173,21 @@ def authenticate():
         password = UserPassword( data.get( 'user_password' ) ),
     )
     return { 'code' : responseCode, 'data' : response }, 202
+
+@userPutController.route( '/api/v1/user/logout', methods = [ 'PUT' ] )
+def logout():
+    # Variables
+    token        : str
+    tokenManager : UserTokenManager
+    # Code
+    headers      = request.headers
+    tokenManager = UserTokenManager()
+    try:
+        token = headers['Token']
+        tokenManager.expireToken( token )
+    except:
+        pass
+    return {}, 204
 
 @userPutController.route( '/api/v1/user/insure', methods = [ 'PUT' ] )
 def insure():
