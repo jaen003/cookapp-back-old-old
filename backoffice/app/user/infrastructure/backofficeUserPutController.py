@@ -48,6 +48,11 @@ def __isValidDataToRename( data : dict ) -> bool:
         return False
     return True
 
+def __isValidDataToAutoRename( data : dict ) -> bool:
+    if data.get( 'user_name' ) is None:
+        return False
+    return True
+
 def __isValidDataToRelocate( data : dict ) -> bool:
     if data.get( 'user_email' ) is None:
         return False
@@ -111,6 +116,43 @@ def rename():
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = renamer.rename(
         email        = UserEmail( data.get( 'user_email' ) ),
+        name         = UserName( data.get( 'user_name' ) ),
+        restaurantId = user.restaurantId(),
+    )
+    return { 'code' : responseCode }, 202
+
+@userPutController.route( '/api/v1/user/autorename', methods = [ 'PUT' ] )
+def autoRename():
+    # Variables
+    data            : dict
+    renamer         : UserRenamer
+    responseCode    : int
+    headers         : dict
+    token           : str
+    tokenManager    : UserTokenManager
+    user            : User
+    isAuthenticated : bool
+    # Code
+    headers         = request.headers
+    tokenManager    = UserTokenManager()
+    isAuthenticated = False
+    try:
+        token           = headers['Token']
+        user            = tokenManager.decodeToken( token )
+        isAuthenticated = True
+    except:
+        pass
+    if not isAuthenticated:
+        return { 'code' : SERVER_ACCESS_DENIED }, 202
+    data    = request.json
+    renamer = UserRenamer(
+        repository = UserMysqlRepository(),
+        eventBus   = EventBus(),
+    )
+    if not __isValidDataToAutoRename( data ):
+        return { 'code' : INCORRECT_DATA }, 202
+    responseCode = renamer.rename(
+        email        = user.email(),
         name         = UserName( data.get( 'user_name' ) ),
         restaurantId = user.restaurantId(),
     )
