@@ -4,13 +4,13 @@
  *
 """
 
-from .backofficeUserCreator       import *
-from .backofficeUserDeletor       import *
-from .backofficeUserRenamer       import *
-from .backofficeUserRelocator     import *
-from .backofficeUserAuthenticator import *
-from .backofficeUserInsurer       import *
-from .backofficeUserSender        import *
-from .backofficeUserValidator     import *
-from .backoffceUserSearcher       import *
-from .backofficeUserRenovator     import *
+from .UserCreator       import *
+from .UserDeletor       import *
+from .UserRenamer       import *
+from .UserRelocator     import *
+from .UserAuthenticator import *
+from .UserInsurer       import *
+from .UserSender        import *
+from .UserValidator     import *
+from .UserSearcher      import *
+from .UserRenovator     import *

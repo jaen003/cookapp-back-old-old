@@ -4,4 +4,4 @@
  *
 """
 
-from .backofficeRestaurantRenamer import *
+from .RestaurantRenamer import *

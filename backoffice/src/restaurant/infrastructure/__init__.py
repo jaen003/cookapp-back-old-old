@@ -4,4 +4,4 @@
  *
 """
 
-from .backofficeRestaurantRepositoryAdapter import *
+from .RestaurantRepositoryAdapter import *

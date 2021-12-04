@@ -4,16 +4,16 @@
  *
 """
 
-from .backofficeUser                 import *
-from .backofficeUserName             import *
-from .backofficeUserPassword         import *
-from .backofficeUserRepository       import *
-from .backofficeUserRole             import *
-from .backofficeAdministrator        import *
-from .backofficeUserFinder           import *
-from .backofficeChef                 import *
-from .backofficeWaiter               import *
-from .backofficeUserTokenManager     import *
-from .backofficeAdministratorCreated import *
-from .backofficeUserCode             import *
-from .backofficeEmployeeCreated      import *
+from .User                 import *
+from .UserName             import *
+from .UserPassword         import *
+from .UserRepository       import *
+from .UserRole             import *
+from .Administrator        import *
+from .UserFinder           import *
+from .Chef                 import *
+from .Waiter               import *
+from .UserTokenManager     import *
+from .AdministratorCreated import *
+from .UserCode             import *
+from .EmployeeCreated      import *

@@ -4,9 +4,9 @@
  *
 """
 
-from .backofficeProduct            import *
-from .backofficeProductName        import *
-from .backofficeProductRepository  import *
-from .backofficeProductFinder      import *
-from .backofficeProductDescription import *
-from .backofficeProductPrice       import *
+from .Product            import *
+from .ProductName        import *
+from .ProductRepository  import *
+from .ProductFinder      import *
+from .ProductDescription import *
+from .ProductPrice       import *

@@ -4,7 +4,7 @@
  *
 """
 
-from .backofficeLoggerAdapter      import *
-from .backofficeEventBusAdapter    import *
-from .backofficeEmailSenderAdapter import *
-from .backofficeDatabase           import *
+from .LoggerAdapter      import *
+from .EventBusAdapter    import *
+from .EmailSenderAdapter import *
+from .Database           import *

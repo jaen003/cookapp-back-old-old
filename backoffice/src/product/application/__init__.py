@@ -4,9 +4,9 @@
  *
 """
 
-from .backofficeProductCreator     import *
-from .backofficeProductDeletor     import *
-from .backofficeProductRenamer     import *
-from .backofficeProductRevalorizer import *
-from .backofficeProductRewriter    import *
-from .backofficeProductSearcher    import *
+from .ProductCreator     import *
+from .ProductDeletor     import *
+from .ProductRenamer     import *
+from .ProductRevalorizer import *
+from .ProductRewriter    import *
+from .ProductSearcher    import *
