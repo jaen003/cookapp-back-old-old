@@ -47,9 +47,7 @@ class TestSuite( unittest.TestCase ):
         # Code
         responseCode = 0
         try:
-            restaurant = Restaurant.create( 
-                RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-            )
+            restaurant = Restaurant.create()
         except DomainException as exc:
             responseCode = exc.code()
         self.assertEqual( responseCode, 0 )
