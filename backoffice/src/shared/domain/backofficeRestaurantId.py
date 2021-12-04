@@ -20,5 +20,5 @@ class RestaurantId( UuidValueObject ):
      *
     """
     
-    def __init__( self, value : str ) -> None:
+    def __init__( self, value : str = None ) -> None:
         super().__init__( value )

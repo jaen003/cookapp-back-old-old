@@ -22,7 +22,6 @@ from src.restaurant.domain import RestaurantRepository
 from src.restaurant.domain import RestaurantFinder
 from src.user.domain       import User
 from src.restaurant.domain import Restaurant
-from src.shared.domain     import UuidValueObject
 from src.user.domain       import UserCode
 
 """
@@ -85,7 +84,7 @@ class UserCreator:
         restaurantRepository = self.__restaurantRepository
         volatileRepository   = self.__volatileRepository
         try:
-            restaurant   = Restaurant.create( UuidValueObject.random() )
+            restaurant   = Restaurant.create()
             restaurantId = restaurant.id()
             code         = UserCode.short()
             user = Administrator.create( email, name, password, restaurantId, code )

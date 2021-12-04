@@ -52,12 +52,9 @@ class Restaurant( AggregateRoot ):
         self.__status = status
     
     @classmethod
-    def create( 
-        cls, 
-        id     : RestaurantId,
-    ): # -> Restaurant
+    def create( cls ): # -> Restaurant
         self = cls( 
-            id     = id,
+            id     = RestaurantId(),
             name   = None,
             status = cls.__ENABLED,
         )

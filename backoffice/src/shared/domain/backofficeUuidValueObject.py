@@ -28,7 +28,9 @@ class UuidValueObject:
      *
     """
 
-    def __init__( self, value : str ) -> None:
+    def __init__( self, value : str = None ) -> None:
+        if value is None:
+            value = str( uuid4() )
         self.__value = value
     
     @classmethod
