@@ -4,8 +4,8 @@
  *
 """
 
-from .backofficeTableCreator     import *
-from .backofficeTableSearcher    import *
-from .backofficeTableDeletor     import *
-from .backofficeTableRenumerator import *
-from .backofficeTableRewriter    import *
+from .TableCreator     import *
+from .TableSearcher    import *
+from .TableDeletor     import *
+from .TableRenumerator import *
+from .TableRewriter    import *

@@ -4,6 +4,6 @@
  *
 """
 
-from .backofficeUserMysqlRepository       import *
-from .backofficeUserTokenManagerAdapter   import *
-from .backofficeUserCacheMemoryRepository import *
+from .UserMysqlRepository       import *
+from .UserTokenManagerAdapter   import *
+from .UserCacheMemoryRepository import *

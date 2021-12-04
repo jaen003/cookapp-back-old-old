@@ -4,4 +4,4 @@
  *
 """
 
-from .backofficeTableRepositoryAdapter import *
+from .TableRepositoryAdapter import *
