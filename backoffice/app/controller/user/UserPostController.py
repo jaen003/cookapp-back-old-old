@@ -18,6 +18,7 @@ from src.user.infrastructure       import UserCacheMemoryRepository
 from src.shared.domain             import SERVER_ACCESS_DENIED
 from src.user.infrastructure       import UserTokenManager
 from src.user.domain               import User
+from app.middleware                import requestHttp
 
 """
  *
@@ -33,37 +34,20 @@ userPostController = Blueprint( 'userPostController', __name__ )
  *
 """
 
-def __isValidDataToCreateAdministrator( data : dict ) -> bool:
-    if data.get( 'user_email' ) is None:
-        return False
-    if data.get( 'user_name' ) is None:
-        return False
-    if data.get( 'user_password' ) is None:
-        return False
-    return True
-
-def __isValidDataToCreateEmployee( data : dict ) -> bool:
-    if data.get( 'user_email' ) is None:
-        return False
-    if data.get( 'user_name' ) is None:
-        return False
-    return True
-
 @userPostController.route( '/api/v1/user/create/administrator', methods = [ 'POST' ] )
-def createAdministrator():
+@requestHttp( [ 'user_email', 'user_name', 'user_password' ] )
+def createAdministrator( data : dict ):
     # Variables
-    data            : dict
-    creator         : UserCreator
-    responseCode    : int
+    creator      : UserCreator
+    responseCode : int
     # Code
-    data    = request.json
     creator = UserCreator(
         repository           = UserMysqlRepository(),
         restaurantRepository = RestaurantRepository(),
         eventBus             = EventBus(),
         volatileRepository   = UserCacheMemoryRepository(),
     )
-    if not __isValidDataToCreateAdministrator( data ):
+    if data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = creator.createAdministrator(
         email    = UserEmail( data.get( 'user_email' ) ),
@@ -73,9 +57,9 @@ def createAdministrator():
     return { 'code' : responseCode }, 202
 
 @userPostController.route( '/api/v1/user/create/waiter', methods = [ 'POST' ] )
-def createWaiter():
+@requestHttp( [ 'user_email', 'user_name' ] )
+def createWaiter( data : dict ):
     # Variables
-    data            : dict
     creator         : UserCreator
     responseCode    : int
     headers         : dict
@@ -95,13 +79,12 @@ def createWaiter():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data    = request.json
     creator = UserCreator(
         repository           = UserMysqlRepository(),
         restaurantRepository = RestaurantRepository(),
         eventBus             = EventBus(),
     )
-    if not __isValidDataToCreateEmployee( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = creator.createWaiter(
         email        = UserEmail( data.get( 'user_email' ) ),
@@ -111,9 +94,9 @@ def createWaiter():
     return { 'code' : responseCode }, 202
 
 @userPostController.route( '/api/v1/user/create/chef', methods = [ 'POST' ] )
-def createChef():
+@requestHttp( [ 'user_email', 'user_name' ] )
+def createChef( data : dict ):
     # Variables
-    data            : dict
     creator         : UserCreator
     responseCode    : int
     headers         : dict
@@ -133,13 +116,12 @@ def createChef():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data    = request.json
     creator = UserCreator(
         repository           = UserMysqlRepository(),
         restaurantRepository = RestaurantRepository(),
         eventBus             = EventBus(),
     )
-    if not __isValidDataToCreateEmployee( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = creator.createChef(
         email        = UserEmail( data.get( 'user_email' ) ),

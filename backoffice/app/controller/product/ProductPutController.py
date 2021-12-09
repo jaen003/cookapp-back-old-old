@@ -19,6 +19,7 @@ from src.product.domain         import ProductDescription
 from src.shared.domain          import SERVER_ACCESS_DENIED
 from src.user.infrastructure    import UserTokenManager
 from src.user.domain            import User
+from app.middleware             import requestHttp
 
 """
  *
@@ -34,31 +35,10 @@ productPutController = Blueprint( 'productPutController', __name__ )
  *
 """
 
-def __isValidDataToRename( data : dict ) -> bool:
-    if data.get( 'prod_id' ) is None:
-        return False
-    if data.get( 'prod_name' ) is None:
-        return False
-    return True
-
-def __isValidDataToRevalue( data : dict ) -> bool:
-    if data.get( 'prod_id' ) is None:
-        return False
-    if data.get( 'prod_price' ) is None:
-        return False
-    return True
-
-def __isValidDataToRewrite( data : dict ) -> bool:
-    if data.get( 'prod_id' ) is None:
-        return False
-    if data.get( 'prod_description' ) is None:
-        return False
-    return True
-
 @productPutController.route( '/api/v1/product/rename', methods = [ 'PUT' ] )
-def rename():
+@requestHttp( [ 'prod_id', 'prod_name' ] )
+def rename( data : dict ):
     # Variables
-    data            : dict
     renamer         : ProductRenamer
     responseCode    : int
     headers         : dict
@@ -78,12 +58,11 @@ def rename():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data    = request.json
     renamer = ProductRenamer(
         repository = ProductRepository(),
         eventBus   = EventBus(),
     )
-    if not __isValidDataToRename( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = renamer.rename(
         id           = ProductId( data.get( 'prod_id' ) ),
@@ -93,9 +72,9 @@ def rename():
     return { 'code' : responseCode }, 202
 
 @productPutController.route( '/api/v1/product/revalue', methods = [ 'PUT' ] )
-def revalue():
+@requestHttp( [ 'prod_id', 'prod_price' ] )
+def revalue( data : dict ):
     # Variables
-    data            : dict
     revalorizer     : ProductRevalorizer
     responseCode    : int
     headers         : dict
@@ -115,12 +94,11 @@ def revalue():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data      = request.json
     revalorizer = ProductRevalorizer(
         repository     = ProductRepository(),
         eventBus       = EventBus(),
     )
-    if not __isValidDataToRevalue( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202    
     responseCode = revalorizer.revalue(
         id           = ProductId( data.get( 'prod_id' ) ),
@@ -130,9 +108,9 @@ def revalue():
     return { 'code' : responseCode }, 202
 
 @productPutController.route( '/api/v1/product/rewrite', methods = [ 'PUT' ] )
-def rewrite():
+@requestHttp( [ 'prod_id', 'prod_description' ] )
+def rewrite( data : dict ):
     # Variables
-    data            : dict
     rewriter        : ProductRewriter
     responseCode    : int
     headers         : dict
@@ -152,12 +130,11 @@ def rewrite():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data     = request.json
     rewriter = ProductRewriter(
         repository = ProductRepository(),
         eventBus   = EventBus(),
     )
-    if not __isValidDataToRewrite( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = rewriter.rewrite(
         id           = ProductId( data.get( 'prod_id' ) ),

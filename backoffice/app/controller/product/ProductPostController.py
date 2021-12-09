@@ -18,6 +18,7 @@ from src.shared.domain             import INCORRECT_DATA
 from src.shared.domain             import SERVER_ACCESS_DENIED
 from src.user.infrastructure       import UserTokenManager
 from src.user.domain               import User
+from app.middleware                import requestHttp
 
 """
  *
@@ -33,21 +34,10 @@ productPostController = Blueprint( 'productPostController', __name__ )
  *
 """
 
-def __isValidData( data : dict ) -> bool:
-    if data.get( 'prod_id' ) is None:
-        return False
-    if data.get( 'prod_name' ) is None:
-        return False
-    if data.get( 'prod_price' ) is None:
-        return False
-    if data.get( 'prod_description' ) is None:
-        return False
-    return True
-
 @productPostController.route( '/api/v1/product', methods = [ 'POST' ] )
-def create():
+@requestHttp( [ 'prod_id', 'prod_name', 'prod_price', 'prod_description' ] )
+def create( data : dict ):
     # Variables
-    data            : dict
     creator         : ProductCreator
     responseCode    : int
     headers         : dict
@@ -67,13 +57,12 @@ def create():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data    = request.json
     creator = ProductCreator(
         repository           = ProductRepository(),
         restaurantRepository = RestaurantRepository(),
         eventBus             = EventBus(),
     )
-    if not __isValidData( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = creator.create(
         id           = ProductId( data.get( 'prod_id' ) ),

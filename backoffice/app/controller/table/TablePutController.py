@@ -17,6 +17,7 @@ from src.table.application     import TableRewriter
 from src.user.infrastructure   import UserTokenManager
 from src.user.domain           import User
 from src.shared.domain         import SERVER_ACCESS_DENIED
+from app.middleware            import requestHttp
 
 """
  *
@@ -32,24 +33,10 @@ tablePutController = Blueprint( 'tablePutController', __name__ )
  *
 """
 
-def __isValidDataToRenumber( data : dict ) -> bool:
-    if data.get( 'tab_id' ) is None:
-        return False
-    if data.get( 'tab_number' ) is None:
-        return False
-    return True
-
-def __isValidDataToRewrite( data : dict ) -> bool:
-    if data.get( 'tab_id' ) is None:
-        return False
-    if data.get( 'tab_description' ) is None:
-        return False
-    return True
-
 @tablePutController.route( '/api/v1/table/renumber', methods = [ 'PUT' ] )
-def renumber():
+@requestHttp( [ 'tab_id', 'tab_number' ] )
+def renumber( data : dict ):
     # Variables
-    data            : dict
     renumerator     : TableRenumerator
     responseCode    : int
     headers         : dict
@@ -69,12 +56,11 @@ def renumber():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data        = request.json
     renumerator = TableRenumerator(
         repository = TableRepository(),
         eventBus   = EventBus(),
     )
-    if not __isValidDataToRenumber( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = renumerator.renumber(
         id           = TableId( data.get( 'tab_id' ) ),
@@ -84,9 +70,9 @@ def renumber():
     return { 'code' : responseCode }, 202
 
 @tablePutController.route( '/api/v1/table/rewrite', methods = [ 'PUT' ] )
-def rewrite():
+@requestHttp( [ 'tab_id', 'tab_description' ] )
+def rewrite( data : dict ):
     # Variables
-    data            : dict
     rewriter        : TableRewriter
     responseCode    : int
     headers         : dict
@@ -106,12 +92,11 @@ def rewrite():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data        = request.json
     rewriter = TableRewriter(
         repository = TableRepository(),
         eventBus   = EventBus(),
     )
-    if not __isValidDataToRewrite( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = rewriter.rewrite(
         id           = TableId( data.get( 'tab_id' ) ),

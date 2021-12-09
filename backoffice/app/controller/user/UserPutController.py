@@ -26,6 +26,7 @@ from src.user.application      import UserRenovator
 from src.shared.domain         import SERVER_ACCESS_DENIED
 from src.user.infrastructure   import UserTokenManager
 from src.user.domain           import User
+from app.middleware            import requestHttp
 
 """
  *
@@ -41,53 +42,10 @@ userPutController = Blueprint( 'userPutController', __name__ )
  *
 """
 
-def __isValidDataToRename( data : dict ) -> bool:
-    if data.get( 'user_email' ) is None:
-        return False
-    if data.get( 'user_name' ) is None:
-        return False
-    return True
-
-def __isValidDataToAutoRename( data : dict ) -> bool:
-    if data.get( 'user_name' ) is None:
-        return False
-    return True
-
-def __isValidDataToRelocate( data : dict ) -> bool:
-    if data.get( 'user_email' ) is None:
-        return False
-    if data.get( 'user_role' ) is None:
-        return False
-    return True
-
-def __isValidDataToAuthenticate( data : dict ) -> bool:
-    if data.get( 'user_email' ) is None:
-        return False
-    if data.get( 'user_password' ) is None:
-        return False
-    return True
-
-def __isValidDataToInsure( data : dict ) -> bool:
-    if data.get( 'user_password' ) is None:
-        return False
-    return True
-
-def __isValidDataToValidate( data : dict ) -> bool:
-    if data.get( 'user_email' ) is None:
-        return False
-    if data.get( 'user_code' ) is None:
-        return False
-    return True
-
-def __isValidDataToRenovateCode( data : dict ) -> bool:
-    if data.get( 'user_email' ) is None:
-        return False
-    return True
-
 @userPutController.route( '/api/v1/user/rename', methods = [ 'PUT' ] )
-def rename():
+@requestHttp( [ 'user_email', 'user_name' ] )
+def rename( data : dict ):
     # Variables
-    data            : dict
     renamer         : UserRenamer
     responseCode    : int
     headers         : dict
@@ -107,12 +65,11 @@ def rename():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data    = request.json
     renamer = UserRenamer(
         repository = UserMysqlRepository(),
         eventBus   = EventBus(),
     )
-    if not __isValidDataToRename( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = renamer.rename(
         email        = UserEmail( data.get( 'user_email' ) ),
@@ -122,9 +79,9 @@ def rename():
     return { 'code' : responseCode }, 202
 
 @userPutController.route( '/api/v1/user/autorename', methods = [ 'PUT' ] )
-def autoRename():
+@requestHttp( [ 'user_name' ] )
+def autoRename( data : dict ):
     # Variables
-    data            : dict
     renamer         : UserRenamer
     responseCode    : int
     headers         : dict
@@ -144,12 +101,11 @@ def autoRename():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data    = request.json
     renamer = UserRenamer(
         repository = UserMysqlRepository(),
         eventBus   = EventBus(),
     )
-    if not __isValidDataToAutoRename( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = renamer.rename(
         email        = user.email(),
@@ -159,9 +115,9 @@ def autoRename():
     return { 'code' : responseCode }, 202
 
 @userPutController.route( '/api/v1/user/relocate', methods = [ 'PUT' ] )
-def relocate():
+@requestHttp( [ 'user_email', 'user_role' ] )
+def relocate( data : dict ):
     # Variables
-    data            : dict
     relocator       : UserRelocator
     responseCode    : int
     headers         : dict
@@ -181,12 +137,11 @@ def relocate():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data    = request.json
     relocator = UserRelocator(
         repository = UserMysqlRepository(),
         eventBus   = EventBus(),
     )
-    if not __isValidDataToRelocate( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = relocator.relocate(
         email        = UserEmail( data.get( 'user_email' ) ),
@@ -196,19 +151,18 @@ def relocate():
     return { 'code' : responseCode }, 202
 
 @userPutController.route( '/api/v1/user/login', methods = [ 'PUT' ] )
-def login():
+@requestHttp( [ 'user_email', 'user_password' ] )
+def login( data : dict ):
     # Variables
-    data          : dict
     authenticator : UserAuthenticator
     responseCode  : int
     response      : dict
     # Code
-    data    = request.json
     authenticator = UserAuthenticator(
         repository   = UserMysqlRepository(),
         tokenManager = UserTokenManager(),
     )
-    if not __isValidDataToAuthenticate( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     response, responseCode = authenticator.authenticate(
         email    = UserEmail( data.get( 'user_email' ) ),
@@ -232,9 +186,9 @@ def logout():
     return {}, 204
 
 @userPutController.route( '/api/v1/user/insure', methods = [ 'PUT' ] )
-def insure():
+@requestHttp( [ 'user_password' ] )
+def insure( data : dict ):
     # Variables
-    data            : dict
     insurer         : UserInsurer
     responseCode    : int
     headers         : dict
@@ -254,12 +208,11 @@ def insure():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data    = request.json
     insurer = UserInsurer(
         repository = UserMysqlRepository(),
         eventBus   = EventBus(),
     )
-    if not __isValidDataToInsure( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = insurer.insure(
         email        = user.email(),
@@ -269,19 +222,18 @@ def insure():
     return { 'code' : responseCode }, 202
 
 @userPutController.route( '/api/v1/user/validate', methods = [ 'PUT' ] )
-def validate():
+@requestHttp( [ 'user_email', 'user_code' ] )
+def validate( data : dict ):
     # Variables
-    data         : dict
     validator    : UserValidator
     responseCode : int
     # Code
-    data    = request.json
     validator = UserValidator(
         repository         = UserMysqlRepository(),
         volatileRepository = UserCacheMemoryRepository(),
         eventBus           = EventBus(),
     )
-    if not __isValidDataToValidate( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = validator.validate(
         email = UserEmail( data.get( 'user_email' ) ),
@@ -290,18 +242,17 @@ def validate():
     return { 'code' : responseCode }, 202
 
 @userPutController.route( '/api/v1/user/renovate/code', methods = [ 'PUT' ] )
-def renovateCode():
+@requestHttp( [ 'user_email' ] )
+def renovateCode( data : dict ):
     # Variables
-    data         : dict
     renovator    : UserRenovator
     responseCode : int
     # Code
-    data    = request.json
     renovator = UserRenovator(
         repository  = UserCacheMemoryRepository(),
         emailSender = EmailSender(),
     )
-    if not __isValidDataToRenovateCode( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = renovator.renovateCode(
         toEmail = UserEmail( data.get( 'user_email' ) ),

@@ -17,6 +17,7 @@ from src.shared.domain             import INCORRECT_DATA
 from src.shared.domain             import SERVER_ACCESS_DENIED
 from src.user.infrastructure       import UserTokenManager
 from src.user.domain               import User
+from app.middleware                import requestHttp
 
 """
  *
@@ -32,17 +33,10 @@ tablePostController = Blueprint( 'tablePostController', __name__ )
  *
 """
 
-def __isValidData( data : dict ) -> bool:
-    if data.get( 'tab_id' ) is None:
-        return False
-    if data.get( 'tab_number' ) is None:
-        return False
-    return True
-
 @tablePostController.route( '/api/v1/table', methods = [ 'POST' ] )
-def create():
+@requestHttp( [ 'tab_id', 'tab_number' ] )
+def create( data : dict ):
     # Variables
-    data            : dict
     creator         : TableCreator
     responseCode    : int
     headers         : dict
@@ -62,13 +56,12 @@ def create():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data    = request.json
     creator = TableCreator(
         repository           = TableRepository(),
         restaurantRepository = RestaurantRepository(),
         eventBus             = EventBus(),
     )
-    if not __isValidData( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = creator.create(
         id           = TableId( data.get( 'tab_id' ) ),
