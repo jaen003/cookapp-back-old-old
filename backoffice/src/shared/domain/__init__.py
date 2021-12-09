@@ -5,7 +5,7 @@
 """
 
 from .StringValueObject         import *
-from .DomainResponseCode        import *
+from .DomainExceptionCode       import *
 from .DomainException           import *
 from .Logger                    import *
 from .AggregateRoot             import *

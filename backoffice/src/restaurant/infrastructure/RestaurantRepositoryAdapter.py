@@ -11,6 +11,7 @@ from src.shared.domain          import RestaurantId
 from mysql.connector.connection import MySQLConnection
 from mysql.connector.cursor     import MySQLCursor
 from src.restaurant.domain      import RestaurantName
+from src.restaurant.domain      import RestaurantStatus
 
 """
  *
@@ -41,7 +42,7 @@ class RestaurantRepository( Repository ):
             cursor     = connection.cursor()
             values = (
                 restaurant.id().value(),
-                restaurant.status(),
+                restaurant.status().value(),
             )
             cursor.execute( query, values )
             connection.commit()
@@ -69,7 +70,7 @@ class RestaurantRepository( Repository ):
             cursor     = connection.cursor()
             values     = ( 
                 restaurant.name().value(),
-                restaurant.status(),
+                restaurant.status().value(),
                 restaurant.id().value(),
             )
             cursor.execute( query, values )
@@ -107,7 +108,7 @@ class RestaurantRepository( Repository ):
             restaurant = Restaurant(
                 id     = RestaurantId( record[0] ),
                 name   = RestaurantName( record[1] ),
-                status = record[2],
+                status = RestaurantStatus( record[2] ),
             )
             return restaurant
         except Exception:
@@ -142,7 +143,7 @@ class RestaurantRepository( Repository ):
             restaurant = Restaurant(
                 id     = RestaurantId( record[0] ),
                 name   = RestaurantName( record[1] ),
-                status = record[2],
+                status = RestaurantStatus( record[2] ),
             )
             return restaurant
         except Exception:

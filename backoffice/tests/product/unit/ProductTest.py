@@ -155,7 +155,7 @@ class TestSuite( unittest.TestCase ):
     
     def testProductDeletedSuccess( self ):
         self.__product.delete()
-        self.assertEqual( self.__product.status(), 2 )
+        self.assertEqual( self.__product.status().value(), 2 )
     
     def testProductRenamedSuccess( self ):
         self.__product.rename( ProductName( 'Sandwich' ) )

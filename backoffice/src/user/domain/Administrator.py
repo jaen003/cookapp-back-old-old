@@ -15,6 +15,7 @@ from .InvalidUserPasswordException import InvalidUserPasswordException
 from .AdministratorCreated         import AdministratorCreated
 from .User                         import User
 from .UserCode                     import UserCode
+from .UserStatus                   import UserStatus
 
 """
  *
@@ -50,7 +51,7 @@ class Administrator( User ):
             name         = name,
             password     = password,
             role         = UserRole.administrator(),
-            status       = cls._DISABLED,
+            status       = UserStatus.disabled(),
             restaurantId = restaurantId,
             code         = code,
         )

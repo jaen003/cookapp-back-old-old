@@ -15,6 +15,7 @@ from .InvalidUserPasswordException import InvalidUserPasswordException
 from .User                         import User
 from .EmployeeCreated              import EmployeeCreated
 from copy                          import copy
+from .UserStatus                   import UserStatus
 
 """
  *
@@ -54,7 +55,7 @@ class Waiter( User ):
             name         = name,
             password     = password,
             role         = UserRole.waiter(),
-            status       = cls._ENABLED,
+            status       = UserStatus.enabled(),
             restaurantId = restaurantId,
         )
         self.record( EmployeeCreated(

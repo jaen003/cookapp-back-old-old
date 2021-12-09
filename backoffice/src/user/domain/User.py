@@ -20,6 +20,7 @@ from .InvalidUserPasswordException import InvalidUserPasswordException
 from .UserCode                     import UserCode
 from .UserValidated                import UserValidated
 from .InvalidUserCodeException     import InvalidUserCodeException
+from .UserStatus                   import UserStatus
 
 """
  *
@@ -31,17 +32,6 @@ class User( AggregateRoot ):
 
     """
      *
-     * Consts 
-     *
-    """
-
-    _ENABLED  = 1
-    __DELETED = 2
-    _DISABLED = 3
-    __BLOCKED = 4
-
-    """
-     *
      * Parameters 
      *
     """
@@ -50,7 +40,7 @@ class User( AggregateRoot ):
     __name         : UserName
     __password     : UserPassword
     __role         : UserRole
-    __status       : int
+    __status       : UserStatus
     __restaurantId : RestaurantId
     __code         : UserCode
 
@@ -66,7 +56,7 @@ class User( AggregateRoot ):
         name         : UserName,
         password     : UserPassword,
         role         : UserRole,
-        status       : int,
+        status       : UserStatus,
         restaurantId : RestaurantId,
         code         : UserCode = None,
     ) -> None:
@@ -91,7 +81,7 @@ class User( AggregateRoot ):
     def role( self ) -> UserRole:
         return self.__role
     
-    def status( self ) -> int:
+    def status( self ) -> UserStatus:
         return self.__status
 
     def restaurantId( self ) -> RestaurantId:
@@ -101,7 +91,7 @@ class User( AggregateRoot ):
         return self.__code
 
     def delete( self ) -> None:
-        self.__status = self.__DELETED
+        self.__status = UserStatus.deleted()
         self.record( UserDeleted(
             email = self.__email,
         ) )
@@ -133,16 +123,6 @@ class User( AggregateRoot ):
             email = self.__email,
         ) )
     
-    def isDisabled( self ) -> bool:
-        if self.__status == self._DISABLED:
-            return True
-        return False
-    
-    def isBlocked( self ) -> bool:
-        if self.__status == self.__BLOCKED:
-            return True
-        return False
-    
     def isAuthentic( self, password : UserPassword ) -> bool:
         if self.__password.equals( password.value() ):
             return True
@@ -151,7 +131,7 @@ class User( AggregateRoot ):
     def validate( self, code : UserCode ) -> None:
         if not self.__code.validate( code.value() ):
             raise InvalidUserCodeException( code )
-        self.__status = self._ENABLED
+        self.__status = UserStatus.enabled()
         self.record( UserValidated(
             email = self.__email,
         ) )

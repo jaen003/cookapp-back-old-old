@@ -19,6 +19,7 @@ from .ProductDeleted                     import ProductDeleted
 from .ProductRenamed                     import ProductRenamed
 from .ProductRevalued                    import ProductRevalued
 from .ProductRewrited                    import ProductRewrited
+from .ProductStatus                      import ProductStatus
 
 """
  *
@@ -30,15 +31,6 @@ class Product( AggregateRoot ):
 
     """
      *
-     * Consts 
-     *
-    """
-
-    __ENABLED = 1
-    __DELETED = 2
-
-    """
-     *
      * Parameters 
      *
     """
@@ -47,7 +39,7 @@ class Product( AggregateRoot ):
     __name         : ProductName
     __price        : ProductPrice
     __description  : ProductDescription
-    __status       : int
+    __status       : ProductStatus
     __restaurantId : RestaurantId
 
     """
@@ -62,7 +54,7 @@ class Product( AggregateRoot ):
         name         : ProductName,
         price        : ProductPrice,
         description  : ProductDescription,
-        status       : int,
+        status       : ProductStatus,
         restaurantId : RestaurantId,
     ) -> None:
         super().__init__()
@@ -85,7 +77,7 @@ class Product( AggregateRoot ):
     def description( self ) -> ProductDescription:
         return self.__description
 
-    def status( self ) -> int:
+    def status( self ) -> ProductStatus:
         return self.__status
 
     def restaurantId( self ) -> RestaurantId:
@@ -113,7 +105,7 @@ class Product( AggregateRoot ):
             name         = name,
             price        = price,
             description  = description,
-            status       = cls.__ENABLED,
+            status       = ProductStatus.enabled(),
             restaurantId = restaurantId,
         )
         self.record( ProductCreated(
@@ -126,7 +118,7 @@ class Product( AggregateRoot ):
         return self    
     
     def delete( self ) -> None:
-        self.__status = self.__DELETED
+        self.__status = ProductStatus.deleted()
         self.record( ProductDeleted(
             id = self.__id,
         ) )

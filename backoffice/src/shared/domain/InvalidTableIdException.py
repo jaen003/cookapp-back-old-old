@@ -5,7 +5,7 @@
 """
 
 from .DomainException    import DomainException
-from .DomainResponseCode import INVALID_TABLE_ID
+from .DomainExceptionCode import INVALID_TABLE_ID
 from .TableId            import TableId
 
 """

@@ -5,7 +5,7 @@
 """
 
 from .DomainException    import DomainException
-from .DomainResponseCode import INVALID_PRODUCT_ID
+from .DomainExceptionCode import INVALID_PRODUCT_ID
 from .ProductId          import ProductId
 
 """
