@@ -66,9 +66,9 @@ class UserAuthenticator:
         response     = {}
         try:
             user = finder.findByEmail( email )
-            if user.isDisabled():
+            if user.status().isDisabled():
                 return response, USER_DISABLED
-            if user.isBlocked():
+            if user.status().isBlocked():
                 return response, USER_BLOCKED
             if not user.isAuthentic( password ):
                 return response, INCORRECT_DATA

@@ -10,3 +10,4 @@ from .ProductRepository  import *
 from .ProductFinder      import *
 from .ProductDescription import *
 from .ProductPrice       import *
+from .ProductStatus      import *

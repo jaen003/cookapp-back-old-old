@@ -13,6 +13,7 @@ from src.shared.domain          import TableId
 from src.shared.domain          import RestaurantId
 from mysql.connector.connection import MySQLConnection
 from mysql.connector.cursor     import MySQLCursor
+from src.table.domain           import TableStatus
 
 """
  *
@@ -46,7 +47,7 @@ class TableRepository( Repository ):
                 table.id().value(),
                 table.number().value(),
                 table.description().value(),
-                table.status(),
+                table.status().value(),
                 table.restaurantId().value(),
             )
             cursor.execute( query, values )
@@ -76,7 +77,7 @@ class TableRepository( Repository ):
             values     = ( 
                 table.number().value(),
                 table.description().value(),
-                table.status(),
+                table.status().value(),
                 table.id().value(),
             )
             cursor.execute( query, values )
@@ -116,7 +117,7 @@ class TableRepository( Repository ):
                 id           = TableId( record[0] ),
                 number       = TableNumber( record[1] ),
                 description  = TableDescription( record[2] ),
-                status       = record[3],
+                status       = TableStatus( record[3] ),
                 restaurantId = RestaurantId( record[4] ),
             )
             return table
@@ -154,7 +155,7 @@ class TableRepository( Repository ):
                 id           = TableId( record[0] ),
                 number       = TableNumber( record[1] ),
                 description  = TableDescription( record[2] ),
-                status       = record[3],
+                status       = TableStatus( record[3] ),
                 restaurantId = RestaurantId( record[4] ),
             )
             return table

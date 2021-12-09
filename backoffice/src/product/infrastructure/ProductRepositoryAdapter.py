@@ -14,6 +14,7 @@ from mysql.connector.connection import MySQLConnection
 from mysql.connector.cursor     import MySQLCursor
 from src.product.domain         import ProductPrice
 from src.product.domain         import ProductDescription
+from src.product.domain         import ProductStatus
 
 """
  *
@@ -49,7 +50,7 @@ class ProductRepository( Repository ):
                 product.name().value(),
                 product.price().value(),
                 product.description().value(),
-                product.status(),
+                product.status().value(),
                 product.restaurantId().value(),
             )
             cursor.execute( query, values )
@@ -79,7 +80,7 @@ class ProductRepository( Repository ):
             values     = ( 
                 product.name().value(),
                 product.price().value(),
-                product.status(),
+                product.status().value(),
                 product.description().value(),
                 product.id().value(),
             )
@@ -121,7 +122,7 @@ class ProductRepository( Repository ):
                 name         = ProductName( record[1] ),
                 price        = ProductPrice( record[2] ),
                 description  = ProductDescription( record[3] ),
-                status       = record[4],
+                status       = ProductStatus( record[4] ),
                 restaurantId = RestaurantId( record[5] ),
             )
             return product
@@ -160,7 +161,7 @@ class ProductRepository( Repository ):
                 name         = ProductName( record[1] ),
                 price        = ProductPrice( record[2] ),
                 description  = ProductDescription( record[3] ),
-                status       = record[4],
+                status       = ProductStatus( record[4] ),
                 restaurantId = RestaurantId( record[5] ),
             )
             return product

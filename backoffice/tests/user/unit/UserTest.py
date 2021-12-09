@@ -13,6 +13,7 @@ from src.user.domain   import UserRole
 from src.shared.domain import RestaurantId
 from src.user.domain   import UserCode
 from src.shared.domain import DomainException
+from src.user.domain   import UserStatus
 
 """
  *
@@ -49,7 +50,7 @@ class TestSuite( unittest.TestCase ):
     
     def testUserDeletedSuccess( self ):
         self.__user.delete()
-        self.assertEqual( self.__user.status(), 2 )
+        self.assertEqual( self.__user.status().value(), 2 )
     
     def testUserRenameSuccess( self ):
         self.__user.rename( UserName( 'Harland D.' ) )
@@ -72,11 +73,11 @@ class TestSuite( unittest.TestCase ):
             UserName( 'Harland D. Sanders' ),
             UserPassword( 'IloveKFC' ),
             UserRole( 1 ),
-            3,
+            UserStatus( 3 ),
             RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
             UserCode( '12345' ),
         )
-        self.assertTrue( user.isDisabled() )
+        self.assertTrue( user.status().isDisabled() )
     
     def testUserIsBlocked( self ):
         # Variables
@@ -87,11 +88,11 @@ class TestSuite( unittest.TestCase ):
             UserName( 'Harland D. Sanders' ),
             UserPassword( 'IloveKFC' ),
             UserRole( 1 ),
-            4,
+            UserStatus( 4 ),
             RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
             UserCode( '12345' ),
         )
-        self.assertTrue( user.isBlocked() )
+        self.assertTrue( user.status().isBlocked() )
 
     def testUserIsAuthentic( self ):
         self.assertTrue( self.__user.isAuthentic( UserPassword( 'IloveKFC' ) ) )

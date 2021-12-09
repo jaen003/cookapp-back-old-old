@@ -17,3 +17,4 @@ from .UserTokenManager     import *
 from .AdministratorCreated import *
 from .UserCode             import *
 from .EmployeeCreated      import *
+from .UserStatus           import *

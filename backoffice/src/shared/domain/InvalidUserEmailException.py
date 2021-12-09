@@ -5,7 +5,7 @@
 """
 
 from .DomainException    import DomainException
-from .DomainResponseCode import INVALID_USER_EMAIL
+from .DomainExceptionCode import INVALID_USER_EMAIL
 from .UserEmail          import UserEmail
 
 """

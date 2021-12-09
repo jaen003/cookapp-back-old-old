@@ -113,7 +113,7 @@ class TestSuite( unittest.TestCase ):
     
     def testTableDeletedSuccess( self ):
         self.__table.delete()
-        self.assertEqual( self.__table.status(), 2 )
+        self.assertEqual( self.__table.status().value(), 2 )
     
     def testTableRenumberedSuccess( self ):
         self.__table.renumber( TableNumber( 4 ) )

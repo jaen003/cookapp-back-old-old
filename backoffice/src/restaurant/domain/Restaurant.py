@@ -8,6 +8,7 @@ from src.shared.domain               import AggregateRoot
 from .RestaurantName                 import RestaurantName
 from src.shared.domain               import RestaurantId
 from .InvalidRestaurantNameException import InvalidRestaurantNameException
+from .RestaurantStatus               import RestaurantStatus
 
 """
  *
@@ -19,21 +20,13 @@ class Restaurant( AggregateRoot ):
 
     """
      *
-     * Consts 
-     *
-    """
-
-    __ENABLED  = 1
-
-    """
-     *
      * Parameters 
      *
     """
 
     __id     : RestaurantId
     __name   : RestaurantName
-    __status : int
+    __status : RestaurantStatus
 
     """
      *
@@ -45,7 +38,7 @@ class Restaurant( AggregateRoot ):
         self, 
         id     : RestaurantId,
         name   : RestaurantName,
-        status : int,
+        status : RestaurantStatus,
     ) -> None:
         self.__id     = id
         self.__name   = name
@@ -56,7 +49,7 @@ class Restaurant( AggregateRoot ):
         self = cls( 
             id     = RestaurantId(),
             name   = None,
-            status = cls.__ENABLED,
+            status = RestaurantStatus.enabled(),
         )
         return self
 
@@ -66,7 +59,7 @@ class Restaurant( AggregateRoot ):
     def name( self ) -> RestaurantName:
         return self.__name
 
-    def status( self ) -> int:
+    def status( self ) -> RestaurantStatus:
         return self.__status
     
     def rename( self, name : RestaurantName ) -> None:

@@ -15,6 +15,7 @@ from .InvalidTableNumberException import InvalidTableNumberException
 from .TableDeleted                import TableDeleted
 from .TableRenumbered             import TableRenumbered
 from .TableRewrited               import TableRewrited
+from .TableStatus                 import TableStatus
 
 """
  *
@@ -26,15 +27,6 @@ class Table( AggregateRoot ):
 
     """
      *
-     * Consts 
-     *
-    """
-
-    __ENABLED = 1
-    __DELETED = 2
-
-    """
-     *
      * Parameters 
      *
     """
@@ -42,7 +34,7 @@ class Table( AggregateRoot ):
     __id           : TableId
     __number       : TableNumber
     __description  : TableDescription
-    __status       : int
+    __status       : TableStatus
     __restaurantId : RestaurantId
 
     """
@@ -56,7 +48,7 @@ class Table( AggregateRoot ):
         id           : TableId, 
         number       : TableNumber,
         description  : TableDescription,
-        status       : int,
+        status       : TableStatus,
         restaurantId : RestaurantId,
     ) -> None:
         super().__init__()
@@ -75,7 +67,7 @@ class Table( AggregateRoot ):
     def description( self ) -> TableDescription:
         return self.__description
 
-    def status( self ) -> int:
+    def status( self ) -> TableStatus:
         return self.__status
 
     def restaurantId( self ) -> RestaurantId:
@@ -97,7 +89,7 @@ class Table( AggregateRoot ):
             id           = id,
             number       = number,
             description  = description,
-            status       = cls.__ENABLED,
+            status       = TableStatus.enabled(),
             restaurantId = restaurantId,
         )
         self.record( TableCreated(
@@ -109,7 +101,7 @@ class Table( AggregateRoot ):
         return self
     
     def delete( self ) -> None:
-        self.__status = self.__DELETED
+        self.__status = TableStatus.deleted()
         self.record( TableDeleted(
             id = self.__id,
         ) )
