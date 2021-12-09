@@ -12,6 +12,7 @@ from src.user.domain   import UserPassword
 from src.user.domain   import UserRole
 from src.user.domain   import UserCode
 from src.shared.domain import RestaurantId
+from src.user.domain   import UserStatus
 
 """
  *
@@ -66,7 +67,7 @@ class UserCacheMemoryRepository( UserRepository, metaclass = Singleton ):
             'code'         : user.code().value(),
             'password'     : user.password().value(),
             'role'         : user.role().value(),
-            'status'       : user.status(),
+            'status'       : user.status().value(),
             'restaurantId' : user.restaurantId().value(),
         }
         return True
@@ -77,7 +78,7 @@ class UserCacheMemoryRepository( UserRepository, metaclass = Singleton ):
             'code'         : user.code().value(),
             'password'     : user.password().value(),
             'role'         : user.role().value(),
-            'status'       : user.status(),
+            'status'       : user.status().value(),
             'restaurantId' : user.restaurantId().value(),
         }
         return True
@@ -95,7 +96,7 @@ class UserCacheMemoryRepository( UserRepository, metaclass = Singleton ):
                 name         = UserName( data['name'] ),
                 password     = UserPassword( data['password'] ),
                 role         = UserRole( data['role'] ),
-                status       = data['status'],
+                status       = UserStatus( data['status'] ),
                 restaurantId = RestaurantId( data['restaurantId'] ),
                 code         = UserCode( data['code'] ),
             )                
