@@ -13,6 +13,7 @@ from src.shared.domain             import INCORRECT_DATA
 from src.shared.domain             import SERVER_ACCESS_DENIED
 from src.user.infrastructure       import UserTokenManager
 from src.user.domain               import User
+from app.middleware                import requestHttp
 
 """
  *
@@ -28,15 +29,10 @@ restaurantPutController = Blueprint( 'restaurantPutController', __name__ )
  *
 """
 
-def __isValidDataToRename( data : dict ) -> bool:
-    if data.get( 'rest_name' ) is None:
-        return False
-    return True
-
 @restaurantPutController.route( '/api/v1/restaurant/rename', methods = [ 'PUT' ] )
-def rename():
+@requestHttp( [ 'rest_name' ] )
+def rename( data : dict ):
     # Variables
-    data            : dict
     renamer         : RestaurantRenamer
     responseCode    : int
     headers         : dict
@@ -56,11 +52,10 @@ def rename():
         pass
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
-    data    = request.json
     renamer = RestaurantRenamer(
         repository = RestaurantRepository(),
     )
-    if not __isValidDataToRename( data ):
+    if not data:
         return { 'code' : INCORRECT_DATA }, 202
     responseCode = renamer.rename(
         id   = user.restaurantId(),
