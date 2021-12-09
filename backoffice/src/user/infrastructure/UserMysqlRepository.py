@@ -14,6 +14,7 @@ from src.shared.infrastructure  import Database
 from src.shared.domain          import RestaurantId
 from mysql.connector.connection import MySQLConnection
 from mysql.connector.cursor     import MySQLCursor
+from src.user.domain            import UserStatus
 
 """
  *
@@ -48,7 +49,7 @@ class UserMysqlRepository( UserRepository ):
                 user.name().value(),
                 user.password().value(),
                 user.role().value(),
-                user.status(),
+                user.status().value(),
                 user.restaurantId().value(),
             )
             cursor.execute( query, values )
@@ -79,7 +80,7 @@ class UserMysqlRepository( UserRepository ):
                 user.name().value(),
                 user.password().value(),
                 user.role().value(),
-                user.status(),
+                user.status().value(),
                 user.email().value(),
             )
             cursor.execute( query, values )
@@ -120,7 +121,7 @@ class UserMysqlRepository( UserRepository ):
                 name         = UserName( record[1] ),
                 password     = UserPassword( record[2] ),
                 role         = UserRole( record[3] ),
-                status       = record[4],
+                status       = UserStatus( record[4] ),
                 restaurantId = RestaurantId( record[5] ),
             )
             return user
@@ -158,7 +159,7 @@ class UserMysqlRepository( UserRepository ):
                 name         = UserName( record[1] ),
                 password     = UserPassword( record[2] ),
                 role         = UserRole( record[3] ),
-                status       = record[4],
+                status       = UserStatus( record[4] ),
                 restaurantId = RestaurantId( record[5] ),
             )
             return user
