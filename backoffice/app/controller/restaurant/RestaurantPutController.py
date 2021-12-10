@@ -7,11 +7,12 @@
 from flask                         import Blueprint
 from flask                         import request
 from src.restaurant.application    import RestaurantRenamer
-from src.restaurant.infrastructure import RestaurantRepository
+from src.restaurant.infrastructure import RestaurantMysqlRepository
 from src.restaurant.domain         import RestaurantName
 from src.shared.domain             import INCORRECT_DATA
 from src.shared.domain             import SERVER_ACCESS_DENIED
-from src.user.infrastructure       import UserTokenManager
+from src.user.infrastructure       import UserTokenManagerAdapter
+from src.user.domain               import UserTokenManager
 from src.user.domain               import User
 from app.middleware                import requestHttp
 
@@ -42,7 +43,7 @@ def rename( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -53,7 +54,7 @@ def rename( data : dict ):
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     renamer = RestaurantRenamer(
-        repository = RestaurantRepository(),
+        repository = RestaurantMysqlRepository(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202

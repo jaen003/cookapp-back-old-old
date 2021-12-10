@@ -7,10 +7,11 @@
 from flask                     import Blueprint
 from flask                     import request
 from src.table.application     import TableDeletor
-from src.table.infrastructure  import TableRepository
+from src.table.infrastructure  import TableMysqlRepository
 from src.shared.domain         import TableId
-from src.shared.infrastructure import EventBus
-from src.user.infrastructure   import UserTokenManager
+from src.shared.infrastructure import RabbitMqEventBus
+from src.user.infrastructure   import UserTokenManagerAdapter
+from src.user.domain           import UserTokenManager
 from src.user.domain           import User
 from src.shared.domain         import SERVER_ACCESS_DENIED
 
@@ -40,7 +41,7 @@ def delete( id : str ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -51,8 +52,8 @@ def delete( id : str ):
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     deletor = TableDeletor(
-        repository = TableRepository(),
-        eventBus   = EventBus(),
+        repository = TableMysqlRepository(),
+        eventBus   = RabbitMqEventBus(),
     )
     responseCode = deletor.delete(
         id           = TableId( id ),

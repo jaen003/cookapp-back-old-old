@@ -7,7 +7,7 @@
 from src.user.application      import UserSender
 from src.shared.domain         import DomainEventSubscriber
 from src.user.domain           import EmployeeCreated
-from src.shared.infrastructure import EmailSender
+from src.shared.infrastructure import SmtpEmailSender
 
 """
  *
@@ -31,7 +31,7 @@ class SendEmailOnEmployeeCreated( DomainEventSubscriber ):
         sender : UserSender
         # Code
         sender = UserSender(
-            emailSender = EmailSender(),
+            emailSender = SmtpEmailSender(),
         )
         sender.sendWelcomeEmail( 
             name     = event.name(), 

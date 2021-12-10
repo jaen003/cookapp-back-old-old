@@ -9,9 +9,10 @@ from flask                     import request
 from src.user.application      import UserDeletor
 from src.user.infrastructure   import UserMysqlRepository
 from src.shared.domain         import UserEmail
-from src.shared.infrastructure import EventBus
+from src.shared.infrastructure import RabbitMqEventBus
 from src.shared.domain         import SERVER_ACCESS_DENIED
-from src.user.infrastructure   import UserTokenManager
+from src.user.infrastructure   import UserTokenManagerAdapter
+from src.user.domain           import UserTokenManager
 from src.user.domain           import User
 
 """
@@ -40,7 +41,7 @@ def delete( email : str ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -52,7 +53,7 @@ def delete( email : str ):
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     deletor = UserDeletor(
         repository = UserMysqlRepository(),
-        eventBus   = EventBus(),
+        eventBus   = RabbitMqEventBus(),
     )
     responseCode = deletor.delete(
         email        = UserEmail( email ),

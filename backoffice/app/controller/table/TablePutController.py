@@ -7,14 +7,15 @@
 from flask                     import Blueprint
 from flask                     import request
 from src.table.application     import TableRenumerator
-from src.table.infrastructure  import TableRepository
+from src.table.infrastructure  import TableMysqlRepository
 from src.table.domain          import TableNumber
 from src.shared.domain         import TableId
-from src.shared.infrastructure import EventBus
+from src.shared.infrastructure import RabbitMqEventBus
 from src.shared.domain         import INCORRECT_DATA
 from src.table.domain          import TableDescription
 from src.table.application     import TableRewriter
-from src.user.infrastructure   import UserTokenManager
+from src.user.infrastructure   import UserTokenManagerAdapter
+from src.user.domain           import UserTokenManager
 from src.user.domain           import User
 from src.shared.domain         import SERVER_ACCESS_DENIED
 from app.middleware            import requestHttp
@@ -46,7 +47,7 @@ def renumber( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -57,8 +58,8 @@ def renumber( data : dict ):
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     renumerator = TableRenumerator(
-        repository = TableRepository(),
-        eventBus   = EventBus(),
+        repository = TableMysqlRepository(),
+        eventBus   = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202
@@ -82,7 +83,7 @@ def rewrite( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -93,8 +94,8 @@ def rewrite( data : dict ):
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     rewriter = TableRewriter(
-        repository = TableRepository(),
-        eventBus   = EventBus(),
+        repository = TableMysqlRepository(),
+        eventBus   = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202

@@ -13,7 +13,7 @@ from src.shared.domain import Logger
  *
 """
 
-class Logger( Logger ):
+class LoggerAdapter( Logger ):
 
     """
      *

@@ -7,11 +7,12 @@
 from flask                      import Blueprint
 from flask                      import request
 from src.product.application    import ProductDeletor
-from src.product.infrastructure import ProductRepository
+from src.product.infrastructure import ProductMysqlRepository
 from src.shared.domain          import ProductId
-from src.shared.infrastructure  import EventBus
+from src.shared.infrastructure  import RabbitMqEventBus
 from src.shared.domain          import SERVER_ACCESS_DENIED
-from src.user.infrastructure    import UserTokenManager
+from src.user.infrastructure    import UserTokenManagerAdapter
+from src.user.domain            import UserTokenManager
 from src.user.domain            import User
 
 """
@@ -40,7 +41,7 @@ def delete( id : str ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -51,8 +52,8 @@ def delete( id : str ):
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     deletor = ProductDeletor(
-        repository = ProductRepository(),
-        eventBus   = EventBus(),
+        repository = ProductMysqlRepository(),
+        eventBus   = RabbitMqEventBus(),
     )
     responseCode = deletor.delete(
         id           = ProductId( id ),

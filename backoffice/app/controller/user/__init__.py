@@ -8,7 +8,7 @@ from .UserPostController              import userPostController
 from .UserDeleteController            import userDeleteController
 from .UserPutController               import userPutController
 from .UserGetController               import userGetController
-from src.shared.infrastructure        import EventBus
+from src.shared.domain                import EventBus
 from src.user.domain                  import AdministratorCreated
 from .SendEmailOnAdministratorCreated import SendEmailOnAdministratorCreated
 from .SendEmailOnEmployeeCreated      import SendEmailOnEmployeeCreated

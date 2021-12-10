@@ -4,4 +4,4 @@
  *
 """
 
-from .RestaurantRepositoryAdapter import *
+from .RestaurantMysqlRepository import *

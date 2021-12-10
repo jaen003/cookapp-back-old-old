@@ -8,7 +8,7 @@ import jwt
 import os
 from src.user.domain      import User
 from src.shared.domain    import UserEmail
-from src.user.domain      import UserTokenManager as TokenManager
+from src.user.domain      import UserTokenManager
 from .UserMysqlRepository import UserMysqlRepository
 from datetime             import datetime
 from time                 import mktime
@@ -42,7 +42,7 @@ class Singleton( type ):
             cls.__instances[cls] = instance
         return cls.__instances[cls]
 
-class UserTokenManager( TokenManager, metaclass = Singleton ):
+class UserTokenManagerAdapter( UserTokenManager, metaclass = Singleton ):
 
     """
      *
