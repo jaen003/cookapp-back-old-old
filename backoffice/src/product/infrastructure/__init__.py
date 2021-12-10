@@ -4,4 +4,4 @@
  *
 """
 
-from .ProductRepositoryAdapter import *
+from .ProductMysqlRepository import *

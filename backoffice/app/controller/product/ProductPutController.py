@@ -7,17 +7,18 @@
 from flask                      import Blueprint
 from flask                      import request
 from src.product.application    import ProductRenamer
-from src.product.infrastructure import ProductRepository
+from src.product.infrastructure import ProductMysqlRepository
 from src.product.domain         import ProductName
 from src.shared.domain          import ProductId
-from src.shared.infrastructure  import EventBus
+from src.shared.infrastructure  import RabbitMqEventBus
 from src.shared.domain          import INCORRECT_DATA
 from src.product.application    import ProductRevalorizer
 from src.product.domain         import ProductPrice
 from src.product.application    import ProductRewriter
 from src.product.domain         import ProductDescription
 from src.shared.domain          import SERVER_ACCESS_DENIED
-from src.user.infrastructure    import UserTokenManager
+from src.user.infrastructure    import UserTokenManagerAdapter
+from src.user.domain            import UserTokenManager
 from src.user.domain            import User
 from app.middleware             import requestHttp
 
@@ -48,7 +49,7 @@ def rename( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -59,8 +60,8 @@ def rename( data : dict ):
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     renamer = ProductRenamer(
-        repository = ProductRepository(),
-        eventBus   = EventBus(),
+        repository = ProductMysqlRepository(),
+        eventBus   = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202
@@ -84,7 +85,7 @@ def revalue( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -95,8 +96,8 @@ def revalue( data : dict ):
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     revalorizer = ProductRevalorizer(
-        repository     = ProductRepository(),
-        eventBus       = EventBus(),
+        repository = ProductMysqlRepository(),
+        eventBus   = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202    
@@ -120,7 +121,7 @@ def rewrite( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -131,8 +132,8 @@ def rewrite( data : dict ):
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     rewriter = ProductRewriter(
-        repository = ProductRepository(),
-        eventBus   = EventBus(),
+        repository = ProductMysqlRepository(),
+        eventBus   = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202

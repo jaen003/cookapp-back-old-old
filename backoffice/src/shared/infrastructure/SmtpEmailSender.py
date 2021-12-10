@@ -14,7 +14,7 @@ from smtplib           import SMTP
  *
 """
 
-class EmailSender( EmailSender ):
+class SmtpEmailSender( EmailSender ):
 
     """
      *

@@ -5,7 +5,7 @@
 """
 
 from src.restaurant.domain      import Restaurant
-from src.restaurant.domain      import RestaurantRepository as Repository
+from src.restaurant.domain      import RestaurantRepository
 from src.shared.infrastructure  import Database
 from src.shared.domain          import RestaurantId
 from mysql.connector.connection import MySQLConnection
@@ -19,7 +19,7 @@ from src.restaurant.domain      import RestaurantStatus
  *
 """
 
-class RestaurantRepository( Repository ):
+class RestaurantMysqlRepository( RestaurantRepository ):
 
     """
      *

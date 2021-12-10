@@ -11,12 +11,13 @@ from src.user.infrastructure       import UserMysqlRepository
 from src.user.domain               import UserName
 from src.user.domain               import UserPassword
 from src.shared.domain             import UserEmail
-from src.restaurant.infrastructure import RestaurantRepository
-from src.shared.infrastructure     import EventBus
+from src.restaurant.infrastructure import RestaurantMysqlRepository
+from src.shared.infrastructure     import RabbitMqEventBus
 from src.shared.domain             import INCORRECT_DATA
 from src.user.infrastructure       import UserCacheMemoryRepository
 from src.shared.domain             import SERVER_ACCESS_DENIED
-from src.user.infrastructure       import UserTokenManager
+from src.user.infrastructure       import UserTokenManagerAdapter
+from src.user.domain               import UserTokenManager
 from src.user.domain               import User
 from app.middleware                import requestHttp
 
@@ -43,8 +44,8 @@ def createAdministrator( data : dict ):
     # Code
     creator = UserCreator(
         repository           = UserMysqlRepository(),
-        restaurantRepository = RestaurantRepository(),
-        eventBus             = EventBus(),
+        restaurantRepository = RestaurantMysqlRepository(),
+        eventBus             = RabbitMqEventBus(),
         volatileRepository   = UserCacheMemoryRepository(),
     )
     if data:
@@ -69,7 +70,7 @@ def createWaiter( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -81,8 +82,8 @@ def createWaiter( data : dict ):
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     creator = UserCreator(
         repository           = UserMysqlRepository(),
-        restaurantRepository = RestaurantRepository(),
-        eventBus             = EventBus(),
+        restaurantRepository = RestaurantMysqlRepository(),
+        eventBus             = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202
@@ -106,7 +107,7 @@ def createChef( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -118,8 +119,8 @@ def createChef( data : dict ):
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     creator = UserCreator(
         repository           = UserMysqlRepository(),
-        restaurantRepository = RestaurantRepository(),
-        eventBus             = EventBus(),
+        restaurantRepository = RestaurantMysqlRepository(),
+        eventBus             = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202

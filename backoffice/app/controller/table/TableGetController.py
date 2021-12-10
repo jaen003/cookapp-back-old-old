@@ -7,8 +7,9 @@
 from flask                    import Blueprint
 from flask                    import request
 from src.table.application    import TableSearcher
-from src.table.infrastructure import TableRepository
-from src.user.infrastructure  import UserTokenManager
+from src.table.infrastructure import TableMysqlRepository
+from src.user.infrastructure  import UserTokenManagerAdapter
+from src.user.domain          import UserTokenManager
 from src.user.domain          import User
 from src.shared.domain        import SERVER_ACCESS_DENIED
 
@@ -38,7 +39,7 @@ def searchAllByRestaurant():
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -49,7 +50,7 @@ def searchAllByRestaurant():
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     searcher = TableSearcher( 
-        repository = TableRepository(),
+        repository = TableMysqlRepository(),
     )
     tables, responseCode = searcher.searchAllByRestaurant(
         restaurantId = user.restaurantId(),

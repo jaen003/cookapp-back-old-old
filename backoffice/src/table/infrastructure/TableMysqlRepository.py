@@ -7,7 +7,7 @@
 from src.table.domain           import Table
 from src.table.domain           import TableNumber
 from src.table.domain           import TableDescription
-from src.table.domain           import TableRepository as Repository
+from src.table.domain           import TableRepository
 from src.shared.infrastructure  import Database
 from src.shared.domain          import TableId
 from src.shared.domain          import RestaurantId
@@ -21,7 +21,7 @@ from src.table.domain           import TableStatus
  *
 """
 
-class TableRepository( Repository ):
+class TableMysqlRepository( TableRepository ):
 
     """
      *

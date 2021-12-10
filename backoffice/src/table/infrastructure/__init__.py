@@ -4,4 +4,4 @@
  *
 """
 
-from .TableRepositoryAdapter import *
+from .TableMysqlRepository import *

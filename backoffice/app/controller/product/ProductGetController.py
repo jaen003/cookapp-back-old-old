@@ -7,11 +7,12 @@
 from flask                      import Blueprint
 from flask                      import request
 from src.product.application    import ProductSearcher
-from src.product.infrastructure import ProductRepository
+from src.product.infrastructure import ProductMysqlRepository
 from src.product.domain         import ProductName
 from src.shared.domain          import SERVER_ACCESS_DENIED
-from src.user.infrastructure    import UserTokenManager
+from src.user.infrastructure    import UserTokenManagerAdapter
 from src.user.domain            import User
+from src.user.domain            import UserTokenManager
 
 """
  *
@@ -39,7 +40,7 @@ def searchAllByNameAndRestaurant( name ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -50,7 +51,7 @@ def searchAllByNameAndRestaurant( name ):
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     searcher = ProductSearcher( 
-        repository = ProductRepository(),
+        repository = ProductMysqlRepository(),
     )
     products, responseCode = searcher.searchAllByNameAndRestaurant(
         restaurantId = user.restaurantId(),
@@ -70,7 +71,7 @@ def findAllByRestaurant():
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -81,7 +82,7 @@ def findAllByRestaurant():
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     searcher = ProductSearcher( 
-        repository = ProductRepository(),
+        repository = ProductMysqlRepository(),
     )
     products, responseCode = searcher.searchAllByRestaurant(
         restaurantId = user.restaurantId(),

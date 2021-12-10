@@ -7,7 +7,8 @@
 import os
 from mysql.connector.pooling    import MySQLConnectionPool
 from mysql.connector.connection import MySQLConnection
-from .LoggerAdapter             import Logger
+from .LoggerAdapter             import LoggerAdapter
+from src.shared.domain          import Logger
 
 """
  *
@@ -79,7 +80,7 @@ class Database( metaclass = Singleton ):
                 port               = port,
             )
         except Exception:
-            logger = Logger()
+            logger = LoggerAdapter()
             logger.fatal( 'Failed to connect to database!' )
 
     def connect( self ):
@@ -91,6 +92,6 @@ class Database( metaclass = Singleton ):
             connection = self.__connectionPool.get_connection()
             return connection
         except Exception:
-            logger = Logger()
+            logger = LoggerAdapter()
             logger.fatal( 'Failed getting connection; pool exhausted' )
             return None

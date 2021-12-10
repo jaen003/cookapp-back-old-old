@@ -6,7 +6,7 @@
 
 from src.product.domain         import Product
 from src.product.domain         import ProductName
-from src.product.domain         import ProductRepository as Repository
+from src.product.domain         import ProductRepository
 from src.shared.infrastructure  import Database
 from src.shared.domain          import ProductId
 from src.shared.domain          import RestaurantId
@@ -22,7 +22,7 @@ from src.product.domain         import ProductStatus
  *
 """
 
-class ProductRepository( Repository ):
+class ProductMysqlRepository( ProductRepository ):
 
     """
      *

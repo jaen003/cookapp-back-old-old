@@ -11,20 +11,20 @@ from src.user.application      import UserRenamer
 from src.user.infrastructure   import UserMysqlRepository
 from src.user.domain           import UserName
 from src.shared.domain         import UserEmail
-from src.shared.infrastructure import EventBus
+from src.shared.infrastructure import RabbitMqEventBus
 from src.shared.domain         import INCORRECT_DATA
 from src.user.application      import UserRelocator
 from src.user.domain           import UserRole
 from src.user.application      import UserAuthenticator
 from src.user.domain           import UserPassword
-from src.user.infrastructure   import UserTokenManager
 from src.user.application      import UserInsurer
 from src.user.application      import UserValidator
 from src.user.domain           import UserCode
-from src.shared.infrastructure import EmailSender
+from src.shared.infrastructure import SmtpEmailSender
 from src.user.application      import UserRenovator
 from src.shared.domain         import SERVER_ACCESS_DENIED
-from src.user.infrastructure   import UserTokenManager
+from src.user.infrastructure   import UserTokenManagerAdapter
+from src.user.domain           import UserTokenManager
 from src.user.domain           import User
 from app.middleware            import requestHttp
 
@@ -55,7 +55,7 @@ def rename( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -67,7 +67,7 @@ def rename( data : dict ):
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     renamer = UserRenamer(
         repository = UserMysqlRepository(),
-        eventBus   = EventBus(),
+        eventBus   = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202
@@ -91,7 +91,7 @@ def autoRename( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -103,7 +103,7 @@ def autoRename( data : dict ):
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     renamer = UserRenamer(
         repository = UserMysqlRepository(),
-        eventBus   = EventBus(),
+        eventBus   = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202
@@ -127,7 +127,7 @@ def relocate( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -139,7 +139,7 @@ def relocate( data : dict ):
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     relocator = UserRelocator(
         repository = UserMysqlRepository(),
-        eventBus   = EventBus(),
+        eventBus   = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202
@@ -160,7 +160,7 @@ def login( data : dict ):
     # Code
     authenticator = UserAuthenticator(
         repository   = UserMysqlRepository(),
-        tokenManager = UserTokenManager(),
+        tokenManager = UserTokenManagerAdapter(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202
@@ -177,7 +177,7 @@ def logout():
     tokenManager : UserTokenManager
     # Code
     headers      = request.headers
-    tokenManager = UserTokenManager()
+    tokenManager = UserTokenManagerAdapter()
     try:
         token = headers['Token']
         tokenManager.expireToken( token )
@@ -198,7 +198,7 @@ def insure( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -210,7 +210,7 @@ def insure( data : dict ):
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     insurer = UserInsurer(
         repository = UserMysqlRepository(),
-        eventBus   = EventBus(),
+        eventBus   = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202
@@ -231,7 +231,7 @@ def validate( data : dict ):
     validator = UserValidator(
         repository         = UserMysqlRepository(),
         volatileRepository = UserCacheMemoryRepository(),
-        eventBus           = EventBus(),
+        eventBus           = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202
@@ -250,7 +250,7 @@ def renovateCode( data : dict ):
     # Code
     renovator = UserRenovator(
         repository  = UserCacheMemoryRepository(),
-        emailSender = EmailSender(),
+        emailSender = SmtpEmailSender(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202

@@ -8,7 +8,7 @@ import os
 import json
 import time
 from threading                         import Thread
-from src.shared.domain                 import EventBus as Bus
+from src.shared.domain                 import EventBus
 from src.shared.domain                 import DomainEvent
 from src.shared.domain                 import DomainEventSubscriber
 from pika.adapters.blocking_connection import BlockingChannel
@@ -43,7 +43,7 @@ class Singleton( type ):
             cls.__instances[cls] = instance
         return cls.__instances[cls]
 
-class EventBus( Bus, metaclass = Singleton ):
+class RabbitMqEventBus( EventBus, metaclass = Singleton ):
 
     """
      *

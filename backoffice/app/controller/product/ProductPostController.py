@@ -7,16 +7,17 @@
 from flask                         import Blueprint
 from flask                         import request
 from src.product.application       import ProductCreator
-from src.product.infrastructure    import ProductRepository
+from src.product.infrastructure    import ProductMysqlRepository
 from src.product.domain            import ProductName
 from src.product.domain            import ProductPrice
 from src.product.domain            import ProductDescription
 from src.shared.domain             import ProductId
-from src.restaurant.infrastructure import RestaurantRepository
-from src.shared.infrastructure     import EventBus
+from src.restaurant.infrastructure import RestaurantMysqlRepository
+from src.shared.infrastructure     import RabbitMqEventBus
 from src.shared.domain             import INCORRECT_DATA
 from src.shared.domain             import SERVER_ACCESS_DENIED
-from src.user.infrastructure       import UserTokenManager
+from src.user.infrastructure       import UserTokenManagerAdapter
+from src.user.domain               import UserTokenManager
 from src.user.domain               import User
 from app.middleware                import requestHttp
 
@@ -47,7 +48,7 @@ def create( data : dict ):
     isAuthenticated : bool
     # Code
     headers         = request.headers
-    tokenManager    = UserTokenManager()
+    tokenManager    = UserTokenManagerAdapter()
     isAuthenticated = False
     try:
         token           = headers['Token']
@@ -58,9 +59,9 @@ def create( data : dict ):
     if not isAuthenticated:
         return { 'code' : SERVER_ACCESS_DENIED }, 202
     creator = ProductCreator(
-        repository           = ProductRepository(),
-        restaurantRepository = RestaurantRepository(),
-        eventBus             = EventBus(),
+        repository           = ProductMysqlRepository(),
+        restaurantRepository = RestaurantMysqlRepository(),
+        eventBus             = RabbitMqEventBus(),
     )
     if not data:
         return { 'code' : INCORRECT_DATA }, 202
