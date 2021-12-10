@@ -21,7 +21,7 @@ services:
         ports:                                                           
             - 3360:3306
         volumes:
-            - ./backoffice/etc/backoffice.sql:/docker-entrypoint-initdb.d/backoffice.sql
+            - ./backoffice/etc/backoffice_init.sql:/docker-entrypoint-initdb.d/backoffice_init.sql
         env_file:
             - ./.env
 
