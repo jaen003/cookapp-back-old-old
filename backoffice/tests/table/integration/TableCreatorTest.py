@@ -58,6 +58,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : TableCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNumberAndRestaurant.return_value = None
         restaurantRepositoryMock = Mock()
@@ -69,7 +70,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.create( 
+            creator.create( 
                 id           = TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 number       = TableNumber( 17 ),
                 description  = TableDescription( 'Nice place' ),
@@ -84,6 +85,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : TableCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNumberAndRestaurant.return_value = self.__table
         restaurantRepositoryMock = Mock()
@@ -95,7 +97,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.create( 
+            creator.create( 
                 id           = TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 number       = TableNumber( 17 ),
                 description  = TableDescription( 'Nice place' ),
@@ -103,13 +105,14 @@ class TestSuite( unittest.TestCase ):
             )
         except DomainException as exc:
             responseCode = exc.code()
-        self.assertEqual( responseCode, 137 )
+        self.assertEqual( responseCode, 157 )
     
     def testTableNotCreatedBecauseTheRestaurantWasNotFound( self ):
         # Variables
         responseCode : int
         creator      : TableCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNumberAndRestaurant.return_value = None
         restaurantRepositoryMock = Mock()
@@ -121,7 +124,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.create( 
+            creator.create( 
                 id           = TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 number       = TableNumber( 17 ),
                 description  = TableDescription( 'Nice place' ),
@@ -136,6 +139,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : TableCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNumberAndRestaurant.return_value = None
         repositoryMock.insert.return_value = False
@@ -148,7 +152,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.create( 
+            creator.create( 
                 id           = TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 number       = TableNumber( 17 ),
                 description  = TableDescription( 'Nice place' ),

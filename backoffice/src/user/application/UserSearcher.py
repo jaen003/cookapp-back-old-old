@@ -5,7 +5,6 @@
 """
 
 from src.user.domain   import UserRepository
-from src.shared.domain import SUCCESSFUL_REQUEST
 from src.shared.domain import RestaurantId
 
 """
@@ -36,11 +35,11 @@ class UserSearcher:
     def searchAllByRestaurant( 
         self,
         restaurantId : RestaurantId,
-    ) -> tuple[ list, int ]:
+    ) -> list:
         # Variables
         repository : UserRepository
         users      : list
         # Code
         repository = self.__repository
         users      = repository.selectAllByRestaurant( restaurantId )
-        return users, SUCCESSFUL_REQUEST
+        return users

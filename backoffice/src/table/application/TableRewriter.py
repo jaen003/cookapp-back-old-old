@@ -9,9 +9,8 @@ from src.shared.domain import TableId
 from src.shared.domain import RestaurantId
 from src.table.domain  import TableRepository
 from src.table.domain  import Table
-from src.shared.domain import SUCCESSFUL_REQUEST
-from src.shared.domain import SERVER_INTERNAL_ERROR
-from src.shared.domain import DomainException
+from src.table.domain  import TableNotFoundException
+from src.shared.domain import ServerInternalErrorException
 from src.table.domain  import TableFinder
 from src.shared.domain import EventBus
 
@@ -51,7 +50,7 @@ class TableRewriter:
         id           : TableId,
         description  : TableDescription,
         restaurantId : RestaurantId,
-    ) -> int:
+    ) -> None:
         # Variables
         table      : Table
         repository : TableRepository
@@ -61,12 +60,10 @@ class TableRewriter:
         eventBus   = self.__eventBus
         repository = self.__repository
         finder     = TableFinder( repository )
-        try:
-            table = finder.findByIdAndRestaurant( id, restaurantId )
-            table.rewrite( description )
-            if repository.update( table ):
-                eventBus.publish( table.pullEvents() )
-                return SUCCESSFUL_REQUEST
-            return SERVER_INTERNAL_ERROR
-        except DomainException as exc:
-            return exc.code()
+        table      = finder.findByIdAndRestaurant( id, restaurantId )
+        if table is None:
+            raise TableNotFoundException( id )
+        table.rewrite( description )
+        if not repository.update( table ):
+            raise ServerInternalErrorException()
+        eventBus.publish( table.pullEvents() )

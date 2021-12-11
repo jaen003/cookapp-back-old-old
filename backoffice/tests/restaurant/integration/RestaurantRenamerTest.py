@@ -5,12 +5,12 @@
 """
 
 import unittest
-from unittest.mock           import Mock 
+from unittest.mock              import Mock 
 from src.restaurant.domain      import Restaurant
-from src.shared.domain       import RestaurantId
+from src.shared.domain          import RestaurantId
 from src.restaurant.domain      import RestaurantName
-from src.shared.domain       import RestaurantId
-from src.shared.domain       import DomainException
+from src.shared.domain          import RestaurantId
+from src.shared.domain          import DomainException
 from src.restaurant.application import RestaurantRenamer
 
 """
@@ -47,6 +47,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         renamer      : RestaurantRenamer
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByName.return_value = None
         repositoryMock.selectById.return_value   = self.__restaurant
@@ -54,7 +55,7 @@ class TestSuite( unittest.TestCase ):
             repository = repositoryMock,
         )
         try:
-            responseCode = renamer.rename( 
+            renamer.rename( 
                 id   = RestaurantId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 name = RestaurantName( 'Drive Pizza' ),
             )
@@ -67,25 +68,27 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         renamer      : RestaurantRenamer
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByName.return_value = self.__restaurant
         renamer = RestaurantRenamer(
             repository = repositoryMock,
         )
         try:
-            responseCode = renamer.rename( 
+            renamer.rename( 
                 id   = RestaurantId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 name = RestaurantName( 'Drive Pizza' ),
             )
         except DomainException as exc:
             responseCode = exc.code()
-        self.assertEqual( responseCode, 149 )
+        self.assertEqual( responseCode, 161 )
     
     def testRestaurantNotRenamedBecauseItNotFound( self ):
         # Variables
         responseCode : int
         renamer      : RestaurantRenamer
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByName.return_value = None
         repositoryMock.selectById.return_value   = None
@@ -93,7 +96,7 @@ class TestSuite( unittest.TestCase ):
             repository = repositoryMock,
         )
         try:
-            responseCode = renamer.rename( 
+            renamer.rename( 
                 id   = RestaurantId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 name = RestaurantName( 'Drive Pizza' ),
             )
@@ -106,6 +109,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         renamer      : RestaurantRenamer
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByName.return_value = None
         repositoryMock.update.return_value       = False
@@ -114,7 +118,7 @@ class TestSuite( unittest.TestCase ):
             repository = repositoryMock,
         )
         try:
-            responseCode = renamer.rename( 
+            renamer.rename( 
                 id   = RestaurantId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 name = RestaurantName( 'Drive Pizza' ),
             )

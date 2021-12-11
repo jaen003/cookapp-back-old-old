@@ -4,18 +4,16 @@
  *
 """
 
-from .TableNumber                 import TableNumber
-from .TableDescription            import TableDescription
-from src.shared.domain            import TableId
-from src.shared.domain            import RestaurantId
-from src.shared.domain            import InvalidTableIdException
-from src.shared.domain            import AggregateRoot
-from .TableCreated                import TableCreated
-from .InvalidTableNumberException import InvalidTableNumberException
-from .TableDeleted                import TableDeleted
-from .TableRenumbered             import TableRenumbered
-from .TableRewrited               import TableRewrited
-from .TableStatus                 import TableStatus
+from .TableNumber      import TableNumber
+from .TableDescription import TableDescription
+from src.shared.domain import TableId
+from src.shared.domain import RestaurantId
+from src.shared.domain import AggregateRoot
+from .TableCreated     import TableCreated
+from .TableDeleted     import TableDeleted
+from .TableRenumbered  import TableRenumbered
+from .TableRewrited    import TableRewrited
+from .TableStatus      import TableStatus
 
 """
  *
@@ -81,10 +79,6 @@ class Table( AggregateRoot ):
         description  : TableDescription,
         restaurantId : RestaurantId,
     ): # -> Table
-        if id.isEmpty():
-            raise InvalidTableIdException( id )
-        if not number.isValid():
-            raise InvalidTableNumberException( number )
         self = cls(
             id           = id,
             number       = number,

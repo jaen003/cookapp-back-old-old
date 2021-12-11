@@ -10,7 +10,6 @@ from src.user.domain   import Administrator
 from src.shared.domain import UserEmail
 from src.user.domain   import UserName
 from src.user.domain   import UserPassword
-from src.user.domain   import UserCode
 from src.shared.domain import RestaurantId
 from src.shared.domain import DomainException
 
@@ -40,7 +39,6 @@ class TestSuite( unittest.TestCase ):
                 UserName( 'Harland D. Sanders' ),
                 UserPassword( 'IloveKFC' ),
                 RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-                UserCode( '12345' ),
             )
         except DomainException as exc:
             responseCode = exc.code()
@@ -58,7 +56,6 @@ class TestSuite( unittest.TestCase ):
                 UserName( 'Harland D. Sanders' ),
                 UserPassword( 'IloveKFC' ),
                 RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-                UserCode( '12345' ),
             )
         except DomainException as exc:
             responseCode = exc.code()
@@ -76,7 +73,6 @@ class TestSuite( unittest.TestCase ):
                 UserName( '' ),
                 UserPassword( 'IloveKFC' ),
                 RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-                UserCode( '12345' ),
             )
         except DomainException as exc:
             responseCode = exc.code()
@@ -94,7 +90,6 @@ class TestSuite( unittest.TestCase ):
                 UserName( 'Harland D. Sanders' ),
                 UserPassword( '' ),
                 RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-                UserCode( '12345' ),
             )
         except DomainException as exc:
             responseCode = exc.code()

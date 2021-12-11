@@ -9,9 +9,8 @@ from src.table.domain  import TableFinder
 from src.table.domain  import Table
 from src.shared.domain import TableId
 from src.shared.domain import RestaurantId
-from src.shared.domain import DomainException
-from src.shared.domain import SUCCESSFUL_REQUEST
-from src.shared.domain import SERVER_INTERNAL_ERROR
+from src.shared.domain import ServerInternalErrorException
+from src.table.domain  import TableNotFoundException
 from src.shared.domain import EventBus
 
 """
@@ -49,22 +48,20 @@ class TableDeletor:
         self,
         id           : TableId,
         restaurantId : RestaurantId,
-    ) -> int:
+    ) -> None:
         # Variables
         repository : TableRepository
         finder     : TableFinder
-        table       : Table
+        table      : Table
         eventBus   : EventBus
         # Code
         eventBus   = self.__eventBus
         repository = self.__repository
         finder     = TableFinder( repository )
-        try:
-            table = finder.findByIdAndRestaurant( id, restaurantId )
-            table.delete()
-            if repository.update( table ):
-                eventBus.publish( table.pullEvents() )
-                return SUCCESSFUL_REQUEST
-            return SERVER_INTERNAL_ERROR
-        except DomainException as exc:
-            return exc.code()
+        table      = finder.findByIdAndRestaurant( id, restaurantId )
+        if table is None:
+            raise TableNotFoundException( id )
+        table.delete()
+        if not repository.update( table ):
+            raise ServerInternalErrorException()
+        eventBus.publish( table.pullEvents() )

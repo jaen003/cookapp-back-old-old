@@ -13,13 +13,15 @@ from src.user.domain               import UserPassword
 from src.shared.domain             import UserEmail
 from src.restaurant.infrastructure import RestaurantMysqlRepository
 from src.shared.infrastructure     import RabbitMqEventBus
-from src.shared.domain             import INCORRECT_DATA
+from src.shared.domain             import INCORRECT_REQUEST_DATA
 from src.user.infrastructure       import UserCacheMemoryRepository
 from src.shared.domain             import SERVER_ACCESS_DENIED
 from src.user.infrastructure       import UserTokenManagerAdapter
 from src.user.domain               import UserTokenManager
 from src.user.domain               import User
 from app.middleware                import requestHttp
+from src.shared.domain             import DomainException
+from src.shared.domain             import SUCCESSFUL_REQUEST
 
 """
  *
@@ -39,8 +41,7 @@ userPostController = Blueprint( 'userPostController', __name__ )
 @requestHttp( [ 'user_email', 'user_name', 'user_password' ] )
 def createAdministrator( data : dict ):
     # Variables
-    creator      : UserCreator
-    responseCode : int
+    creator : UserCreator
     # Code
     creator = UserCreator(
         repository           = UserMysqlRepository(),
@@ -48,21 +49,23 @@ def createAdministrator( data : dict ):
         eventBus             = RabbitMqEventBus(),
         volatileRepository   = UserCacheMemoryRepository(),
     )
-    if data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = creator.createAdministrator(
-        email    = UserEmail( data.get( 'user_email' ) ),
-        name     = UserName( data.get( 'user_name' ) ),
-        password = UserPassword( data.get( 'user_password' ) ),
-    )
-    return { 'code' : responseCode }, 202
+    if not data:
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        creator.createAdministrator(
+            email    = UserEmail( data.get( 'user_email' ) ),
+            name     = UserName( data.get( 'user_name' ) ),
+            password = UserPassword( data.get( 'user_password' ) ),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202
 
 @userPostController.route( '/api/v1/user/create/waiter', methods = [ 'POST' ] )
 @requestHttp( [ 'user_email', 'user_name' ] )
 def createWaiter( data : dict ):
     # Variables
     creator         : UserCreator
-    responseCode    : int
     headers         : dict
     token           : str
     tokenManager    : UserTokenManager
@@ -86,20 +89,22 @@ def createWaiter( data : dict ):
         eventBus             = RabbitMqEventBus(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = creator.createWaiter(
-        email        = UserEmail( data.get( 'user_email' ) ),
-        name         = UserName( data.get( 'user_name' ) ),
-        restaurantId = user.restaurantId(),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        creator.createWaiter(
+            email        = UserEmail( data.get( 'user_email' ) ),
+            name         = UserName( data.get( 'user_name' ) ),
+            restaurantId = user.restaurantId(),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202
 
 @userPostController.route( '/api/v1/user/create/chef', methods = [ 'POST' ] )
 @requestHttp( [ 'user_email', 'user_name' ] )
 def createChef( data : dict ):
     # Variables
     creator         : UserCreator
-    responseCode    : int
     headers         : dict
     token           : str
     tokenManager    : UserTokenManager
@@ -123,10 +128,13 @@ def createChef( data : dict ):
         eventBus             = RabbitMqEventBus(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = creator.createChef(
-        email        = UserEmail( data.get( 'user_email' ) ),
-        name         = UserName( data.get( 'user_name' ) ),
-        restaurantId = user.restaurantId(),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        creator.createChef(
+            email        = UserEmail( data.get( 'user_email' ) ),
+            name         = UserName( data.get( 'user_name' ) ),
+            restaurantId = user.restaurantId(),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202

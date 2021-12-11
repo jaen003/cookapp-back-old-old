@@ -4,18 +4,14 @@
  *
 """
 
-from .UserName                     import UserName
-from src.shared.domain             import UserEmail
-from .UserPassword                 import UserPassword
-from .UserRole                     import UserRole
-from src.shared.domain             import RestaurantId
-from .InvalidUserNameException     import InvalidUserNameException
-from src.shared.domain             import InvalidUserEmailException
-from .InvalidUserPasswordException import InvalidUserPasswordException
-from .User                         import User
-from .EmployeeCreated              import EmployeeCreated
-from copy                          import copy
-from .UserStatus                   import UserStatus
+from .UserName         import UserName
+from src.shared.domain import UserEmail
+from .UserPassword     import UserPassword
+from .UserRole         import UserRole
+from src.shared.domain import RestaurantId
+from .User             import User
+from .EmployeeCreated  import EmployeeCreated
+from .UserStatus       import UserStatus
 
 """
  *
@@ -40,20 +36,13 @@ class Chef( User ):
         restaurantId : RestaurantId,
     ): # -> User
         # Variables
-        passwordDecrypted : UserPassword
+        passwordEncrypted : UserPassword
         # Code
-        if name.isEmpty():
-            raise InvalidUserNameException( name )
-        if email.isEmpty():
-            raise InvalidUserEmailException( email )
-        if password.isEmpty():
-            raise InvalidUserPasswordException( password )
-        passwordDecrypted = copy( password )
-        password.encode()
+        passwordEncrypted = UserPassword.encrypt( password.value() )
         self = cls(
             email        = email,
             name         = name,
-            password     = password,
+            password     = passwordEncrypted,
             role         = UserRole.chef(),
             status       = UserStatus.enabled(),
             restaurantId = restaurantId,
@@ -61,7 +50,7 @@ class Chef( User ):
         self.record( EmployeeCreated(
             email        = email,
             name         = name,
-            password     = passwordDecrypted,
+            password     = password,
             role         = self.role(),
             restaurantId = restaurantId,
         ) )

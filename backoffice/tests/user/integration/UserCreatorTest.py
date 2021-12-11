@@ -62,6 +62,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : UserCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByEmail.return_value = None
         volatileRepositoryMock = Mock()
@@ -75,7 +76,7 @@ class TestSuite( unittest.TestCase ):
             volatileRepository   = volatileRepositoryMock,
         )
         try:
-            responseCode = creator.createAdministrator( 
+            creator.createAdministrator( 
                 email    = UserEmail( 'harland.sanders@gmail.com' ),
                 name     = UserName( 'Harland D. Sanders' ),
                 password = UserPassword( 'IloveKFC' ),
@@ -89,6 +90,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : UserCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByEmail.return_value = self.__user
         restaurantRepositoryMock = Mock()
@@ -99,7 +101,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.createAdministrator( 
+            creator.createAdministrator( 
                 email    = UserEmail( 'harland.sanders@gmail.com' ),
                 name     = UserName( 'Harland D. Sanders' ),
                 password = UserPassword( 'IloveKFC' ),
@@ -113,6 +115,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : UserCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByEmail.return_value = None
         restaurantRepositoryMock = Mock()
@@ -124,7 +127,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.createAdministrator( 
+            creator.createAdministrator( 
                 email    = UserEmail( 'harland.sanders@gmail.com' ),
                 name     = UserName( 'Harland D. Sanders' ),
                 password = UserPassword( 'IloveKFC' ),
@@ -138,6 +141,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : UserCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByEmail.return_value = None
         repositoryMock.insert.return_value        = False
@@ -150,7 +154,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.createAdministrator( 
+            creator.createAdministrator( 
                 email    = UserEmail( 'harland.sanders@gmail.com' ),
                 name     = UserName( 'Harland D. Sanders' ),
                 password = UserPassword( 'IloveKFC' ),
@@ -164,6 +168,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : UserCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByEmailAndRestaurant.return_value = None
         restaurantRepositoryMock = Mock()
@@ -175,7 +180,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.createChef( 
+            creator.createChef( 
                 email        = UserEmail( 'harland.sanders@gmail.com' ),
                 name         = UserName( 'Harland D. Sanders' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
@@ -189,6 +194,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : UserCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByEmailAndRestaurant.return_value = self.__user
         restaurantRepositoryMock = Mock()
@@ -200,7 +206,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.createChef( 
+            creator.createChef( 
                 email        = UserEmail( 'harland.sanders@gmail.com' ),
                 name         = UserName( 'Harland D. Sanders' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
@@ -214,6 +220,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : UserCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByEmailAndRestaurant.return_value = None
         repositoryMock.insert.return_value                     = False
@@ -226,7 +233,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.createChef( 
+            creator.createChef( 
                 email        = UserEmail( 'harland.sanders@gmail.com' ),
                 name         = UserName( 'Harland D. Sanders' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
@@ -240,6 +247,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : UserCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByEmailAndRestaurant.return_value = None
         restaurantRepositoryMock = Mock()
@@ -251,7 +259,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.createWaiter( 
+            creator.createWaiter( 
                 email        = UserEmail( 'harland.sanders@gmail.com' ),
                 name         = UserName( 'Harland D. Sanders' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
@@ -265,6 +273,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : UserCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByEmailAndRestaurant.return_value = self.__user
         restaurantRepositoryMock = Mock()
@@ -276,7 +285,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.createWaiter( 
+            creator.createWaiter( 
                 email        = UserEmail( 'harland.sanders@gmail.com' ),
                 name         = UserName( 'Harland D. Sanders' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),

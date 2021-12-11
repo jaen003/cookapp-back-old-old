@@ -6,7 +6,6 @@
 
 from src.shared.domain import DomainException
 from src.shared.domain import INVALID_USER_PASSWORD
-from .UserPassword     import UserPassword
 
 """
  *
@@ -22,8 +21,8 @@ class InvalidUserPasswordException( DomainException ):
      *
     """
 
-    def __init__( self, password : UserPassword ) -> None:
+    def __init__( self, password : str ) -> None:
         super().__init__(
             INVALID_USER_PASSWORD,
-            'The user password {} is invalid'.format( password.value() ),
+            'The user password {} is invalid'.format( password ),
         )

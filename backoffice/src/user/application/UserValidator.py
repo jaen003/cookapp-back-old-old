@@ -8,11 +8,10 @@ from src.user.domain   import UserRepository
 from src.user.domain   import User
 from src.shared.domain import UserEmail
 from src.user.domain   import UserCode
-from src.shared.domain import DomainException
-from src.shared.domain import SUCCESSFUL_REQUEST
-from src.shared.domain import SERVER_INTERNAL_ERROR
 from src.shared.domain import EventBus
 from src.user.domain   import UserFinder
+from src.shared.domain import ServerInternalErrorException
+from src.user.domain   import UserNotFoundException
 
 """
  *
@@ -52,7 +51,7 @@ class UserValidator:
         self,
         email : UserEmail,
         code  : UserCode,
-    ) -> int:
+    ) -> None:
         # Variables
         repository         : UserRepository
         user               : User
@@ -64,12 +63,10 @@ class UserValidator:
         repository         = self.__repository
         volatileRepository = self.__volatileRepository
         finder             = UserFinder( volatileRepository )
-        try:
-            user = finder.findByEmail( email )
-            user.validate( code )
-            if repository.update( user ):
-                eventBus.publish( user.pullEvents() )
-                return SUCCESSFUL_REQUEST
-            return SERVER_INTERNAL_ERROR
-        except DomainException as exc:
-            return exc.code()
+        user               = finder.findByEmail( email )
+        if user is None:
+            raise UserNotFoundException( email )
+        user.validate( code )
+        if not repository.update( user ):
+            raise ServerInternalErrorException()
+        eventBus.publish( user.pullEvents() )

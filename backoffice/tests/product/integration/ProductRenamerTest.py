@@ -52,6 +52,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         renamer      : ProductRenamer
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNameAndRestaurant.return_value = None
         repositoryMock.selectByIdAndRestaurant.return_value = self.__product
@@ -61,7 +62,7 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = renamer.rename( 
+            renamer.rename( 
                 id           = ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 name         = ProductName( 'Sandwich' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
@@ -75,6 +76,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         renamer      : ProductRenamer
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNameAndRestaurant.return_value = self.__product
         eventBusMock = Mock()
@@ -83,20 +85,21 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = renamer.rename( 
+            renamer.rename( 
                 id           = ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 name         = ProductName( 'Sandwich' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
             )
         except DomainException as exc:
             responseCode = exc.code()
-        self.assertEqual( responseCode, 127 )
+        self.assertEqual( responseCode, 162 )
     
     def testProductNotRenamedBecauseItNotFound( self ):
         # Variables
         responseCode : int
         renamer      : ProductRenamer
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNameAndRestaurant.return_value = None
         repositoryMock.selectByIdAndRestaurant.return_value = None
@@ -106,7 +109,7 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = renamer.rename( 
+            renamer.rename( 
                 id           = ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 name         = ProductName( 'Sandwich' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
@@ -120,6 +123,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         renamer      : ProductRenamer
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNameAndRestaurant.return_value = None
         repositoryMock.update.return_value = False
@@ -130,7 +134,7 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = renamer.rename( 
+            renamer.rename( 
                 id           = ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 name         = ProductName( 'Sandwich' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),

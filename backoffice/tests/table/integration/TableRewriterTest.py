@@ -50,6 +50,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         rewriter     : TableRewriter
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByIdAndRestaurant.return_value = self.__table
         eventBusMock = Mock()
@@ -58,7 +59,7 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = rewriter.rewrite( 
+            rewriter.rewrite( 
                 id           = TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 description  = TableDescription( 'Nice place' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
@@ -72,6 +73,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         rewriter     : TableRewriter
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByIdAndRestaurant.return_value = None
         eventBusMock = Mock()
@@ -80,7 +82,7 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = rewriter.rewrite( 
+            rewriter.rewrite( 
                 id           = TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 description  = TableDescription( 'Nice place' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
@@ -94,6 +96,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         rewriter     : TableRewriter
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByIdAndRestaurant.return_value = self.__table
         repositoryMock.update.return_value = False
@@ -103,7 +106,7 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = rewriter.rewrite( 
+            rewriter.rewrite( 
                 id           = TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 description  = TableDescription( 'Nice place' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),

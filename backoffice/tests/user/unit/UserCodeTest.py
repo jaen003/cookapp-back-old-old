@@ -5,7 +5,8 @@
 """
 
 import unittest
-from src.user.domain import UserCode
+from src.user.domain   import UserCode
+from src.shared.domain import DomainException
 
 """
  *
@@ -41,10 +42,26 @@ class TestSuite( unittest.TestCase ):
         self.assertTrue( isValid )
     
     def testUserCodeValidatedSuccess( self ):
-        code = UserCode( '12345' )
-        self.assertTrue( code.validate( '12345' ) )
+        # Variables
+        responseCode : int
+        code         : UserCode
+        responseCode = 0
+        try:
+            code = UserCode( '12345' )
+            code.match( '12345' )
+        except DomainException as exc:
+            responseCode = exc.code()
+        self.assertEqual( responseCode, 0 )
     
     def testInvalidUserCode( self ):
-        code = UserCode( '12345' )
-        self.assertFalse( code.validate( '12346' ) )
+        # Variables
+        responseCode : int
+        code         : UserCode
+        responseCode = 0
+        try:
+            code = UserCode( '12345' )
+            code.match( '12346' )
+        except DomainException as exc:
+            responseCode = exc.code()
+        self.assertEqual( responseCode, 148 )
 

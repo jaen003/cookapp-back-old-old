@@ -14,12 +14,14 @@ from src.product.domain            import ProductDescription
 from src.shared.domain             import ProductId
 from src.restaurant.infrastructure import RestaurantMysqlRepository
 from src.shared.infrastructure     import RabbitMqEventBus
-from src.shared.domain             import INCORRECT_DATA
+from src.shared.domain             import INCORRECT_REQUEST_DATA
 from src.shared.domain             import SERVER_ACCESS_DENIED
 from src.user.infrastructure       import UserTokenManagerAdapter
 from src.user.domain               import UserTokenManager
 from src.user.domain               import User
 from app.middleware                import requestHttp
+from src.shared.domain             import DomainException
+from src.shared.domain             import SUCCESSFUL_REQUEST
 
 """
  *
@@ -40,7 +42,6 @@ productPostController = Blueprint( 'productPostController', __name__ )
 def create( data : dict ):
     # Variables
     creator         : ProductCreator
-    responseCode    : int
     headers         : dict
     token           : str
     tokenManager    : UserTokenManager
@@ -64,12 +65,15 @@ def create( data : dict ):
         eventBus             = RabbitMqEventBus(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = creator.create(
-        id           = ProductId( data.get( 'prod_id' ) ),
-        name         = ProductName( data.get( 'prod_name' ) ),
-        price        = ProductPrice( data.get( 'prod_price' ) ),
-        description  = ProductDescription( data.get( 'prod_description' ) ),
-        restaurantId = user.restaurantId(),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        creator.create(
+            id           = ProductId( data.get( 'prod_id' ) ),
+            name         = ProductName( data.get( 'prod_name' ) ),
+            price        = ProductPrice( data.get( 'prod_price' ) ),
+            description  = ProductDescription( data.get( 'prod_description' ) ),
+            restaurantId = user.restaurantId(),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202

@@ -10,15 +10,15 @@ from src.product.domain    import ProductDescription
 from src.shared.domain     import ProductId
 from src.product.domain    import ProductRepository
 from src.product.domain    import Product
-from src.shared.domain     import SUCCESSFUL_REQUEST
-from src.shared.domain     import SERVER_INTERNAL_ERROR
-from src.shared.domain     import DomainException
 from src.product.domain    import ProductFinder
-from src.shared.domain     import PRODUCT_ALREADY_CREATED
 from src.restaurant.domain import RestaurantRepository
 from src.restaurant.domain import RestaurantFinder
 from src.shared.domain     import EventBus
 from src.shared.domain     import RestaurantId
+from src.restaurant.domain import RestaurantNotFoundException
+from src.shared.domain     import ServerInternalErrorException
+from src.product.domain    import ProductNameAlreadyCreatedException
+from src.restaurant.domain import Restaurant
 
 """
  *
@@ -61,7 +61,7 @@ class ProductCreator:
         price        : ProductPrice,
         description  : ProductDescription,
         restaurantId : RestaurantId,
-    ) -> int:
+    ) -> None:
         # Variables
         product              : Product
         repository           : ProductRepository
@@ -69,23 +69,20 @@ class ProductCreator:
         finder               : ProductFinder
         restaurantFinder     : RestaurantFinder
         eventBus             : EventBus
+        restaurant           : Restaurant
         # Code
         eventBus             = self.__eventBus
         restaurantRepository = self.__restaurantRepository
         restaurantFinder     = RestaurantFinder( restaurantRepository )
         repository           = self.__repository
         finder               = ProductFinder( repository )
-        try:
-            product = Product.create( id, name, price, description, restaurantId )
-            restaurantFinder.findById( restaurantId )
-            try:            
-                finder.findByNameAndRestaurant( name, restaurantId )
-                return PRODUCT_ALREADY_CREATED
-            except DomainException:
-                pass
-            if repository.insert( product ):
-                eventBus.publish( product.pullEvents() )
-                return SUCCESSFUL_REQUEST
-            return SERVER_INTERNAL_ERROR
-        except DomainException as exc:
-            return exc.code()
+        restaurant           = restaurantFinder.findById( restaurantId )
+        if restaurant is None:
+            raise RestaurantNotFoundException( restaurantId )
+        product = finder.findByNameAndRestaurant( name, restaurantId )
+        if product is not None:
+            raise ProductNameAlreadyCreatedException( name )
+        product = Product.create( id, name, price, description, restaurantId )     
+        if not repository.insert( product ):
+            raise ServerInternalErrorException()
+        eventBus.publish( product.pullEvents() )

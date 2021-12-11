@@ -4,9 +4,8 @@
  *
 """
 
-from .DomainException    import DomainException
+from .DomainException     import DomainException
 from .DomainExceptionCode import INVALID_PRODUCT_ID
-from .ProductId          import ProductId
 
 """
  *
@@ -22,8 +21,8 @@ class InvalidProductIdException( DomainException ):
      *
     """
 
-    def __init__( self, id : ProductId ) -> None:
+    def __init__( self, id : str ) -> None:
         super().__init__( 
             INVALID_PRODUCT_ID,
-            'The product id {} is invalid'.format( id.value() )
+            'The product id {} is invalid'.format( id )
         )

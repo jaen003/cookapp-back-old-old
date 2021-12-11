@@ -4,9 +4,8 @@
  *
 """
 
-from src.shared.domain   import DomainException
-from src.shared.domain   import INVALID_PRODUCT_DESCRIPTION
-from .ProductDescription import ProductDescription
+from src.shared.domain import DomainException
+from src.shared.domain import INVALID_PRODUCT_DESCRIPTION
 
 """
  *
@@ -22,8 +21,8 @@ class InvalidProductDescriptionException( DomainException ):
      *
     """
 
-    def __init__( self, description : ProductDescription ) -> None:
+    def __init__( self, description : str ) -> None:
         super().__init__( 
             INVALID_PRODUCT_DESCRIPTION,
-            'The product description {} is invalid'.format( description.value() )
+            'The product description {} is invalid'.format( description )
         )

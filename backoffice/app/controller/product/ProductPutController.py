@@ -11,7 +11,7 @@ from src.product.infrastructure import ProductMysqlRepository
 from src.product.domain         import ProductName
 from src.shared.domain          import ProductId
 from src.shared.infrastructure  import RabbitMqEventBus
-from src.shared.domain          import INCORRECT_DATA
+from src.shared.domain          import INCORRECT_REQUEST_DATA
 from src.product.application    import ProductRevalorizer
 from src.product.domain         import ProductPrice
 from src.product.application    import ProductRewriter
@@ -21,6 +21,8 @@ from src.user.infrastructure    import UserTokenManagerAdapter
 from src.user.domain            import UserTokenManager
 from src.user.domain            import User
 from app.middleware             import requestHttp
+from src.shared.domain          import DomainException
+from src.shared.domain          import SUCCESSFUL_REQUEST
 
 """
  *
@@ -41,7 +43,6 @@ productPutController = Blueprint( 'productPutController', __name__ )
 def rename( data : dict ):
     # Variables
     renamer         : ProductRenamer
-    responseCode    : int
     headers         : dict
     token           : str
     tokenManager    : UserTokenManager
@@ -64,20 +65,22 @@ def rename( data : dict ):
         eventBus   = RabbitMqEventBus(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = renamer.rename(
-        id           = ProductId( data.get( 'prod_id' ) ),
-        name         = ProductName( data.get( 'prod_name' ) ),
-        restaurantId = user.restaurantId(),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        renamer.rename(
+            id           = ProductId( data.get( 'prod_id' ) ),
+            name         = ProductName( data.get( 'prod_name' ) ),
+            restaurantId = user.restaurantId(),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202
 
 @productPutController.route( '/api/v1/product/revalue', methods = [ 'PUT' ] )
 @requestHttp( [ 'prod_id', 'prod_price' ] )
 def revalue( data : dict ):
     # Variables
     revalorizer     : ProductRevalorizer
-    responseCode    : int
     headers         : dict
     token           : str
     tokenManager    : UserTokenManager
@@ -100,20 +103,22 @@ def revalue( data : dict ):
         eventBus   = RabbitMqEventBus(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202    
-    responseCode = revalorizer.revalue(
-        id           = ProductId( data.get( 'prod_id' ) ),
-        price        = ProductPrice( data.get( 'prod_price' ) ),
-        restaurantId = user.restaurantId(),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        revalorizer.revalue(
+            id           = ProductId( data.get( 'prod_id' ) ),
+            price        = ProductPrice( data.get( 'prod_price' ) ),
+            restaurantId = user.restaurantId(),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202
 
 @productPutController.route( '/api/v1/product/rewrite', methods = [ 'PUT' ] )
 @requestHttp( [ 'prod_id', 'prod_description' ] )
 def rewrite( data : dict ):
     # Variables
     rewriter        : ProductRewriter
-    responseCode    : int
     headers         : dict
     token           : str
     tokenManager    : UserTokenManager
@@ -136,10 +141,13 @@ def rewrite( data : dict ):
         eventBus   = RabbitMqEventBus(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = rewriter.rewrite(
-        id           = ProductId( data.get( 'prod_id' ) ),
-        description  = ProductDescription( data.get( 'prod_description' ) ),
-        restaurantId = user.restaurantId(),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        rewriter.rewrite(
+            id           = ProductId( data.get( 'prod_id' ) ),
+            description  = ProductDescription( data.get( 'prod_description' ) ),
+            restaurantId = user.restaurantId(),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202

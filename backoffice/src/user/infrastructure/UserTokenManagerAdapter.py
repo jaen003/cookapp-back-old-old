@@ -105,7 +105,7 @@ class UserTokenManagerAdapter( UserTokenManager, metaclass = Singleton ):
             return None
         userMysqlRepository = UserMysqlRepository()
         secret    = os.getenv( 'SECRET_KEY' )
-        claims    = jwt.decode( token, secret, algorithms=['HS256'] )
+        claims    = jwt.decode( token, secret, algorithms = ['HS256'] )
         dateNow   = int( mktime( datetime.now().timetuple() ) )
         expiresAt = claims['expiresAt']
         if dateNow > expiresAt:
@@ -113,7 +113,7 @@ class UserTokenManagerAdapter( UserTokenManager, metaclass = Singleton ):
             return None
         email     = UserEmail( claims['email'] )
         user      = userMysqlRepository.selectByEmail( email )
-        if user.isDisabled() or user.isBlocked():
+        if user.status().isDisabled() or user.status().isBlocked():
             return None
         return user
     

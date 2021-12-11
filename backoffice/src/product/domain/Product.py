@@ -4,22 +4,18 @@
  *
 """
 
-from .ProductName                        import ProductName
-from .ProductPrice                       import ProductPrice
-from .ProductDescription                 import ProductDescription
-from src.shared.domain                   import ProductId
-from .InvalidProductNameException        import InvalidProductNameException
-from src.shared.domain                   import InvalidProductIdException
-from src.shared.domain                   import AggregateRoot
-from .ProductCreated                     import ProductCreated
-from .InvalidProductDescriptionException import InvalidProductDescriptionException
-from .InvalidProductPriceException       import InvalidProductPriceException
-from src.shared.domain                   import RestaurantId
-from .ProductDeleted                     import ProductDeleted
-from .ProductRenamed                     import ProductRenamed
-from .ProductRevalued                    import ProductRevalued
-from .ProductRewrited                    import ProductRewrited
-from .ProductStatus                      import ProductStatus
+from .ProductName        import ProductName
+from .ProductPrice       import ProductPrice
+from .ProductDescription import ProductDescription
+from src.shared.domain   import ProductId
+from src.shared.domain   import AggregateRoot
+from .ProductCreated     import ProductCreated
+from src.shared.domain   import RestaurantId
+from .ProductDeleted     import ProductDeleted
+from .ProductRenamed     import ProductRenamed
+from .ProductRevalued    import ProductRevalued
+from .ProductRewrited    import ProductRewrited
+from .ProductStatus      import ProductStatus
 
 """
  *
@@ -92,14 +88,6 @@ class Product( AggregateRoot ):
         description  : ProductDescription,
         restaurantId : RestaurantId,
     ): # -> Product
-        if id.isEmpty():
-            raise InvalidProductIdException( id )
-        if name.isEmpty():
-            raise InvalidProductNameException( name )
-        if price.isValid() == False:
-            raise InvalidProductPriceException( price )
-        if description.isEmpty():
-            raise InvalidProductDescriptionException( description )
         self = cls(
             id           = id,
             name         = name,
@@ -124,8 +112,6 @@ class Product( AggregateRoot ):
         ) )
     
     def rename( self, name : ProductName ) -> None:
-        if name.isEmpty():
-            raise InvalidProductNameException( name )
         self.__name = name
         self.record( ProductRenamed(
             id   = self.__id,
@@ -133,8 +119,6 @@ class Product( AggregateRoot ):
         ) )
     
     def revalue( self, price : ProductPrice ) -> None:
-        if not price.isValid():
-            raise InvalidProductPriceException( price )
         self.__price = price
         self.record( ProductRevalued(
             id    = self.__id,
@@ -142,8 +126,6 @@ class Product( AggregateRoot ):
         ) )
     
     def rewrite( self, description : ProductDescription ) -> None:
-        if description.isEmpty():
-            raise InvalidProductDescriptionException( description )
         self.__description = description
         self.record( ProductRewrited(
             id          = self.__id,

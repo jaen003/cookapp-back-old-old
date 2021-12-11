@@ -4,7 +4,8 @@
  *
 """
 
-from src.shared.domain import StringValueObject
+from src.shared.domain            import StringValueObject
+from .InvalidProductNameException import InvalidProductNameException
 
 """
  *
@@ -22,3 +23,5 @@ class ProductName( StringValueObject ):
     
     def __init__( self, value : str ) -> None:
         super().__init__( value )
+        if self.isEmpty():
+            raise InvalidProductNameException( value )

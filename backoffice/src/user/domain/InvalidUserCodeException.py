@@ -6,7 +6,6 @@
 
 from src.shared.domain import DomainException
 from src.shared.domain import INVALID_USER_CODE
-from .UserCode         import UserCode
 
 """
  *
@@ -22,8 +21,8 @@ class InvalidUserCodeException( DomainException ):
      *
     """
 
-    def __init__( self, code : UserCode ) -> None:
+    def __init__( self, code : str ) -> None:
         super().__init__(
             INVALID_USER_CODE,
-            'The user code {} is invalid'.format( code.value() ),
+            'The user code {} is invalid'.format( code ),
         )

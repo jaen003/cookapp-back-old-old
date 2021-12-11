@@ -8,12 +8,11 @@ from src.user.domain   import UserPassword
 from src.shared.domain import UserEmail
 from src.shared.domain import RestaurantId
 from src.user.domain   import UserRepository
-from src.shared.domain import SUCCESSFUL_REQUEST
-from src.shared.domain import SERVER_INTERNAL_ERROR
-from src.shared.domain import DomainException
 from src.user.domain   import UserFinder
 from src.shared.domain import EventBus
 from src.user.domain   import User
+from src.shared.domain import ServerInternalErrorException
+from src.user.domain   import UserNotFoundException
 
 """
  *
@@ -51,7 +50,7 @@ class UserInsurer:
         email        : UserEmail,
         password     : UserPassword,
         restaurantId : RestaurantId,
-    ) -> int:
+    ) -> None:
         # Variables
         user       : User
         repository : UserRepository
@@ -61,12 +60,10 @@ class UserInsurer:
         eventBus   = self.__eventBus
         repository = self.__repository
         finder     = UserFinder( repository )
-        try:
-            user = finder.findByEmailAndRestaurant( email, restaurantId )
-            user.insure( password )
-            if repository.update( user ):
-                eventBus.publish( user.pullEvents() )
-                return SUCCESSFUL_REQUEST
-            return SERVER_INTERNAL_ERROR
-        except DomainException as exc:
-            return exc.code()
+        user       = finder.findByEmailAndRestaurant( email, restaurantId )
+        if user is None:
+            raise UserNotFoundException( email )
+        user.insure( password )
+        if not repository.update( user ):
+            raise ServerInternalErrorException()
+        eventBus.publish( user.pullEvents() )

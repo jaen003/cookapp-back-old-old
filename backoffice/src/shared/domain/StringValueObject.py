@@ -12,7 +12,7 @@ class StringValueObject:
      *
     """
 
-    _value : str
+    __value : str
 
     """
      *
@@ -21,17 +21,22 @@ class StringValueObject:
     """
 
     def __init__( self, value : str ) -> None:
-        self._value = value
+        self.__value = value
     
     def value( self ) -> str:
-        return self._value
+        return self.__value
 
     def isEmpty( self ) -> bool:
-        if self._value == '':
+        if self.__value == '':
             return True
         return False
     
     def equals( self, value : str ) -> bool:
-        if self._value == value:
+        if self.__value == value:
+            return True
+        return False
+    
+    def isLongerThan( self, value : int ) -> bool:
+        if len( self.__value ) > value:
             return True
         return False

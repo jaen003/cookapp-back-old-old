@@ -4,9 +4,8 @@
  *
 """
 
-from .DomainException    import DomainException
+from .DomainException     import DomainException
 from .DomainExceptionCode import INVALID_USER_EMAIL
-from .UserEmail          import UserEmail
 
 """
  *
@@ -22,8 +21,8 @@ class InvalidUserEmailException( DomainException ):
      *
     """
 
-    def __init__( self, email : UserEmail ) -> None:
+    def __init__( self, email : str ) -> None:
         super().__init__(
             INVALID_USER_EMAIL,
-            'The user email {} is invalid'.format( email.value() ),
+            'The user email {} is invalid'.format( email ),
         )

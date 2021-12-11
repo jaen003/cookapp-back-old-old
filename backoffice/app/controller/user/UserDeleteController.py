@@ -14,6 +14,8 @@ from src.shared.domain         import SERVER_ACCESS_DENIED
 from src.user.infrastructure   import UserTokenManagerAdapter
 from src.user.domain           import UserTokenManager
 from src.user.domain           import User
+from src.shared.domain         import DomainException
+from src.shared.domain         import SUCCESSFUL_REQUEST
 
 """
  *
@@ -33,7 +35,6 @@ userDeleteController = Blueprint( 'userDeleteController', __name__ )
 def delete( email : str ):
     # Variables
     deletor         : UserDeletor
-    responseCode    : int
     headers         : dict
     token           : str
     tokenManager    : UserTokenManager
@@ -55,8 +56,11 @@ def delete( email : str ):
         repository = UserMysqlRepository(),
         eventBus   = RabbitMqEventBus(),
     )
-    responseCode = deletor.delete(
-        email        = UserEmail( email ),
-        restaurantId = user.restaurantId(),
-    )
-    return { 'code' : responseCode }, 202
+    try:
+        deletor.delete(
+            email        = UserEmail( email ),
+            restaurantId = user.restaurantId(),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202

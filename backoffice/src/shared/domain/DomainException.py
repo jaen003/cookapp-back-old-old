@@ -12,8 +12,7 @@ class DomainException( Exception ):
      *
     """
 
-    __message : str
-    __code    : int
+    __code : int
 
     """
      *
@@ -22,11 +21,8 @@ class DomainException( Exception ):
     """
 
     def __init__( self, code : int, message : str ) -> None:
+        super().__init__( message )
         self.__code = code
-        self.__message = message
-    
-    def message( self ) -> str:
-        return self.__message
 
     def code( self ) -> int:
         return self.__code
