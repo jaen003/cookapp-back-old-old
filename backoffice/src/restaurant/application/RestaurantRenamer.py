@@ -8,12 +8,11 @@ from src.restaurant.domain import RestaurantName
 from src.shared.domain     import RestaurantId
 from src.restaurant.domain import RestaurantRepository
 from src.restaurant.domain import Restaurant
-from src.shared.domain     import SUCCESSFUL_REQUEST
-from src.shared.domain     import SERVER_INTERNAL_ERROR
-from src.shared.domain     import RESTAURANT_ALREADY_CREATED
-from src.shared.domain     import DomainException
 from src.restaurant.domain import RestaurantFinder
 from src.shared.domain     import RestaurantId
+from src.restaurant.domain import RestaurantNotFoundException
+from src.shared.domain     import ServerInternalErrorException
+from src.restaurant.domain import RestaurantNameAlreadyCreatedException
 
 """
  *
@@ -47,7 +46,7 @@ class RestaurantRenamer:
         self, 
         id   : RestaurantId, 
         name : RestaurantName,
-    ) -> int:
+    ) -> None:
         # Variables
         restaurant : Restaurant
         repository : RestaurantRepository
@@ -55,16 +54,12 @@ class RestaurantRenamer:
         # Code
         repository = self.__repository
         finder     = RestaurantFinder( repository )
-        try:
-            try:
-                finder.findByName( name )
-                return RESTAURANT_ALREADY_CREATED
-            except DomainException:
-                pass
-            restaurant = finder.findById( id )
-            restaurant.rename( name )
-            if repository.update( restaurant ):
-                return SUCCESSFUL_REQUEST
-            return SERVER_INTERNAL_ERROR
-        except DomainException as exc:
-            return exc.code()
+        restaurant = finder.findByName( name )
+        if restaurant is not None:
+            raise RestaurantNameAlreadyCreatedException( name )
+        restaurant = finder.findById( id )
+        if restaurant is None:
+            raise RestaurantNotFoundException( id )
+        restaurant.rename( name )
+        if not repository.update( restaurant ):
+            raise ServerInternalErrorException()

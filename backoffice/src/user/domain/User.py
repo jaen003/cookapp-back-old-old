@@ -4,23 +4,19 @@
  *
 """
 
-from .UserName                     import UserName
-from src.shared.domain             import UserEmail
-from .UserPassword                 import UserPassword
-from .UserRole                     import UserRole
-from src.shared.domain             import RestaurantId
-from src.shared.domain             import AggregateRoot
-from .UserDeleted                  import UserDeleted
-from .UserRenamed                  import UserRenamed
-from .UserRelocated                import UserRelocated
-from .InvalidUserRoleException     import InvalidUserRoleException
-from .InvalidUserNameException     import InvalidUserNameException
-from .UserInsured                  import UserInsured
-from .InvalidUserPasswordException import InvalidUserPasswordException
-from .UserCode                     import UserCode
-from .UserValidated                import UserValidated
-from .InvalidUserCodeException     import InvalidUserCodeException
-from .UserStatus                   import UserStatus
+from .UserName         import UserName
+from src.shared.domain import UserEmail
+from .UserPassword     import UserPassword
+from .UserRole         import UserRole
+from src.shared.domain import RestaurantId
+from src.shared.domain import AggregateRoot
+from .UserDeleted      import UserDeleted
+from .UserRenamed      import UserRenamed
+from .UserRelocated    import UserRelocated
+from .UserInsured      import UserInsured
+from .UserCode         import UserCode
+from .UserValidated    import UserValidated
+from .UserStatus       import UserStatus
 
 """
  *
@@ -97,8 +93,6 @@ class User( AggregateRoot ):
         ) )
 
     def rename( self, name : UserName ) -> None:
-        if name.isEmpty():
-            raise InvalidUserNameException( name )
         self.__name = name
         self.record( UserRenamed(
             name  = name,
@@ -106,8 +100,6 @@ class User( AggregateRoot ):
         ) )
     
     def insure( self, password : UserPassword ) -> None:
-        if password.isEmpty():
-            raise InvalidUserPasswordException( password )
         self.__password = password
         self.record( UserInsured(
             email    = self.__email,
@@ -115,28 +107,19 @@ class User( AggregateRoot ):
         ) )
     
     def relocate( self, role : UserRole ) -> None:
-        if not self.__role.validate( role.value() ):
-            raise InvalidUserRoleException( role )
+        self.__role.validate( role.value() )
         self.__role = role
         self.record( UserRelocated(
             role  = role,
             email = self.__email,
         ) )
     
-    def isAuthentic( self, password : UserPassword ) -> bool:
-        if self.__password.equals( password.value() ):
-            return True
-        return False
-    
     def validate( self, code : UserCode ) -> None:
-        if not self.__code.validate( code.value() ):
-            raise InvalidUserCodeException( code )
+        self.__code.match( code.value() )
         self.__status = UserStatus.enabled()
         self.record( UserValidated(
             email = self.__email,
         ) )
     
     def renovateCode( self, code : UserCode ) -> None:
-        if code.isEmpty():
-            raise InvalidUserCodeException( code )
         self.__code = code

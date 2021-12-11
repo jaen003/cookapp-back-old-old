@@ -4,13 +4,11 @@
  *
 """
 
-from .TableNotFoundException       import TableNotFoundException
-from .TableRepository              import TableRepository
-from src.shared.domain             import TableId
-from src.shared.domain             import RestaurantId
-from .Table                        import Table 
-from .TableNumber                  import TableNumber
-from .TableNumberNotFoundException import TableNumberNotFoundException
+from .TableRepository  import TableRepository
+from src.shared.domain import TableId
+from src.shared.domain import RestaurantId
+from .Table            import Table 
+from .TableNumber      import TableNumber
 
 """
  *
@@ -44,8 +42,6 @@ class TableFinder:
         # Code
         repository = self.__repository
         data = repository.selectByIdAndRestaurant( id, restaurantId )
-        if data is None:
-            raise TableNotFoundException( id )
         return data
     
     def findByNumberAndRestaurant( self, number : TableNumber, restaurantId : RestaurantId ) -> Table:
@@ -55,6 +51,4 @@ class TableFinder:
         # Code
         repository = self.__repository
         data = repository.selectByNumberAndRestaurant( number, restaurantId )
-        if data is None:
-            raise TableNumberNotFoundException( number )
         return data

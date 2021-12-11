@@ -4,14 +4,13 @@
  *
 """
 
+from src.product.domain import ProductNotFoundException
+from src.shared.domain  import ServerInternalErrorException
+from src.product.domain import ProductNameAlreadyCreatedException
 from src.product.domain import ProductName
 from src.shared.domain  import ProductId
 from src.product.domain import ProductRepository
 from src.product.domain import Product
-from src.shared.domain  import SUCCESSFUL_REQUEST
-from src.shared.domain  import SERVER_INTERNAL_ERROR
-from src.shared.domain  import PRODUCT_ALREADY_CREATED
-from src.shared.domain  import DomainException
 from src.product.domain import ProductFinder
 from src.shared.domain  import EventBus
 from src.shared.domain  import RestaurantId
@@ -52,7 +51,7 @@ class ProductRenamer:
         id           : ProductId, 
         name         : ProductName,
         restaurantId : RestaurantId,
-    ) -> int:
+    ) -> None:
         # Variables
         product    : Product
         repository : ProductRepository
@@ -62,17 +61,13 @@ class ProductRenamer:
         eventBus   = self.__eventBus
         repository = self.__repository
         finder     = ProductFinder( repository )
-        try:
-            try:            
-                finder.findByNameAndRestaurant( name, restaurantId )
-                return PRODUCT_ALREADY_CREATED
-            except DomainException:
-                pass
-            product = finder.findByIdAndRestaurant( id, restaurantId )
-            product.rename( name )
-            if repository.update( product ):
-                eventBus.publish( product.pullEvents() )
-                return SUCCESSFUL_REQUEST
-            return SERVER_INTERNAL_ERROR
-        except DomainException as exc:
-            return exc.code()
+        product    = finder.findByNameAndRestaurant( name, restaurantId )
+        if product is not None:
+            raise ProductNameAlreadyCreatedException( name )
+        product = finder.findByIdAndRestaurant( id, restaurantId )
+        if product is None:
+            raise ProductNotFoundException( id )
+        product.rename( name )
+        if not repository.update( product ):
+            raise ServerInternalErrorException()
+        eventBus.publish( product.pullEvents() )

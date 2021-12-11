@@ -12,6 +12,7 @@ from src.user.infrastructure  import UserTokenManagerAdapter
 from src.user.domain          import UserTokenManager
 from src.user.domain          import User
 from src.shared.domain        import SERVER_ACCESS_DENIED
+from src.shared.domain        import SUCCESSFUL_REQUEST
 
 """
  *
@@ -30,7 +31,6 @@ tableGetController = Blueprint( 'tableGetController', __name__ )
 @tableGetController.route( '/api/v1/table', methods = [ 'GET' ] )
 def searchAllByRestaurant():
     # Variables
-    responseCode    : int
     tables          : list
     headers         : dict
     token           : str
@@ -52,7 +52,7 @@ def searchAllByRestaurant():
     searcher = TableSearcher( 
         repository = TableMysqlRepository(),
     )
-    tables, responseCode = searcher.searchAllByRestaurant(
+    tables = searcher.searchAllByRestaurant(
         restaurantId = user.restaurantId(),
     )
-    return { 'code' : responseCode, 'data' : tables }, 202
+    return { 'code' : SUCCESSFUL_REQUEST, 'data' : tables }, 202

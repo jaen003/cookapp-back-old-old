@@ -9,12 +9,11 @@ from src.shared.domain import TableId
 from src.shared.domain import RestaurantId
 from src.table.domain  import TableRepository
 from src.table.domain  import Table
-from src.shared.domain import SUCCESSFUL_REQUEST
-from src.shared.domain import SERVER_INTERNAL_ERROR
-from src.shared.domain import DomainException
 from src.table.domain  import TableFinder
-from src.shared.domain import TABLE_ALREADY_CREATED
 from src.shared.domain import EventBus
+from src.table.domain  import TableNumberAlreadyCreatedException
+from src.table.domain  import TableNotFoundException
+from src.shared.domain import ServerInternalErrorException
 
 """
  *
@@ -52,7 +51,7 @@ class TableRenumerator:
         id           : TableId, 
         number       : TableNumber,
         restaurantId : RestaurantId,
-    ) -> int:
+    ) -> None:
         # Variables
         table      : Table
         repository : TableRepository
@@ -62,17 +61,13 @@ class TableRenumerator:
         eventBus   = self.__eventBus
         repository = self.__repository
         finder     = TableFinder( repository )
-        try:
-            try:            
-                finder.findByNumberAndRestaurant( number, restaurantId )
-                return TABLE_ALREADY_CREATED
-            except DomainException:
-                pass
-            table = finder.findByIdAndRestaurant( id, restaurantId )
-            table.renumber( number )
-            if repository.update( table ):
-                eventBus.publish( table.pullEvents() )
-                return SUCCESSFUL_REQUEST
-            return SERVER_INTERNAL_ERROR
-        except DomainException as exc:
-            return exc.code()
+        table      = finder.findByNumberAndRestaurant( number, restaurantId )
+        if table is not None:
+            raise TableNumberAlreadyCreatedException( number )
+        table = finder.findByIdAndRestaurant( id, restaurantId )
+        if table is None:
+            raise TableNotFoundException( id )
+        table.renumber( number )
+        if not repository.update( table ):
+            raise ServerInternalErrorException()
+        eventBus.publish( table.pullEvents() )

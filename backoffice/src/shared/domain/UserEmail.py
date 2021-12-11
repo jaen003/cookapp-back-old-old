@@ -4,7 +4,8 @@
  *
 """
 
-from .StringValueObject import StringValueObject
+from .StringValueObject         import StringValueObject
+from .InvalidUserEmailException import InvalidUserEmailException
 
 """
  *
@@ -20,5 +21,7 @@ class UserEmail( StringValueObject ):
      *
     """
     
-    def __init__( self, value : str = None ) -> None:
+    def __init__( self, value : str ) -> None:
         super().__init__( value )
+        if self.isEmpty():
+            raise InvalidUserEmailException( value )

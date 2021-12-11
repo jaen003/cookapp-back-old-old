@@ -52,6 +52,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         deletor      : ProductDeletor
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByIdAndRestaurant.return_value = self.__product
         eventBusMock = Mock()
@@ -60,7 +61,7 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = deletor.delete( 
+            deletor.delete( 
                 id           = ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
             )
@@ -73,6 +74,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         deletor      : ProductDeletor
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByIdAndRestaurant.return_value = None
         eventBusMock = Mock()
@@ -81,7 +83,7 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = deletor.delete( 
+            deletor.delete( 
                 id           = ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
             )
@@ -94,6 +96,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         deletor      : ProductDeletor
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByIdAndRestaurant.return_value = self.__product
         repositoryMock.update.return_value = False
@@ -103,7 +106,7 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = deletor.delete( 
+            deletor.delete( 
                 id           = ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
             )

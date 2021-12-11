@@ -6,7 +6,6 @@
 
 from src.shared.domain import DomainException
 from src.shared.domain import INVALID_PRODUCT_NAME
-from .ProductName      import ProductName
 
 """
  *
@@ -22,8 +21,8 @@ class InvalidProductNameException( DomainException ):
      *
     """
 
-    def __init__( self, name : ProductName ) -> None:
+    def __init__( self, name : str ) -> None:
         super().__init__( 
             INVALID_PRODUCT_NAME,
-            'The product name {} is invalid'.format( name.value() )
+            'The product name {} is invalid'.format( name )
         )

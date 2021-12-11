@@ -40,7 +40,7 @@ services:
         depends_on:
             - rabbitmq
             - mysql
-        command: python /src/app/main.py
+        command: python /src/app/Main.py
     
     backoffice_backend_test:
         image: 'cookapp_backoffice_backend_test:latest'

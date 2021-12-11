@@ -4,11 +4,10 @@
  *
 """
 
-from .UserNotFoundException import UserNotFoundException
-from .UserRepository        import UserRepository
-from src.shared.domain      import UserEmail
-from src.shared.domain      import RestaurantId
-from .User                  import User
+from .UserRepository   import UserRepository
+from src.shared.domain import UserEmail
+from src.shared.domain import RestaurantId
+from .User             import User
 
 """
  *
@@ -42,8 +41,6 @@ class UserFinder:
         # Code
         repository = self.__repository
         data = repository.selectByEmailAndRestaurant( email, restaurantId )
-        if data is None:
-            raise UserNotFoundException( email )
         return data
     
     def findByEmail( self, email : UserEmail ) -> User:
@@ -53,6 +50,4 @@ class UserFinder:
         # Code
         repository = self.__repository
         data = repository.selectByEmail( email )
-        if data is None:
-            raise UserNotFoundException( email )
         return data

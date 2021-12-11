@@ -8,13 +8,11 @@ from src.user.domain   import UserPassword
 from src.shared.domain import UserEmail
 from src.user.domain   import UserRepository
 from src.user.domain   import User
-from src.shared.domain import SUCCESSFUL_REQUEST
-from src.shared.domain import DomainException
 from src.user.domain   import UserFinder
-from src.shared.domain import USER_DISABLED
-from src.shared.domain import USER_BLOCKED
-from src.shared.domain import INCORRECT_DATA
 from src.user.domain   import UserTokenManager
+from src.user.domain   import UserBlockedException
+from src.user.domain   import UserDisabledException
+from src.user.domain   import IncorrectUserDataException
 
 """
  *
@@ -51,7 +49,7 @@ class UserAuthenticator:
         self, 
         email    : UserEmail,
         password : UserPassword,
-    ) -> tuple[ dict, int ]:
+    ) -> dict:
         # Variables
         user         : User
         repository   : UserRepository
@@ -64,17 +62,16 @@ class UserAuthenticator:
         finder       = UserFinder( repository )
         tokenManager = self.__tokenManager
         response     = {}
-        try:
-            user = finder.findByEmail( email )
-            if user.status().isDisabled():
-                return response, USER_DISABLED
-            if user.status().isBlocked():
-                return response, USER_BLOCKED
-            if not user.isAuthentic( password ):
-                return response, INCORRECT_DATA
-            token = tokenManager.generateToken( user )
-            response['user_token'] = token
-            response['user_role'] = user.role().value()
-            return response, SUCCESSFUL_REQUEST
-        except DomainException as exc:
-            return response, exc.code()
+        user         = finder.findByEmail( email )
+        if user is None:
+            raise IncorrectUserDataException()
+        if user.status().isDisabled():
+            raise UserDisabledException( email )
+        if user.status().isBlocked():
+            raise UserBlockedException( email )
+        if not user.password().equals( password.value() ):
+            raise IncorrectUserDataException()
+        token = tokenManager.generateToken( user )
+        response['user_token'] = token
+        response['user_role']  = user.role().value()
+        return response

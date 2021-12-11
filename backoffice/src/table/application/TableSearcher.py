@@ -5,7 +5,6 @@
 """
 
 from src.table.domain  import TableRepository
-from src.shared.domain import SUCCESSFUL_REQUEST
 from src.shared.domain import RestaurantId
 
 """
@@ -36,11 +35,11 @@ class TableSearcher:
     def searchAllByRestaurant( 
         self,
         restaurantId : RestaurantId,
-    ) -> tuple[ list, int ]:
+    ) -> list:
         # Variables
         repository : TableRepository
         tables   : list
         # Code
         repository = self.__repository
         tables     = repository.selectAllByRestaurant( restaurantId )
-        return tables, SUCCESSFUL_REQUEST
+        return tables

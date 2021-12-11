@@ -49,72 +49,56 @@ class TestSuite( unittest.TestCase ):
 
     def testProductAlreadyExist( self ):
         # Variables
-        finder       : ProductFinder
-        responseCode : int
+        finder   : ProductFinder
+        response : Product
         # Code
-        responseCode = 0
         repositoryMock = Mock()
         repositoryMock.selectByIdAndRestaurant.return_value = self.__product
-        finder = ProductFinder( repositoryMock )
-        try:
-            finder.findByIdAndRestaurant( 
-                ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
-                RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-            )
-        except DomainException as exc:
-            responseCode = exc.code()
-        self.assertEqual( responseCode, 0 )
+        finder   = ProductFinder( repositoryMock )
+        response = finder.findByIdAndRestaurant( 
+            ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
+            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        )
+        self.assertIsNotNone( response )
     
     def testProductNameAlreadyExist( self ):
         # Variables
-        finder       : ProductFinder
-        responseCode : int
+        finder   : ProductFinder
+        response : Product
         # Code
-        responseCode = 0
         repositoryMock = Mock()
         repositoryMock.selectByNameAndRestaurant.return_value = self.__product
         finder = ProductFinder( repositoryMock )
-        try:
-            finder.findByNameAndRestaurant( 
-                ProductName( 'Sandwich' ),
-                RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-            )
-        except DomainException as exc:
-            responseCode = exc.code()
-        self.assertEqual( responseCode, 0 )
+        response = finder.findByNameAndRestaurant( 
+            ProductName( 'Sandwich' ),
+            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        )
+        self.assertIsNotNone( response )
     
     def testProductNotFound( self ):
         # Variables
-        finder       : ProductFinder
-        responseCode : int
+        finder   : ProductFinder
+        response : Product
         # Code
-        responseCode = 0
         repositoryMock = Mock()
         repositoryMock.selectByIdAndRestaurant.return_value = None
         finder = ProductFinder( repositoryMock )
-        try:
-            finder.findByIdAndRestaurant( 
-                ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
-                RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-            )
-        except DomainException as exc:
-            responseCode = exc.code()
-        self.assertEqual( responseCode, 123 )
+        response = finder.findByIdAndRestaurant(
+            ProductName( 'Sandwich' ),
+            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        )
+        self.assertIsNone( response )
     
     def testProductNameNotFound( self ):
         # Variables
-        finder       : ProductFinder
-        responseCode : int
+        finder   : ProductFinder
+        response : Product
         # Code
-        responseCode = 0
         repositoryMock = Mock()
         repositoryMock.selectByNameAndRestaurant.return_value = None
         finder = ProductFinder( repositoryMock )
-        try:
-            finder.findByNameAndRestaurant( 
-                ProductName( 'Sandwich' ),
-                RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
-            )
-        except DomainException as exc:
-            responseCode = exc.code()
-        self.assertEqual( responseCode, 128 )
+        response = finder.findByNameAndRestaurant(
+            ProductName( 'Sandwich' ),
+            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+        )
+        self.assertIsNone( response )

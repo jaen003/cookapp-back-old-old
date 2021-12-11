@@ -4,11 +4,12 @@
  *
 """
 
-from src.shared.domain import StringValueObject
-from random            import choice
-from time              import mktime
-from datetime          import datetime
-from datetime          import timedelta
+from src.shared.domain         import StringValueObject
+from random                    import choice
+from time                      import mktime
+from datetime                  import datetime
+from datetime                  import timedelta
+from .InvalidUserCodeException import InvalidUserCodeException
 
 """
  *
@@ -44,6 +45,8 @@ class UserCode( StringValueObject ):
     
     def __init__( self, value : str ) -> None:
         super().__init__( value )
+        if not self.isValid():
+            raise InvalidUserCodeException( value )
         dateNow          = datetime.now()
         finalDate        = dateNow + timedelta( minutes = self.__EXPIRATION_TIME )
         self.__expiresAt = int( mktime( finalDate.timetuple() ) )
@@ -58,13 +61,19 @@ class UserCode( StringValueObject ):
         self = cls( code )
         return self
     
-    def validate( self, code : str ) -> bool:
+    def match( self, code : str ) -> None:
         # Variables
-        response : bool
+        isMatch : bool
         # Code
-        response = False
-        dateNow  = int( mktime( datetime.now().timetuple() ) )
+        isMatch = False
+        dateNow = int( mktime( datetime.now().timetuple() ) )
         if dateNow < self.__expiresAt:
             if self.equals( code ):
-                response = True
-        return response
+                isMatch = True
+        if not isMatch:
+            raise InvalidUserCodeException( code )
+    
+    def isValid( self ):
+        if self.isLongerThan( self.__SHORT_SIZE - 1 ):
+            return True
+        return False

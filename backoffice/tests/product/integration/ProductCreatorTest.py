@@ -60,6 +60,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : ProductCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNameAndRestaurant.return_value = None
         restaurantRepositoryMock = Mock()
@@ -71,7 +72,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.create( 
+            creator.create( 
                 id           = ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 name         = ProductName( 'Sandwich' ),
                 price        = ProductPrice( 3 ),
@@ -87,6 +88,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : ProductCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNameAndRestaurant.return_value = self.__product
         restaurantRepositoryMock = Mock()
@@ -98,7 +100,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.create( 
+            creator.create( 
                 id           = ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 name         = ProductName( 'Sandwich' ),
                 price        = ProductPrice( 3 ),
@@ -107,13 +109,14 @@ class TestSuite( unittest.TestCase ):
             )
         except DomainException as exc:
             responseCode = exc.code()
-        self.assertEqual( responseCode, 127 )
+        self.assertEqual( responseCode, 162 )
     
     def testProductNotCreatedBecauseTheRestaurantWasNotFound( self ):
         # Variables
         responseCode : int
         creator      : ProductCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNameAndRestaurant.return_value = None
         restaurantRepositoryMock = Mock()
@@ -125,7 +128,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.create( 
+            creator.create( 
                 id           = ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 name         = ProductName( 'Sandwich' ),
                 price        = ProductPrice( 3 ),
@@ -141,6 +144,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         creator      : ProductCreator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNameAndRestaurant.return_value = None
         repositoryMock.insert.return_value = False
@@ -153,7 +157,7 @@ class TestSuite( unittest.TestCase ):
             eventBus             = eventBusMock,
         )
         try:
-            responseCode = creator.create( 
+            creator.create( 
                 id           = ProductId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 name         = ProductName( 'Sandwich' ),
                 price        = ProductPrice( 3 ),

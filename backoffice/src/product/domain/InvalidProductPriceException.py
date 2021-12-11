@@ -6,7 +6,6 @@
 
 from src.shared.domain import DomainException
 from src.shared.domain import INVALID_PRODUCT_PRICE
-from .ProductPrice     import ProductPrice
 
 """
  *
@@ -22,8 +21,8 @@ class InvalidProductPriceException( DomainException ):
      *
     """
 
-    def __init__( self, price : ProductPrice ) -> None:
+    def __init__( self, price : int ) -> None:
         super().__init__( 
             INVALID_PRODUCT_PRICE,
-            'The product price {} is invalid'.format( price.value() )
+            'The product price {} is invalid'.format( price )
         )

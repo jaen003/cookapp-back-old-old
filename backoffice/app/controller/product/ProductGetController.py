@@ -13,6 +13,7 @@ from src.shared.domain          import SERVER_ACCESS_DENIED
 from src.user.infrastructure    import UserTokenManagerAdapter
 from src.user.domain            import User
 from src.user.domain            import UserTokenManager
+from src.shared.domain          import SUCCESSFUL_REQUEST
 
 """
  *
@@ -31,7 +32,6 @@ productGetController = Blueprint( 'productGetController', __name__ )
 @productGetController.route( '/api/v1/product/name/<string:name>', methods = [ 'GET' ] )
 def searchAllByNameAndRestaurant( name ):
     # Variables
-    responseCode    : int
     products        : list
     headers         : dict
     token           : str
@@ -53,16 +53,15 @@ def searchAllByNameAndRestaurant( name ):
     searcher = ProductSearcher( 
         repository = ProductMysqlRepository(),
     )
-    products, responseCode = searcher.searchAllByNameAndRestaurant(
+    products = searcher.searchAllByNameAndRestaurant(
         restaurantId = user.restaurantId(),
         name         = ProductName( name ),
     )
-    return { 'code' : responseCode, 'data' : products }, 202
+    return { 'code' : SUCCESSFUL_REQUEST, 'data' : products }, 202
 
 @productGetController.route( '/api/v1/product', methods = [ 'GET' ] )
 def findAllByRestaurant():
     # Variables
-    responseCode    : int
     products        : list
     headers         : dict
     token           : str
@@ -84,7 +83,7 @@ def findAllByRestaurant():
     searcher = ProductSearcher( 
         repository = ProductMysqlRepository(),
     )
-    products, responseCode = searcher.searchAllByRestaurant(
+    products = searcher.searchAllByRestaurant(
         restaurantId = user.restaurantId(),
     )
-    return { 'code' : responseCode, 'data' : products }, 202
+    return { 'code' : SUCCESSFUL_REQUEST, 'data' : products }, 202

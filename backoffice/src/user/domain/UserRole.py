@@ -4,7 +4,8 @@
  *
 """
 
-from src.shared.domain import IntValueObject
+from src.shared.domain         import IntValueObject
+from .InvalidUserRoleException import InvalidUserRoleException
 
 """
  *
@@ -33,6 +34,8 @@ class UserRole( IntValueObject ):
     
     def __init__( self, value : int ) -> None:
         super().__init__( value )
+        if not self.isValid():
+            raise InvalidUserRoleException( value )
 
     @classmethod
     def administrator( cls ): # -> UserRole
@@ -49,9 +52,20 @@ class UserRole( IntValueObject ):
         self = cls( cls.__WAITER )
         return self
     
-    def validate( self, role : int ) -> bool:
+    def validate( self, role : int ) -> None:
+        # Variables
+        isValid : bool
+        # Code
+        isValid = False
         if self.equals( self.__WAITER ) or self.equals( self.__CHEF ):
             if role != self.__ADMINISTRATOR:
+                isValid = True
+        if not isValid:
+            raise InvalidUserRoleException( role )
+    
+    def isValid( self ) -> bool:
+        if self.equals( self.__WAITER ) or self.equals( self.__CHEF ) or \
+           self.equals( self.__ADMINISTRATOR ):
                 return True
         return False
     

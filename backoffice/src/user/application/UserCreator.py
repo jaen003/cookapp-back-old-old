@@ -12,17 +12,15 @@ from src.user.domain       import UserRepository
 from src.user.domain       import Administrator
 from src.user.domain       import Chef
 from src.user.domain       import Waiter
-from src.shared.domain     import SUCCESSFUL_REQUEST
-from src.shared.domain     import SERVER_INTERNAL_ERROR
-from src.shared.domain     import DomainException
 from src.user.domain       import UserFinder
-from src.shared.domain     import USER_ALREADY_CREATED
 from src.shared.domain     import EventBus
 from src.restaurant.domain import RestaurantRepository
 from src.restaurant.domain import RestaurantFinder
 from src.user.domain       import User
 from src.restaurant.domain import Restaurant
-from src.user.domain       import UserCode
+from src.shared.domain     import ServerInternalErrorException
+from src.restaurant.domain import RestaurantNotFoundException
+from src.user.domain       import UserAlreadyCreatedException
 
 """
  *
@@ -66,7 +64,7 @@ class UserCreator:
         email    : UserEmail, 
         name     : UserName,
         password : UserPassword,
-    ) -> int:
+    ) -> None:
         # Variables
         user                 : User
         repository           : UserRepository
@@ -76,39 +74,31 @@ class UserCreator:
         volatileRepository   : UserRepository
         restaurant           : Restaurant
         restaurantId         : RestaurantId
-        code                 : UserCode
         # Code
         eventBus             = self.__eventBus
         repository           = self.__repository
         finder               = UserFinder( repository )
         restaurantRepository = self.__restaurantRepository
         volatileRepository   = self.__volatileRepository
-        try:
-            restaurant   = Restaurant.create()
-            restaurantId = restaurant.id()
-            code         = UserCode.short()
-            user = Administrator.create( email, name, password, restaurantId, code )
-            try:            
-                finder.findByEmail( email )
-                return USER_ALREADY_CREATED
-            except DomainException:
-                pass
-            if not restaurantRepository.insert( restaurant ):
-                return SERVER_INTERNAL_ERROR
-            if not repository.insert( user ):
-                return SERVER_INTERNAL_ERROR
-            volatileRepository.insert( user )
-            eventBus.publish( user.pullEvents() )
-            return SUCCESSFUL_REQUEST
-        except DomainException as exc:
-            return exc.code()
+        user                 = finder.findByEmail( email )
+        if user is not None:
+            raise UserAlreadyCreatedException( email )
+        restaurant   = Restaurant.create()
+        restaurantId = restaurant.id()
+        user = Administrator.create( email, name, password, restaurantId )
+        if not restaurantRepository.insert( restaurant ):
+            raise ServerInternalErrorException()
+        if not repository.insert( user ):
+            raise ServerInternalErrorException()
+        volatileRepository.insert( user )
+        eventBus.publish( user.pullEvents() )
     
     def createChef( 
         self,
         email        : UserEmail, 
         name         : UserName,
         restaurantId : RestaurantId,
-    ) -> int:
+    ) -> None:
         # Variables
         user                 : User
         repository           : UserRepository
@@ -116,33 +106,30 @@ class UserCreator:
         eventBus             : EventBus
         restaurantRepository : RestaurantRepository
         restaurantFinder     : RestaurantFinder
+        restaurant           : Restaurant
         # Code
         eventBus             = self.__eventBus
         repository           = self.__repository
         finder               = UserFinder( repository )
         restaurantRepository = self.__restaurantRepository
         restaurantFinder     = RestaurantFinder( restaurantRepository )
-        try:
-            user = Chef.create( email, name, UserPassword.weak(), restaurantId )
-            restaurantFinder.findById( restaurantId )
-            try:            
-                finder.findByEmailAndRestaurant( email, restaurantId )
-                return USER_ALREADY_CREATED
-            except DomainException:
-                pass
-            if repository.insert( user ):
-                eventBus.publish( user.pullEvents() )
-                return SUCCESSFUL_REQUEST
-            return SERVER_INTERNAL_ERROR
-        except DomainException as exc:
-            return exc.code()
+        restaurant           = restaurantFinder.findById( restaurantId )
+        if restaurant is None:
+            raise RestaurantNotFoundException( restaurantId )
+        user = finder.findByEmailAndRestaurant( email, restaurantId )
+        if user is not None:
+            raise UserAlreadyCreatedException( email )
+        user = Chef.create( email, name, UserPassword.weak(), restaurantId )
+        if not repository.insert( user ):
+            raise ServerInternalErrorException()
+        eventBus.publish( user.pullEvents() )
     
     def createWaiter( 
         self, 
         email        : UserEmail, 
         name         : UserName,
         restaurantId : RestaurantId,
-    ) -> int:
+    ) -> None:
         # Variables
         user                : User
         repository           : UserRepository
@@ -150,23 +137,20 @@ class UserCreator:
         eventBus             : EventBus
         restaurantRepository : RestaurantRepository
         restaurantFinder     : RestaurantFinder
+        restaurant           : Restaurant
         # Code
         eventBus             = self.__eventBus
         repository           = self.__repository
         finder               = UserFinder( repository )
         restaurantRepository = self.__restaurantRepository
         restaurantFinder     = RestaurantFinder( restaurantRepository )
-        try:
-            user = Waiter.create( email, name, UserPassword.weak(), restaurantId )
-            restaurantFinder.findById( restaurantId )
-            try:            
-                finder.findByEmailAndRestaurant( email, restaurantId )
-                return USER_ALREADY_CREATED
-            except DomainException:
-                pass
-            if repository.insert( user ):
-                eventBus.publish( user.pullEvents() )
-                return SUCCESSFUL_REQUEST
-            return SERVER_INTERNAL_ERROR
-        except DomainException as exc:
-            return exc.code()
+        restaurant           = restaurantFinder.findById( restaurantId )
+        if restaurant is None:
+            raise RestaurantNotFoundException( restaurantId )
+        user = finder.findByEmailAndRestaurant( email, restaurantId )
+        if user is not None:
+            raise UserAlreadyCreatedException( email )
+        user = Waiter.create( email, name, UserPassword.weak(), restaurantId )
+        if not repository.insert( user ):
+            raise ServerInternalErrorException()
+        eventBus.publish( user.pullEvents() )

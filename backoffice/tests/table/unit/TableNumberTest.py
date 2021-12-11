@@ -5,7 +5,8 @@
 """
 
 import unittest
-from src.table.domain import TableNumber
+from src.table.domain  import TableNumber
+from src.shared.domain import DomainException
 
 """
  *
@@ -22,13 +23,34 @@ class TestSuite( unittest.TestCase ):
     """
 
     def testValidTableNumber( self ):
-        number = TableNumber( 33 )
+        # Variables
+        responseCode : int
+        number       : TableNumber
+        responseCode = 0
+        try:
+            number = TableNumber( 33 )
+        except DomainException as exc:
+            responseCode = exc.code()
+        self.assertEqual( responseCode, 0 )
         self.assertTrue( number.isValid() )
     
     def testInvalidTableNumberBecauseItIsLessThanOne( self ):
-        number = TableNumber( 0 )
-        self.assertFalse( number.isValid() )
+        # Variables
+        responseCode : int
+        number       : TableNumber
+        responseCode = 0
+        try:
+            number = TableNumber( 0 )
+        except DomainException as exc:
+            responseCode = exc.code()
+        self.assertEqual( responseCode, 133 )
 
     def testInvalidTableNumberBecauseItIsBiggerThanTwoHundredFityFive( self ):
-        number = TableNumber( 256 )
-        self.assertFalse( number.isValid() )
+        # Variables
+        responseCode : int
+        responseCode = 0
+        try:
+            number = TableNumber( 256 )
+        except DomainException as exc:
+            responseCode = exc.code()
+        self.assertEqual( responseCode, 133 )

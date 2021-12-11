@@ -6,7 +6,6 @@
 
 from src.shared.domain import DomainException
 from src.shared.domain import INVALID_TABLE_NUMBER
-from .TableNumber      import TableNumber
 
 """
  *
@@ -22,8 +21,8 @@ class InvalidTableNumberException( DomainException ):
      *
     """
 
-    def __init__( self, number : TableNumber ) -> None:
+    def __init__( self, number : int ) -> None:
         super().__init__(
             INVALID_TABLE_NUMBER,
-            'The table number {} is invalid'.format( number.value() )
+            'The table number {} is invalid'.format( number )
         )

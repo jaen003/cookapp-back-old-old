@@ -50,6 +50,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         renumerator  : TableRenumerator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNumberAndRestaurant.return_value = None
         repositoryMock.selectByIdAndRestaurant.return_value = self.__table
@@ -59,7 +60,7 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = renumerator.renumber( 
+            renumerator.renumber( 
                 id           = TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 number       = TableNumber( 6 ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
@@ -73,6 +74,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         renumerator  : TableRenumerator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNumberAndRestaurant.return_value = self.__table
         eventBusMock = Mock()
@@ -81,20 +83,21 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = renumerator.renumber( 
+            renumerator.renumber( 
                 id           = TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 number       = TableNumber( 6 ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
             )
         except DomainException as exc:
             responseCode = exc.code()
-        self.assertEqual( responseCode, 137 )
+        self.assertEqual( responseCode, 157 )
     
     def testTableNotRenumberedBecauseItNotFound( self ):
         # Variables
         responseCode : int
         renumerator  : TableRenumerator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNumberAndRestaurant.return_value = None
         repositoryMock.selectByIdAndRestaurant.return_value = None
@@ -104,7 +107,7 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = renumerator.renumber( 
+            renumerator.renumber( 
                 id           = TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 number       = TableNumber( 6 ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
@@ -118,6 +121,7 @@ class TestSuite( unittest.TestCase ):
         responseCode : int
         renumerator  : TableRenumerator
         # Code
+        responseCode   = 102
         repositoryMock = Mock()
         repositoryMock.selectByNumberAndRestaurant.return_value = None
         repositoryMock.update.return_value = False
@@ -128,7 +132,7 @@ class TestSuite( unittest.TestCase ):
             eventBus   = eventBusMock,
         )
         try:
-            responseCode = renumerator.renumber( 
+            renumerator.renumber( 
                 id           = TableId( 'f727c0e0-31fc-11ec-8ce7-f91f9c1d88b1' ),
                 number       = TableNumber( 6 ),
                 restaurantId = RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),

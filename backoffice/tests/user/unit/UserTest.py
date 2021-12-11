@@ -93,9 +93,6 @@ class TestSuite( unittest.TestCase ):
             UserCode( '12345' ),
         )
         self.assertTrue( user.status().isBlocked() )
-
-    def testUserIsAuthentic( self ):
-        self.assertTrue( self.__user.isAuthentic( UserPassword( 'IloveKFC' ) ) )
     
     def testUserCodeValidatedSuccess( self ):
         # Variables

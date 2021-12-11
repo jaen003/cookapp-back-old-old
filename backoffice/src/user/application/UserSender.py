@@ -50,7 +50,7 @@ class UserSender:
         toEmail : UserEmail,
         name    : UserName,
         code    : UserCode,
-    ) -> int:
+    ) -> None:
         # Variables
         env         : Environment
         fromEmail   : str
@@ -78,7 +78,7 @@ class UserSender:
         toEmail  : UserEmail,
         name     : UserName,
         password : UserPassword,
-    ) -> int:
+    ) -> None:
         # Variables
         env         : Environment
         fromEmail   : str

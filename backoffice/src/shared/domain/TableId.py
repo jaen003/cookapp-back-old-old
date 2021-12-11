@@ -4,7 +4,8 @@
  *
 """
 
-from .StringValueObject import StringValueObject
+from .StringValueObject       import StringValueObject
+from .InvalidTableIdException import InvalidTableIdException
 
 """
  *
@@ -22,3 +23,5 @@ class TableId( StringValueObject ):
     
     def __init__( self, value : str ) -> None:
         super().__init__( value )
+        if self.isEmpty():
+            raise InvalidTableIdException( value )

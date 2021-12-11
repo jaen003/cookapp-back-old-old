@@ -6,7 +6,6 @@
 
 from src.shared.domain import DomainException
 from src.shared.domain import INVALID_USER_ROLE
-from .UserRole         import UserRole
 
 """
  *
@@ -22,8 +21,8 @@ class InvalidUserRoleException( DomainException ):
      *
     """
 
-    def __init__( self, role : UserRole ) -> None:
+    def __init__( self, role : int ) -> None:
         super().__init__(
             INVALID_USER_ROLE,
-            'The user role {} is invalid'.format( role.value() ),
+            'The user role {} is invalid'.format( role ),
         )

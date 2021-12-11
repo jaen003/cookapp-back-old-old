@@ -12,7 +12,7 @@ from src.user.infrastructure   import UserMysqlRepository
 from src.user.domain           import UserName
 from src.shared.domain         import UserEmail
 from src.shared.infrastructure import RabbitMqEventBus
-from src.shared.domain         import INCORRECT_DATA
+from src.shared.domain         import INCORRECT_REQUEST_DATA
 from src.user.application      import UserRelocator
 from src.user.domain           import UserRole
 from src.user.application      import UserAuthenticator
@@ -27,6 +27,8 @@ from src.user.infrastructure   import UserTokenManagerAdapter
 from src.user.domain           import UserTokenManager
 from src.user.domain           import User
 from app.middleware            import requestHttp
+from src.shared.domain         import DomainException
+from src.shared.domain         import SUCCESSFUL_REQUEST
 
 """
  *
@@ -47,7 +49,6 @@ userPutController = Blueprint( 'userPutController', __name__ )
 def rename( data : dict ):
     # Variables
     renamer         : UserRenamer
-    responseCode    : int
     headers         : dict
     token           : str
     tokenManager    : UserTokenManager
@@ -70,20 +71,22 @@ def rename( data : dict ):
         eventBus   = RabbitMqEventBus(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = renamer.rename(
-        email        = UserEmail( data.get( 'user_email' ) ),
-        name         = UserName( data.get( 'user_name' ) ),
-        restaurantId = user.restaurantId(),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        renamer.rename(
+            email        = UserEmail( data.get( 'user_email' ) ),
+            name         = UserName( data.get( 'user_name' ) ),
+            restaurantId = user.restaurantId(),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202
 
 @userPutController.route( '/api/v1/user/autorename', methods = [ 'PUT' ] )
 @requestHttp( [ 'user_name' ] )
 def autoRename( data : dict ):
     # Variables
     renamer         : UserRenamer
-    responseCode    : int
     headers         : dict
     token           : str
     tokenManager    : UserTokenManager
@@ -106,20 +109,22 @@ def autoRename( data : dict ):
         eventBus   = RabbitMqEventBus(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = renamer.rename(
-        email        = user.email(),
-        name         = UserName( data.get( 'user_name' ) ),
-        restaurantId = user.restaurantId(),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        renamer.rename(
+            email        = user.email(),
+            name         = UserName( data.get( 'user_name' ) ),
+            restaurantId = user.restaurantId(),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202
 
 @userPutController.route( '/api/v1/user/relocate', methods = [ 'PUT' ] )
 @requestHttp( [ 'user_email', 'user_role' ] )
 def relocate( data : dict ):
     # Variables
     relocator       : UserRelocator
-    responseCode    : int
     headers         : dict
     token           : str
     tokenManager    : UserTokenManager
@@ -142,20 +147,22 @@ def relocate( data : dict ):
         eventBus   = RabbitMqEventBus(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = relocator.relocate(
-        email        = UserEmail( data.get( 'user_email' ) ),
-        role         = UserRole( data.get( 'user_role' ) ),
-        restaurantId = user.restaurantId(),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        relocator.relocate(
+            email        = UserEmail( data.get( 'user_email' ) ),
+            role         = UserRole( data.get( 'user_role' ) ),
+            restaurantId = user.restaurantId(),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202
 
 @userPutController.route( '/api/v1/user/login', methods = [ 'PUT' ] )
 @requestHttp( [ 'user_email', 'user_password' ] )
 def login( data : dict ):
     # Variables
     authenticator : UserAuthenticator
-    responseCode  : int
     response      : dict
     # Code
     authenticator = UserAuthenticator(
@@ -163,12 +170,15 @@ def login( data : dict ):
         tokenManager = UserTokenManagerAdapter(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    response, responseCode = authenticator.authenticate(
-        email    = UserEmail( data.get( 'user_email' ) ),
-        password = UserPassword( data.get( 'user_password' ) ),
-    )
-    return { 'code' : responseCode, 'data' : response }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        response = authenticator.authenticate(
+            email    = UserEmail( data.get( 'user_email' ) ),
+            password = UserPassword( data.get( 'user_password' ) ),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST, "data" : response }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202
 
 @userPutController.route( '/api/v1/user/logout', methods = [ 'PUT' ] )
 def logout():
@@ -190,7 +200,6 @@ def logout():
 def insure( data : dict ):
     # Variables
     insurer         : UserInsurer
-    responseCode    : int
     headers         : dict
     token           : str
     tokenManager    : UserTokenManager
@@ -213,20 +222,22 @@ def insure( data : dict ):
         eventBus   = RabbitMqEventBus(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = insurer.insure(
-        email        = user.email(),
-        password     = UserPassword( data.get( 'user_password' ) ),
-        restaurantId = user.restaurantId(),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        insurer.insure(
+            email        = user.email(),
+            password     = UserPassword( data.get( 'user_password' ) ),
+            restaurantId = user.restaurantId(),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202
 
 @userPutController.route( '/api/v1/user/validate', methods = [ 'PUT' ] )
 @requestHttp( [ 'user_email', 'user_code' ] )
 def validate( data : dict ):
     # Variables
-    validator    : UserValidator
-    responseCode : int
+    validator : UserValidator
     # Code
     validator = UserValidator(
         repository         = UserMysqlRepository(),
@@ -234,27 +245,32 @@ def validate( data : dict ):
         eventBus           = RabbitMqEventBus(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = validator.validate(
-        email = UserEmail( data.get( 'user_email' ) ),
-        code  = UserCode( data.get( 'user_code' ) ),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        validator.validate(
+            email = UserEmail( data.get( 'user_email' ) ),
+            code  = UserCode( data.get( 'user_code' ) ),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202
 
 @userPutController.route( '/api/v1/user/renovate/code', methods = [ 'PUT' ] )
 @requestHttp( [ 'user_email' ] )
 def renovateCode( data : dict ):
     # Variables
-    renovator    : UserRenovator
-    responseCode : int
+    renovator : UserRenovator
     # Code
     renovator = UserRenovator(
         repository  = UserCacheMemoryRepository(),
         emailSender = SmtpEmailSender(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = renovator.renovateCode(
-        toEmail = UserEmail( data.get( 'user_email' ) ),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        renovator.renovateCode(
+            toEmail = UserEmail( data.get( 'user_email' ) ),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202

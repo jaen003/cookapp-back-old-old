@@ -103,7 +103,7 @@ class RabbitMqEventBus( EventBus, metaclass = Singleton ):
         subscribers : list[ DomainEventSubscriber ]
         topic       : str
         # Code
-        self        = EventBus()
+        self        = RabbitMqEventBus()
         topic       = event.topic()
         subscribers = self.__topics[topic]
         for subscriber in subscribers:
@@ -206,7 +206,7 @@ class Listener( Thread ):
     def __callback( self, channel, method, properties, body ):
         message = json.loads( body )
         self.__event.fromPrimitives( message )
-        EventBus.notify( self.__event )
+        RabbitMqEventBus.notify( self.__event )
         channel.basic_ack( delivery_tag = method.delivery_tag )
 
     def __consume( self ) -> None:

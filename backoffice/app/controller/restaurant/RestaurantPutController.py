@@ -9,12 +9,14 @@ from flask                         import request
 from src.restaurant.application    import RestaurantRenamer
 from src.restaurant.infrastructure import RestaurantMysqlRepository
 from src.restaurant.domain         import RestaurantName
-from src.shared.domain             import INCORRECT_DATA
+from src.shared.domain             import INCORRECT_REQUEST_DATA
 from src.shared.domain             import SERVER_ACCESS_DENIED
 from src.user.infrastructure       import UserTokenManagerAdapter
 from src.user.domain               import UserTokenManager
 from src.user.domain               import User
 from app.middleware                import requestHttp
+from src.shared.domain             import DomainException
+from src.shared.domain             import SUCCESSFUL_REQUEST
 
 """
  *
@@ -35,7 +37,6 @@ restaurantPutController = Blueprint( 'restaurantPutController', __name__ )
 def rename( data : dict ):
     # Variables
     renamer         : RestaurantRenamer
-    responseCode    : int
     headers         : dict
     token           : str
     tokenManager    : UserTokenManager
@@ -57,9 +58,12 @@ def rename( data : dict ):
         repository = RestaurantMysqlRepository(),
     )
     if not data:
-        return { 'code' : INCORRECT_DATA }, 202
-    responseCode = renamer.rename(
-        id   = user.restaurantId(),
-        name = RestaurantName( data.get( 'rest_name' ) ),
-    )
-    return { 'code' : responseCode }, 202
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        renamer.rename(
+            id   = user.restaurantId(),
+            name = RestaurantName( data.get( 'rest_name' ) ),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202
