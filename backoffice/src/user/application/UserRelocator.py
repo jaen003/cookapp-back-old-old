@@ -44,11 +44,10 @@ class UserRelocator:
     ) -> None:
         self.__repository = repository
         self.__eventBus   = eventBus
-
-    def relocate( 
+    
+    def relocateAsChef( 
         self, 
-        email        : UserEmail, 
-        role         : UserRole,
+        email        : UserEmail,
         restaurantId : RestaurantId,
     ) -> None:
         # Variables
@@ -63,7 +62,29 @@ class UserRelocator:
         user       = finder.findByEmailAndRestaurant( email, restaurantId )
         if user is None:
             raise UserNotFoundException( email )
-        user.relocate( role )
+        user.relocateAsChef()
+        if not repository.update( user ):
+            raise ServerInternalErrorException()
+        eventBus.publish( user.pullEvents() )
+    
+    def relocateAsWaiter( 
+        self, 
+        email        : UserEmail,
+        restaurantId : RestaurantId,
+    ) -> None:
+        # Variables
+        user       : User
+        repository : UserRepository
+        finder     : UserFinder
+        eventBus   : EventBus
+        # Code
+        eventBus   = self.__eventBus
+        repository = self.__repository
+        finder     = UserFinder( repository )
+        user       = finder.findByEmailAndRestaurant( email, restaurantId )
+        if user is None:
+            raise UserNotFoundException( email )
+        user.relocateAsWaiter()
         if not repository.update( user ):
             raise ServerInternalErrorException()
         eventBus.publish( user.pullEvents() )
