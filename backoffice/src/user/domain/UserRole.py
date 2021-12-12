@@ -52,17 +52,6 @@ class UserRole( IntValueObject ):
         self = cls( cls.__WAITER )
         return self
     
-    def validate( self, role : int ) -> None:
-        # Variables
-        isValid : bool
-        # Code
-        isValid = False
-        if self.equals( self.__WAITER ) or self.equals( self.__CHEF ):
-            if role != self.__ADMINISTRATOR:
-                isValid = True
-        if not isValid:
-            raise InvalidUserRoleException( role )
-    
     def isValid( self ) -> bool:
         if self.equals( self.__WAITER ) or self.equals( self.__CHEF ) or \
            self.equals( self.__ADMINISTRATOR ):

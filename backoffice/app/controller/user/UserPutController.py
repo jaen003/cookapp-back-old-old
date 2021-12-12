@@ -119,10 +119,10 @@ def autoRename( data : dict ):
         return { 'code' : SUCCESSFUL_REQUEST }, 202
     except DomainException as exc:
         return { 'code' : exc.code() }, 202
-
-@userPutController.route( '/api/v1/user/relocate', methods = [ 'PUT' ] )
-@requestHttp( [ 'user_email', 'user_role' ] )
-def relocate( data : dict ):
+    
+@userPutController.route( '/api/v1/user/relocateAs/chef', methods = [ 'PUT' ] )
+@requestHttp( [ 'user_email' ] )
+def relocateAsChef( data : dict ):
     # Variables
     relocator       : UserRelocator
     headers         : dict
@@ -149,9 +149,45 @@ def relocate( data : dict ):
     if not data:
         return { 'code' : INCORRECT_REQUEST_DATA }, 202
     try:
-        relocator.relocate(
+        relocator.relocateAsChef(
             email        = UserEmail( data.get( 'user_email' ) ),
-            role         = UserRole( data.get( 'user_role' ) ),
+            restaurantId = user.restaurantId(),
+        )
+        return { 'code' : SUCCESSFUL_REQUEST }, 202
+    except DomainException as exc:
+        return { 'code' : exc.code() }, 202
+
+@userPutController.route( '/api/v1/user/relocateAs/waiter', methods = [ 'PUT' ] )
+@requestHttp( [ 'user_email' ] )
+def relocateAsWaiter( data : dict ):
+    # Variables
+    relocator       : UserRelocator
+    headers         : dict
+    token           : str
+    tokenManager    : UserTokenManager
+    user            : User
+    isAuthenticated : bool
+    # Code
+    headers         = request.headers
+    tokenManager    = UserTokenManagerAdapter()
+    isAuthenticated = False
+    try:
+        token           = headers['Token']
+        user            = tokenManager.decodeToken( token )
+        isAuthenticated = user.role().isAdministrator()
+    except:
+        pass
+    if not isAuthenticated:
+        return { 'code' : SERVER_ACCESS_DENIED }, 202
+    relocator = UserRelocator(
+        repository = UserMysqlRepository(),
+        eventBus   = RabbitMqEventBus(),
+    )
+    if not data:
+        return { 'code' : INCORRECT_REQUEST_DATA }, 202
+    try:
+        relocator.relocateAsWaiter(
+            email        = UserEmail( data.get( 'user_email' ) ),
             restaurantId = user.restaurantId(),
         )
         return { 'code' : SUCCESSFUL_REQUEST }, 202

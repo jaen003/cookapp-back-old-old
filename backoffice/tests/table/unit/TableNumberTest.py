@@ -26,6 +26,7 @@ class TestSuite( unittest.TestCase ):
         # Variables
         responseCode : int
         number       : TableNumber
+        # Code
         responseCode = 0
         try:
             number = TableNumber( 33 )
@@ -38,6 +39,7 @@ class TestSuite( unittest.TestCase ):
         # Variables
         responseCode : int
         number       : TableNumber
+        # Code
         responseCode = 0
         try:
             number = TableNumber( 0 )
@@ -48,6 +50,7 @@ class TestSuite( unittest.TestCase ):
     def testInvalidTableNumberBecauseItIsBiggerThanTwoHundredFityFive( self ):
         # Variables
         responseCode : int
+        # Code
         responseCode = 0
         try:
             number = TableNumber( 256 )

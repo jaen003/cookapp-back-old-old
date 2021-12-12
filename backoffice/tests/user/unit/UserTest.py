@@ -60,9 +60,71 @@ class TestSuite( unittest.TestCase ):
         self.__user.insure( UserPassword( 'Password' ) )
         self.assertEqual( self.__user.password().value(), 'Password' )
     
-    def testUserRelocatedSuccess( self ):
-        self.__user.relocate( UserRole( 3 ) )
+    def testUserRelocatedSuccess1( self ):
+        # Variables
+        responseCode : int
+        # Code
+        responseCode = 0
+        try:
+            self.__user.relocateAsWaiter()
+        except DomainException as exc:
+            responseCode = exc.code()
+        self.assertEqual( responseCode, 0 )
         self.assertEqual( self.__user.role().value(), 3 )
+    
+    def testUserRelocatedSuccess2( self ):
+        # Variables
+        responseCode : int
+        # Code
+        responseCode = 0
+        try:
+            self.__user.relocateAsChef()
+        except DomainException as exc:
+            responseCode = exc.code()
+        self.assertEqual( responseCode, 0 )
+        self.assertEqual( self.__user.role().value(), 2 )
+    
+    def testUserNotRelocated1( self ):
+        # Variables
+        responseCode : int
+        user         : User
+        # Code
+        responseCode = 0
+        user = User( 
+            UserEmail( 'harland.sanders@gmail.com' ),
+            UserName( 'Harland D. Sanders' ),
+            UserPassword( 'IloveKFC' ),
+            UserRole( 1 ),
+            UserStatus( 3 ),
+            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+            UserCode( '12345' ),
+        )
+        try:
+            user.relocateAsChef()
+        except DomainException as exc:
+            responseCode = exc.code()
+        self.assertEqual( responseCode, 164 )
+    
+    def testUserNotRelocated2( self ):
+        # Variables
+        responseCode : int
+        user         : User
+        # Code
+        responseCode = 0
+        user = User( 
+            UserEmail( 'harland.sanders@gmail.com' ),
+            UserName( 'Harland D. Sanders' ),
+            UserPassword( 'IloveKFC' ),
+            UserRole( 1 ),
+            UserStatus( 3 ),
+            RestaurantId( '43fd2ede-699d-4602-b6e3-3987923a28e4' ),
+            UserCode( '12345' ),
+        )
+        try:
+            user.relocateAsWaiter()
+        except DomainException as exc:
+            responseCode = exc.code()
+        self.assertEqual( responseCode, 164 )
     
     def testUserIsEnabled( self ):
         # Variables

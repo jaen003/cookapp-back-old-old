@@ -4,19 +4,20 @@
  *
 """
 
-from .UserName         import UserName
-from src.shared.domain import UserEmail
-from .UserPassword     import UserPassword
-from .UserRole         import UserRole
-from src.shared.domain import RestaurantId
-from src.shared.domain import AggregateRoot
-from .UserDeleted      import UserDeleted
-from .UserRenamed      import UserRenamed
-from .UserRelocated    import UserRelocated
-from .UserInsured      import UserInsured
-from .UserCode         import UserCode
-from .UserValidated    import UserValidated
-from .UserStatus       import UserStatus
+from .UserName                  import UserName
+from src.shared.domain          import UserEmail
+from .UserPassword              import UserPassword
+from .UserRole                  import UserRole
+from src.shared.domain          import RestaurantId
+from src.shared.domain          import AggregateRoot
+from .UserDeleted               import UserDeleted
+from .UserRenamed               import UserRenamed
+from .UserRelocated             import UserRelocated
+from .UserInsured               import UserInsured
+from .UserCode                  import UserCode
+from .UserValidated             import UserValidated
+from .UserStatus                import UserStatus
+from .UserNotRelocatedException import UserNotRelocatedException
 
 """
  *
@@ -105,15 +106,27 @@ class User( AggregateRoot ):
             email    = self.__email,
             password = password,
         ) )
+
+    def relocateAsChef( self ) -> None:
+        if self.__role.isAdministrator():
+            raise UserNotRelocatedException( self.__email )
+        if self.__role.isWaiter():
+            self.__role = UserRole.chef()
+            self.record( UserRelocated(
+                role  = self.__role,
+                email = self.__email,
+            ) )
     
-    def relocate( self, role : UserRole ) -> None:
-        self.__role.validate( role.value() )
-        self.__role = role
-        self.record( UserRelocated(
-            role  = role,
-            email = self.__email,
-        ) )
-    
+    def relocateAsWaiter( self ) -> None:
+        if self.__role.isAdministrator():
+            raise UserNotRelocatedException( self.__email )
+        if self.__role.isChef():
+            self.__role = UserRole.waiter()
+            self.record( UserRelocated(
+                role  = self.__role,
+                email = self.__email,
+            ) )
+            
     def validate( self, code : UserCode ) -> None:
         self.__code.match( code.value() )
         self.__status = UserStatus.enabled()

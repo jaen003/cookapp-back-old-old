@@ -33,51 +33,51 @@ class TestSuite( unittest.TestCase ):
     def testUserIsWaiter( self ):
         role = UserRole.waiter()
         self.assertEqual( role.value(), 3 )
-
-    def testUserCodeValidatedSuccess( self ):
+    
+    def testUserRoleIsValid1( self ):
         # Variables
         responseCode : int
         role         : UserRole
+        # Code
         responseCode = 0
         try:
-            role = UserRole.waiter()
-            role.validate( 2 )
+            role = UserRole( 1 )
         except DomainException as exc:
             responseCode = exc.code()
         self.assertEqual( responseCode, 0 )
-
-    def testInvalidUserRole1( self ):
+    
+    def testUserRoleIsValid2( self ):
         # Variables
         responseCode : int
         role         : UserRole
+        # Code
         responseCode = 0
         try:
-            role = UserRole.waiter()
-            role.validate( 1 )
+            role = UserRole( 2 )
         except DomainException as exc:
             responseCode = exc.code()
-        self.assertEqual( responseCode, 144 )
+        self.assertEqual( responseCode, 0 )
     
-    def testInvalidUserRole2( self ):
+    def testUserRoleIsValid3( self ):
         # Variables
         responseCode : int
         role         : UserRole
+        # Code
         responseCode = 0
         try:
-            role = UserRole.administrator()
-            role.validate( 2 )
+            role = UserRole( 3 )
         except DomainException as exc:
             responseCode = exc.code()
-        self.assertEqual( responseCode, 144 )
+        self.assertEqual( responseCode, 0 )
     
-    def testInvalidUserRole3( self ):
+    def testInvalidUserRole( self ):
         # Variables
         responseCode : int
         role         : UserRole
+        # Code
         responseCode = 0
         try:
-            role = UserRole.administrator()
-            role.validate( 3 )
+            role = UserRole( 4 )
         except DomainException as exc:
             responseCode = exc.code()
         self.assertEqual( responseCode, 144 )
