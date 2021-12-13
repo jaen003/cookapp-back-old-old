@@ -4,9 +4,8 @@
  *
 """
 
-from abc                    import abstractmethod
-from .DomainEvent           import DomainEvent
-from .DomainEventSubscriber import DomainEventSubscriber
+from abc          import abstractmethod
+from .DomainEvent import DomainEvent
 
 """
  *
@@ -27,5 +26,5 @@ class EventBus:
         pass
 
     @abstractmethod
-    def subscribe( self, eventName : str, subscriber : DomainEventSubscriber ) -> None:
+    def subscribe( self, eventName : str, subscriber ) -> None:
         pass
