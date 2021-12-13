@@ -12,7 +12,6 @@ from .AggregateRoot                import *
 from .DomainEvent                  import *
 from .EventBus                     import *
 from .IntValueObject               import *
-from .DomainEventSubscriber        import *
 from .InvalidUserEmailException    import *
 from .UserEmail                    import *
 from .InvalidProductIdException    import *
