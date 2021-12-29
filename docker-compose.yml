@@ -22,6 +22,7 @@ services:
             - 3360:3306
         volumes:
             - ./backoffice/etc/backoffice_init.sql:/docker-entrypoint-initdb.d/backoffice_init.sql
+            - ./attention/etc/attention_init.sql:/docker-entrypoint-initdb.d/attention_init.sql
         env_file:
             - ./.env
 
@@ -51,3 +52,20 @@ services:
         volumes:
             - ./backoffice:/src/app
         command: python -m unittest discover -s /src/app/tests -p "*Test.py"
+    
+    attention_backend:
+        image: 'cookapp_attention_backend:latest'
+        container_name: 'cookapp_attention_backend'
+        hostname: 'cookapp_attention_backend'
+        build: ./attention
+        restart: unless-stopped
+        ports:
+            - "5002:5000"
+        volumes:
+            - ./attention:/src/app
+        env_file:
+            - ./attention/.env
+        depends_on:
+            - rabbitmq
+            - mysql
+        command: /bin/bash ./entrypoint.sh
