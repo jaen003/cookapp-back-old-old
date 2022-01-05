@@ -30,16 +30,16 @@ namespace attention.src.shared.domain {
             return _value;
         }
 
-        public bool equals( IntValueObject value ) {
-            return _value == value.value();
+        public bool equals( int value ) {
+            return _value == value;
         }
 
-        public bool isLessThan( IntValueObject value ) {
-            return _value < value.value();
+        public bool isLessThan( int value ) {
+            return _value < value;
         }
 
-        public bool isBiggerThan( IntValueObject value ) {
-            return _value > value.value();
+        public bool isBiggerThan( int value ) {
+            return _value > value;
         }
 
         public string toString() {
