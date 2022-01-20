@@ -23,19 +23,14 @@ namespace attention.src.shared.domain {
          *
         */
 
-        public DomainEvent( string? eventId, int? timestamp ) {
-            if( eventId != null && timestamp != null ){
-                _eventId   = eventId;
-                _timestamp = ( int )timestamp;
-            } else {
-                _eventId   = generateId();
-                _timestamp = getTimestamp();
-            }
+        public DomainEvent( string eventId, int timestamp ) {
+            _eventId   = eventId;
+            _timestamp = timestamp;
         }
 
         public DomainEvent() {
-            _timestamp = 0;
-            _eventId   = "";
+            _eventId   = generateId();
+            _timestamp = getTimestamp();
         }
 
         private string generateId() {

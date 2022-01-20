@@ -26,7 +26,6 @@ namespace attention.src.shared.infrastructure {
 
         private ConnectionFactory _connectionFactory;
         private IConnection?      _connection = null;
-        private IModel?           _channel    = null;
 
         /* 
          * 

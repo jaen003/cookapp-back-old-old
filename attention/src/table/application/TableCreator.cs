@@ -41,9 +41,12 @@ namespace attention.src.table.application {
             RestaurantId restaurantId
         ) {
             // Variables
-            Table table;
+            Table? table;
             // Code
-
+            table = _repository.findById( id );
+            if( table != null ) {
+                throw new TableAlreadyCreated( id );
+            }
             table = Table.create( id, number, restaurantId );
             if( !_repository.insert( table ) ) {
                 throw new ServerInternalError();

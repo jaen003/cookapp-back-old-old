@@ -18,7 +18,7 @@ namespace attention.src.table.domain {
 
         /* 
          * 
-         * Methods
+         * Attributes
          *
         */
 

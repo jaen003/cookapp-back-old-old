@@ -41,9 +41,19 @@ namespace attention.src.table.domain {
         public TableCreated(
             string  id,
             int     number,
+            string  restaurantId
+        ) {
+            _id           = id;
+            _number       = number;
+            _restaurantId = restaurantId;
+        }
+
+        public TableCreated(
+            string  id,
+            int     number,
             string  restaurantId,
-            string? eventId   = null,
-            int?    timestamp = null
+            string  eventId,
+            int     timestamp
         ) : base( eventId, timestamp ) {
             _id           = id;
             _number       = number;

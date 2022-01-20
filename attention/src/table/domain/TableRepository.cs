@@ -24,7 +24,8 @@ namespace attention.src.table.domain {
 
         bool insert( Table table );
         bool update( Table table );
-        Table? select( Specifications specifications );
+        Table? findById( TableId id );
+
 
     }
 

@@ -63,6 +63,7 @@ services:
             - "5002:5000"
         volumes:
             - ./attention:/src/app
+            - /src/app/obj
         env_file:
             - ./attention/.env
         depends_on:

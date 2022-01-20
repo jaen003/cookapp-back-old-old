@@ -77,7 +77,7 @@ namespace attention.src.table.infrastructure {
                 return false;
             }
         }
-        public Table? select( Specifications specifications ) {
+        public Table? findById( TableId id ) {
             // Variables
             MysqlDatabase   database;
             MySqlConnection connection;
@@ -86,13 +86,14 @@ namespace attention.src.table.infrastructure {
             MySqlDataReader reader;
             Table           table;
             // Code
-            query = "SELECT * Dining_Table WHERE " + specifications.serialize();
+            query = "SELECT * FROM Dining_Table WHERE tab_id = @id";
             try {
                 database   = MysqlDatabase.instance();
                 connection = database.connection();
                 connection.Open();                
                 command = connection.CreateCommand();
                 command.CommandText = query;
+                command.Parameters.AddWithValue( "@id", id.value() );
                 reader = command.ExecuteReader();
                 table  = new Table( 
                     new TableId( reader["tab_id"].ToString() ?? "" ),
